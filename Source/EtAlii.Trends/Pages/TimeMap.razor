@@ -1,0 +1,22 @@
+﻿@page "/timemap"
+
+
+<div class="content-wrapper">
+    <div class="col-lg-9 control-section" style="border-right: 1px solid #D7D7D7;height: 640px">
+        <SfDiagramComponent >
+            @* @ref="@_diagram" *@
+            @* InteractionController="@interactionController" *@
+            @* Width="100%" Height="600px" *@
+            @* GetCustomTool="@GetCustomTool" *@
+            @* NodeCreating="@NodeCreating" *@
+            @* ConnectorCreating="@ConnectorCreating" *@
+            @* SelectionSettings="@_selectionSettings" *@
+            @* SelectionChanging="OnSelectionChanging" *@
+            @* Created="OnCreated"> *@
+            @* <ScrollSettings @bind-ScrollLimit="@ScrollLimit" /> *@
+            @* <Layout FixedNode="1" HorizontalSpacing="@_horizontalSpacing" VerticalSpacing="@_verticalSpacing" Type="LayoutType.MindMap" GetBranch="@GetBranch" /> *@
+            @* <SnapSettings Constraints="@SnapConstraints.None" /> *@
+            @* <DataSourceSettings ID="Id" ParentID="ParentId" DataSource="@DataSource" /> *@
+        </SfDiagramComponent>
+    </div>
+</div>

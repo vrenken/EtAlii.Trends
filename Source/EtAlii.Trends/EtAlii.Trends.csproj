@@ -8,4 +8,32 @@
     <LangVersion>default</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="6.0.3" />
+    <PackageReference Include="Syncfusion.Blazor.Diagram" Version="20.1.0.47" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.1.0.47" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="**\*.cshtml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+
+    <Compile Update="**\*.razor.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+
+    <Content Update="Shared\NavMenu.razor.css">
+      <DependentUpon>NavMenu.razor</DependentUpon>
+    </Content>
+
+    <Content Update="Shared\MainLayout.razor.css">
+      <DependentUpon>MainLayout.razor</DependentUpon>
+    </Content>
+
+  </ItemGroup>
+
 </Project>
