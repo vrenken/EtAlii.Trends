@@ -37,7 +37,7 @@
                     @ref="@_diagram"
                     Width="100%"
                     Height="@_diagramHeight"
-                    InteractionController="InteractionController.ZoomPan"
+                    InteractionController="@_diagramTool"
                     ConnectorCreating="@ConnectorDefaults"
                     NodeCreating="@NodeDefaults">
                     <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
