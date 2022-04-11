@@ -2,14 +2,21 @@
 
 namespace EtAlii.Trends.Pages;
 
+using System.Collections.ObjectModel;
+using Syncfusion.Blazor.Diagram;
+using Syncfusion.Blazor.Layouts;
+
 public partial class TrendMap
 {
     private bool _isLoaded;
+
+    private readonly ObservableCollection<Trend> _trends = new();
+
     protected override void OnInitialized()
     {
         InitializeTreeView();
+        _trends.CollectionChanged += OnTrendsChanged;
     }
-
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -27,11 +34,23 @@ public partial class TrendMap
         }
     }
 
-
     public class WindowDimension
     {
         public int Width { get; set; }
         public int Height { get; set; }
     }
 
+    private void OnClicked(ClickEventArgs e)
+    {
+        if (e.Count == 2 && e.ActualObject == null)
+        {
+            AddNewTrend(e.Position);
+        }
+    }
+
+    private void OnSplitterResized(ResizingEventArgs e)
+    {
+        _diagramWidth = $"{e.PaneSize[1]}px";
+        StateHasChanged();
+    }
 }

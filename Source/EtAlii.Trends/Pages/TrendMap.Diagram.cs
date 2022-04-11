@@ -7,8 +7,7 @@ using Syncfusion.Blazor.Diagram;
 public partial class TrendMap
 {
     private SfDiagramComponent? _diagram;
-    // Specify the layout type.
-    private LayoutType _type = LayoutType.HierarchicalTree;
+
     // Specify the orientation of the layout.
     private LayoutOrientation _orientation = LayoutOrientation.TopToBottom;
     private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Auto;
@@ -16,10 +15,13 @@ public partial class TrendMap
     private int _horizontalSpacing = 30;
     private int _verticalSpacing = 30;
     private string _diagramHeight = "900px";
+    private string _diagramWidth = "100%";
+    private readonly DiagramObjectCollection<Node> _nodes = new();
+    private readonly DiagramObjectCollection<Connector> _connectors = new();
 
 
     // Defines the connector's default values.
-    private void OnConnectorCreated(IDiagramObject diagramObject)
+    private void ApplyConnectorDefaults(IDiagramObject diagramObject)
     {
         var connector = (Connector)diagramObject;
         connector.Type = ConnectorSegmentType.Orthogonal;
@@ -40,42 +42,21 @@ public partial class TrendMap
     }
 
     // Defines the node's default values.
-    private void OnNodeCreated(IDiagramObject diagramObject)
+    private void ApplyNodeDefaults(IDiagramObject diagramObject)
     {
         var node = (Node)diagramObject;
         if (node.Data is System.Text.Json.JsonElement)
         {
             node.Data = System.Text.Json.JsonSerializer.Deserialize<Trend>(node.Data.ToString()!);
         }
+
         var trend = (Trend)node.Data!;
         node.Style = new ShapeStyle { Fill = "#659be5", StrokeColor = "none", StrokeWidth = 2, };
         node.BackgroundColor = "#659be5";
         node.Width = 150;
         node.Height = 50;
-        node.Annotations = new DiagramObjectCollection<ShapeAnnotation>
-        {
-            new ShapeAnnotation
-            {
-                Content = trend.Id,
-                Style =new TextStyle {Color = "white"}
-            }
-        };
+        node.OffsetX = trend.X;
+        node.OffsetY = trend.Y;
+        node.Annotations = new DiagramObjectCollection<ShapeAnnotation> { new ShapeAnnotation { Content = trend.Id, Style = new TextStyle { Color = "white" } } };
     }
-
-    // Create the data source with node name and fill color values.
-    private readonly List<Trend> _dataSource = new()
-    {
-        new( Id: "Diagram", ParentId:""),
-        new( Id: "Layout", ParentId: "Diagram"),
-        new( Id: "Tree layout", ParentId: "Layout"),
-        new( Id: "Organizational chart", ParentId: "Layout"),
-        new( Id: "Hierarchical tree", ParentId: "Tree layout"),
-        new( Id: "Radial tree", ParentId: "Tree layout"),
-        new( Id: "Mind map", ParentId: "Hierarchical tree"),
-        new( Id: "Family tree", ParentId: "Hierarchical tree"),
-        new( Id: "Management", ParentId: "Organizational chart"),
-        new( Id: "Human resources", ParentId: "Management"),
-        new( Id: "University", ParentId: "Management"),
-        new( Id: "Business", ParentId: "#Management"),
-    };
 }

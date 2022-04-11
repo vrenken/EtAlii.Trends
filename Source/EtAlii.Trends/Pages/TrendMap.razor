@@ -6,27 +6,28 @@
 
 
 <SfSplitter Height="100%" Width="100%" SeparatorSize=4>
+    <SplitterEvents Resizing="@OnSplitterResized"></SplitterEvents>
     <SplitterPanes>
         <SplitterPane Size="200px" Min="20%" Max="40%">
             <ContentTemplate>
-            <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
-                <TreeViewFieldsSettings
-                    TValue="Layer"
-                    Id="Id"
-                    DataSource="@_layers"
-                    Text="Name"
-                    ParentID="ParentId"
-                    HasChildren="HasChild"
-                    Expanded="Expanded"
-                    IsChecked="IsChecked" />
-            </SfTreeView>
+                <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
+                    <TreeViewFieldsSettings
+                        TValue="Layer"
+                        Id="Id"
+                        DataSource="@_layers"
+                        Text="Name"
+                        ParentID="ParentId"
+                        HasChildren="HasChild"
+                        Expanded="Expanded"
+                        IsChecked="IsChecked"/>
+                </SfTreeView>
             </ContentTemplate>
         </SplitterPane>
         <SplitterPane Size="200px" Min="30%" Max="60%">
             <ContentTemplate>
                 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
                     <ToolbarItems>
-                        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn"  CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
+                        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
                         <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick"></ToolbarItem>
                         <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
                         <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick"></ToolbarItem>
@@ -43,19 +44,22 @@
                 </SfToolbar>
                 <SfDiagramComponent
                     @ref="@_diagram"
-                    Width="100%"
+                    Width="@_diagramWidth"
                     Height="@_diagramHeight"
                     InteractionController="@_diagramTool"
-                    ConnectorCreating="@OnConnectorCreated"
-                    NodeCreating="@OnNodeCreated">
-                    <DataSourceSettings ID="Id" ParentID="ParentId" DataSource="_dataSource"/>
-                    <Layout @bind-Type="_type"
-                            @bind-HorizontalSpacing="@_horizontalSpacing"
-                            @bind-Orientation="@_orientation"
-                            @bind-VerticalSpacing="@_verticalSpacing"
-                            @bind-HorizontalAlignment="@_horizontalAlignment"
-                            @bind-VerticalAlignment="@_verticalAlignment"
-                            GetLayoutInfo="GetLayoutInfo">
+                    ConnectorCreating="@ApplyConnectorDefaults"
+                    NodeCreating="@ApplyNodeDefaults"
+                    Nodes="@_nodes"
+                    Connectors="@_connectors"
+                    Click="@OnClicked">
+                    <Layout
+                        type="@LayoutType.None"
+                        @bind-HorizontalSpacing="@_horizontalSpacing"
+                        @bind-Orientation="@_orientation"
+                        @bind-VerticalSpacing="@_verticalSpacing"
+                        @bind-HorizontalAlignment="@_horizontalAlignment"
+                        @bind-VerticalAlignment="@_verticalAlignment"
+                        GetLayoutInfo="GetLayoutInfo">
                         <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
                     </Layout>
                 </SfDiagramComponent>
@@ -63,9 +67,3 @@
         </SplitterPane>
     </SplitterPanes>
 </SfSplitter>
-
-<style>
-    .content {
-        padding: 10px;
-    }
-</style>
