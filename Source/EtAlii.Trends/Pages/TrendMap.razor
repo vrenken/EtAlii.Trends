@@ -10,7 +10,15 @@
         <SplitterPane Size="200px" Min="20%" Max="40%">
             <ContentTemplate>
             <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
-                <TreeViewFieldsSettings TValue="Layer" Id="Id" DataSource="@_layers" Text="Name" ParentID="ParentId" HasChildren="HasChild" Expanded="Expanded" IsChecked="IsChecked"></TreeViewFieldsSettings>
+                <TreeViewFieldsSettings
+                    TValue="Layer"
+                    Id="Id"
+                    DataSource="@_layers"
+                    Text="Name"
+                    ParentID="ParentId"
+                    HasChildren="HasChild"
+                    Expanded="Expanded"
+                    IsChecked="IsChecked" />
             </SfTreeView>
             </ContentTemplate>
         </SplitterPane>

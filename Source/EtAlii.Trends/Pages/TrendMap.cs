@@ -4,6 +4,7 @@ namespace EtAlii.Trends.Pages;
 
 public partial class TrendMap
 {
+    private bool _isLoaded;
     protected override void OnInitialized()
     {
         InitializeTreeView();
@@ -12,14 +13,18 @@ public partial class TrendMap
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var windowDimensions = await JsRuntime
-            .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
-            .ConfigureAwait(false);
+        if (!_isLoaded)
+        {
+            _isLoaded = true;
+            var windowDimensions = await JsRuntime
+                .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
+                .ConfigureAwait(false);
 
-        //var toolbarHeight = _toolbar.Height;
-        _diagramHeight = $"{windowDimensions.Height - 60}px";
-        _toolbarHeight = $"{60}px";
-        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            //var toolbarHeight = _toolbar.Height;
+            _diagramHeight = $"{windowDimensions.Height - 60}px";
+            _toolbarHeight = $"{60}px";
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        }
     }
 
 
