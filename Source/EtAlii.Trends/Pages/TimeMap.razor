@@ -1,83 +1,22 @@
 ﻿@page "/"
-@using Syncfusion.Blazor.Navigations
 @using shapes = Syncfusion.Blazor.Diagram.Shapes
-    <div style="width:100%">
-        <SfToolbar>
-            <ToolbarItems>
-                <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn"  CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
-                <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick"></ToolbarItem>
-                <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-                <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick"></ToolbarItem>
-                <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" OnClick="@OnPointerClick"></ToolbarItem>
-                <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-                <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick">
-                </ToolbarItem>
-                <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick">
-                </ToolbarItem>
-                <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-                <ToolbarItem @ref="@_fitToPageItem" OnClick="@OnFitToPageClick" CssClass="@_fitCssClass"  PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page">
-                </ToolbarItem>
-            </ToolbarItems>
-        </SfToolbar>
-    </div>
-    <div id="diagram-space" class="content-wrapper" style="width:100%">
-        <SfDiagramComponent @ref="@_diagram" Width="100%" Height="900px" ConnectorCreating="@OnConnectorCreating" NodeCreating="@OnNodeCreating" InteractionController="@_diagramTool">
-            <ScrollSettings @bind-ScrollLimit="@_scrollLimit"></ScrollSettings>
-            <DataSourceSettings ID="EmployeeID" ParentID="ParentID" DataSource="_dataSource"> </DataSourceSettings>
-            <Layout @bind-Type="_type" @bind-HorizontalSpacing="@_horizontalSpacing" @bind-Orientation="@_orientationType" @bind-VerticalSpacing="@_verticalSpacing" @bind-HorizontalAlignment="@_horizontalAlignment" @bind-VerticalAlignment="@_verticalAlignment" GetLayoutInfo="GetLayoutInfo">
-                <LayoutMargin @bind-Top="@_top" @bind-Bottom="@_bottom" @bind-Right="@_right" @bind-Left="@_left"></LayoutMargin>
-            </Layout>
-            <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
-            <DiagramTemplates>
-                <NodeTemplate>
-                    @{
-                        var node1 = (Node)context;
-                        var node1Data = (HierarchicalDetails)node1.Data;
-                        var Name = node1Data.Name;
-                        var Role = node1Data.Designation;
-                        var imageUrl = node1Data.BG;
-                        if (Name == "Maria Anders")
-                        {
-                            <div class=e-orgchart-div>
-                                <div class="e-orgchart-image-div" style="padding-left:12px;padding-right:12px;padding-top:5px;padding-bottom:5px">
-                                    <div id="image" class="e-orgchart-template-image-style" style="background-image: url(@( "SampleService.WebAssetsPath" + imageUrl));">
-                                    </div>
-                                </div><span class="e-orgchart-name-div">@Name</span><span class="e-orgchart-role-div">@Role</span>
-                                <div class="e-orgchart-whole-div"></div>
-                            </div>
-                        }
-                        else if (Name == "Miguel Angel Paolino")
-                        {
-                            <div class=e-orgchart-div>
-                                <div class="e-orgchart-image-div" style="padding-left:12px;padding-right:12px;padding-top:5px;padding-bottom:5px;width:210px">
-                                    <div id="image" class="e-orgchart-template-image-style" style="background-image: url(@( "SampleService.WebAssetsPath" + imageUrl));">
-                                    </div>
-                                </div><span class="e-orgchart-name-div">@Name</span><span class="e-orgchart-role-div">@Role</span>
-                                <div class="e-orgchart-whole-div"></div>
-                            </div>
-                        }
-                        else if (Name == "Frédérique Citeaux"||Name== "Christina Berglund"||Name== "Art Braunschweiger")
-                        {
-                            <div class=e-orgchart-div>
-                                <div class="e-orgchart-image-div" style="padding-left:12px;padding-right:12px;padding-top:5px;padding-bottom:5px;width:195px">
-                                    <div id="image" class="e-orgchart-template-image-style" style="background-image: url(@( "SampleService.WebAssetsPath" + imageUrl));">
-                                    </div>
-                                </div><span class="e-orgchart-name-div">@Name</span><span class="e-orgchart-role-div">@Role</span>
-                                <div class="e-orgchart-whole-div"></div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class=e-orgchart-div>
-                                <div class="e-orgchart-image-div" style="padding-left:12px;padding-right:12px;padding-top:5px;padding-bottom:5px">
-                                    <div id="image" class="e-orgchart-template-image-style" style="background-image: url(@( "SampleService.WebAssetsPath" + imageUrl));">
-                                    </div>
-                                </div><span class="e-orgchart-name-div">@Name</span><span class="e-orgchart-role-div">@Role</span>
-                                <div class="e-orgchart-whole-div"></div>
-                            </div>
-                        }
-                    }
-                </NodeTemplate>
-            </DiagramTemplates>
-        </SfDiagramComponent>
-    </div>
+
+@inject IJSRuntime JsRuntime
+
+<SfDiagramComponent
+    @ref="@_diagram"
+    Height="@_height"
+    InteractionController="InteractionController.ZoomPan"
+    ConnectorCreating="@ConnectorDefaults"
+    NodeCreating="@NodeDefaults">
+    <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
+    <Layout @bind-Type="_type"
+            @bind-HorizontalSpacing="@_horizontalSpacing"
+            @bind-Orientation="@_orientation"
+            @bind-VerticalSpacing="@_verticalSpacing"
+            @bind-HorizontalAlignment="@_horizontalAlignment"
+            @bind-VerticalAlignment="@_verticalAlignment"
+            GetLayoutInfo="GetLayoutInfo">
+        <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
+    </Layout>
+</SfDiagramComponent>

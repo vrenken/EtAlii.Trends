@@ -2,4 +2,5 @@
 
 namespace EtAlii.Trends;
 
-public record HierarchicalDetails(string Name, string Designation, string EmployeeID, string TeamName, string TeamSize, string ParentID, string BG);
+
+public record HierarchicalDetails(string Name, string FillColor, string Category);
