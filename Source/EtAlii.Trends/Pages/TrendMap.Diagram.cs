@@ -8,31 +8,14 @@ public partial class TrendMap
 {
     private SfDiagramComponent? _diagram;
     // Specify the layout type.
-    private LayoutType _type = LayoutType.MindMap;
+    private LayoutType _type = LayoutType.HierarchicalTree;
     // Specify the orientation of the layout.
     private LayoutOrientation _orientation = LayoutOrientation.TopToBottom;
     private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Auto;
     private VerticalAlignment _verticalAlignment = VerticalAlignment.Auto;
     private int _horizontalSpacing = 30;
     private int _verticalSpacing = 30;
-    private string _height = "900px";
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        var windowDimensions = await JsRuntime
-            .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
-            .ConfigureAwait(false);
-
-        _height = $"{windowDimensions.Height}px";
-        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-    }
-
-
-    public class WindowDimension
-    {
-        public int Width { get; set; }
-        public int Height { get; set; }
-    }
+    private string _diagramHeight = "900px";
 
 
     // Defines the connector's default values.

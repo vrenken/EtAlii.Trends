@@ -16,23 +16,42 @@
         </SplitterPane>
         <SplitterPane Size="200px" Min="30%" Max="60%">
             <ContentTemplate>
-            <SfDiagramComponent
-                @ref="@_diagram"
-                Height="@_height"
-                InteractionController="InteractionController.ZoomPan"
-                ConnectorCreating="@ConnectorDefaults"
-                NodeCreating="@NodeDefaults">
-                <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
-                <Layout @bind-Type="_type"
-                        @bind-HorizontalSpacing="@_horizontalSpacing"
-                        @bind-Orientation="@_orientation"
-                        @bind-VerticalSpacing="@_verticalSpacing"
-                        @bind-HorizontalAlignment="@_horizontalAlignment"
-                        @bind-VerticalAlignment="@_verticalAlignment"
-                        GetLayoutInfo="GetLayoutInfo">
-                    <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
-                </Layout>
-            </SfDiagramComponent>            </ContentTemplate>
+                <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
+                    <ToolbarItems>
+                        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn"  CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
+                        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick"></ToolbarItem>
+                        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+                        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick"></ToolbarItem>
+                        <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" OnClick="@OnPointerClick"></ToolbarItem>
+                        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+                        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick">
+                        </ToolbarItem>
+                        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick">
+                        </ToolbarItem>
+                        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+                        <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="@OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page">
+                        </ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+                <SfDiagramComponent
+                    @ref="@_diagram"
+                    Width="100%"
+                    Height="@_diagramHeight"
+                    InteractionController="InteractionController.ZoomPan"
+                    ConnectorCreating="@ConnectorDefaults"
+                    NodeCreating="@NodeDefaults">
+                    <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
+                    <Layout @bind-Type="_type"
+                            @bind-HorizontalSpacing="@_horizontalSpacing"
+                            @bind-Orientation="@_orientation"
+                            @bind-VerticalSpacing="@_verticalSpacing"
+                            @bind-HorizontalAlignment="@_horizontalAlignment"
+                            @bind-VerticalAlignment="@_verticalAlignment"
+                            GetLayoutInfo="GetLayoutInfo">
+                        <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
+                    </Layout>
+                </SfDiagramComponent>
+            </ContentTemplate>
         </SplitterPane>
     </SplitterPanes>
 </SfSplitter>

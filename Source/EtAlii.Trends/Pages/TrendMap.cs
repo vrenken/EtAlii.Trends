@@ -8,4 +8,25 @@ public partial class TrendMap
     {
         InitializeTreeView();
     }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var windowDimensions = await JsRuntime
+            .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
+            .ConfigureAwait(false);
+
+        //var toolbarHeight = _toolbar.Height;
+        _diagramHeight = $"{windowDimensions.Height - 60}px";
+        _toolbarHeight = $"{60}px";
+        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+    }
+
+
+    public class WindowDimension
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+    }
+
 }
