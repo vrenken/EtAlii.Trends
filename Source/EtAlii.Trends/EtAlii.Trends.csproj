@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="6.0.3" />
     <PackageReference Include="Syncfusion.Blazor.Diagram" Version="20.1.0.47" />
+    <PackageReference Include="Syncfusion.Blazor.Layouts" Version="20.1.0.47" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.1.0.47" />
   </ItemGroup>
 
@@ -33,6 +34,18 @@
     <Content Update="Shared\MainLayout.razor.css">
       <DependentUpon>MainLayout.razor</DependentUpon>
     </Content>
+
+    <Compile Update="Pages\TrendMap.cs">
+      <DependentUpon>TimeMap.razor</DependentUpon>
+    </Compile>
+
+    <Compile Update="Pages\TrendMap.Diagram.cs">
+      <DependentUpon>TimeMap.razor</DependentUpon>
+    </Compile>
+
+    <Compile Update="Pages\TrendMap.TreeView.cs">
+      <DependentUpon>TimeMap.razor</DependentUpon>
+    </Compile>
 
   </ItemGroup>
 

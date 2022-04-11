@@ -1,0 +1,44 @@
+﻿@page "/"
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Layouts
+
+@inject IJSRuntime JsRuntime
+
+
+<SfSplitter Height="100%" Width="100%" SeparatorSize=4>
+    <SplitterPanes>
+        <SplitterPane Size="200px" Min="20%" Max="40%">
+            <ContentTemplate>
+            <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
+                <TreeViewFieldsSettings TValue="Layer" Id="Id" DataSource="@_layers" Text="Name" ParentID="ParentId" HasChildren="HasChild" Expanded="Expanded" IsChecked="IsChecked"></TreeViewFieldsSettings>
+            </SfTreeView>
+            </ContentTemplate>
+        </SplitterPane>
+        <SplitterPane Size="200px" Min="30%" Max="60%">
+            <ContentTemplate>
+            <SfDiagramComponent
+                @ref="@_diagram"
+                Height="@_height"
+                InteractionController="InteractionController.ZoomPan"
+                ConnectorCreating="@ConnectorDefaults"
+                NodeCreating="@NodeDefaults">
+                <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
+                <Layout @bind-Type="_type"
+                        @bind-HorizontalSpacing="@_horizontalSpacing"
+                        @bind-Orientation="@_orientation"
+                        @bind-VerticalSpacing="@_verticalSpacing"
+                        @bind-HorizontalAlignment="@_horizontalAlignment"
+                        @bind-VerticalAlignment="@_verticalAlignment"
+                        GetLayoutInfo="GetLayoutInfo">
+                    <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
+                </Layout>
+            </SfDiagramComponent>            </ContentTemplate>
+        </SplitterPane>
+    </SplitterPanes>
+</SfSplitter>
+
+<style>
+    .content {
+        padding: 10px;
+    }
+</style>

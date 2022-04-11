@@ -4,7 +4,7 @@ namespace EtAlii.Trends.Pages;
 
 using Syncfusion.Blazor.Diagram;
 
-public partial class TimeMap
+public partial class TrendMap
 {
     private SfDiagramComponent? _diagram;
     // Specify the layout type.
@@ -18,8 +18,6 @@ public partial class TimeMap
     private string _height = "900px";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
-
-    //protected override async Task OnInitializedAsync()
     {
         var windowDimensions = await JsRuntime
             .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
