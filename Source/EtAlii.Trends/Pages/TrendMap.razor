@@ -46,9 +46,9 @@
                     Width="100%"
                     Height="@_diagramHeight"
                     InteractionController="@_diagramTool"
-                    ConnectorCreating="@ConnectorDefaults"
-                    NodeCreating="@NodeDefaults">
-                    <DataSourceSettings ID="Name" ParentID="Category" DataSource="_dataSource"/>
+                    ConnectorCreating="@OnConnectorCreated"
+                    NodeCreating="@OnNodeCreated">
+                    <DataSourceSettings ID="Id" ParentID="ParentId" DataSource="_dataSource"/>
                     <Layout @bind-Type="_type"
                             @bind-HorizontalSpacing="@_horizontalSpacing"
                             @bind-Orientation="@_orientation"

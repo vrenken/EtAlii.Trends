@@ -2,4 +2,4 @@
 
 namespace EtAlii.Trends;
 
-public record Trend(string Id, string ParentId, string Name, DateTime Begin, DateTime End);
+public record Trend(string Id, string ParentId);//, string Name, DateTime Begin, DateTime End);

@@ -19,7 +19,7 @@ public partial class TrendMap
 
 
     // Defines the connector's default values.
-    private void ConnectorDefaults(IDiagramObject diagramObject)
+    private void OnConnectorCreated(IDiagramObject diagramObject)
     {
         var connector = (Connector)diagramObject;
         connector.Type = ConnectorSegmentType.Orthogonal;
@@ -40,14 +40,14 @@ public partial class TrendMap
     }
 
     // Defines the node's default values.
-    private void NodeDefaults(IDiagramObject obj)
+    private void OnNodeCreated(IDiagramObject diagramObject)
     {
-        var node = (Node)obj;
+        var node = (Node)diagramObject;
         if (node.Data is System.Text.Json.JsonElement)
         {
-            node.Data = System.Text.Json.JsonSerializer.Deserialize<HierarchicalDetails>(node.Data.ToString()!);
+            node.Data = System.Text.Json.JsonSerializer.Deserialize<Trend>(node.Data.ToString()!);
         }
-        var hierarchicalData = (HierarchicalDetails)node.Data!;
+        var trend = (Trend)node.Data!;
         node.Style = new ShapeStyle { Fill = "#659be5", StrokeColor = "none", StrokeWidth = 2, };
         node.BackgroundColor = "#659be5";
         node.Width = 150;
@@ -56,26 +56,26 @@ public partial class TrendMap
         {
             new ShapeAnnotation
             {
-                Content = hierarchicalData.Name,
+                Content = trend.Id,
                 Style =new TextStyle {Color = "white"}
             }
         };
     }
 
     // Create the data source with node name and fill color values.
-    private readonly List<HierarchicalDetails> _dataSource = new()
+    private readonly List<Trend> _dataSource = new()
     {
-        new( Name :"Diagram", Category:"",FillColor:"#659be5"),
-        new( Name :"Layout", Category:"Diagram",FillColor:"#659be5"),
-        new( Name :"Tree layout", Category:"Layout",FillColor:"#659be5"),
-        new( Name :"Organizational chart", Category:"Layout",FillColor:"#659be5"),
-        new( Name :"Hierarchical tree", Category:"Tree layout",FillColor:"#659be5"),
-        new( Name :"Radial tree", Category:"Tree layout",FillColor:"#659be5"),
-        new( Name :"Mind map", Category:"Hierarchical tree",FillColor:"#659be5"),
-        new( Name :"Family tree", Category:"Hierarchical tree",FillColor:"#659be5"),
-        new( Name :"Management", Category:"Organizational chart",FillColor:"#659be5"),
-        new( Name :"Human resources", Category:"Management",FillColor:"#659be5"),
-        new( Name :"University", Category:"Management",FillColor:"#659be5"),
-        new( Name :"Business", Category:"#Management",FillColor:"#659be5")
+        new( Id: "Diagram", ParentId:""),
+        new( Id: "Layout", ParentId: "Diagram"),
+        new( Id: "Tree layout", ParentId: "Layout"),
+        new( Id: "Organizational chart", ParentId: "Layout"),
+        new( Id: "Hierarchical tree", ParentId: "Tree layout"),
+        new( Id: "Radial tree", ParentId: "Tree layout"),
+        new( Id: "Mind map", ParentId: "Hierarchical tree"),
+        new( Id: "Family tree", ParentId: "Hierarchical tree"),
+        new( Id: "Management", ParentId: "Organizational chart"),
+        new( Id: "Human resources", ParentId: "Management"),
+        new( Id: "University", ParentId: "Management"),
+        new( Id: "Business", ParentId: "#Management"),
     };
 }
