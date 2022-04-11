@@ -47,6 +47,10 @@
       <DependentUpon>TimeMap.razor</DependentUpon>
     </Compile>
 
+    <Compile Update="Shared\NavMenu.cs">
+      <DependentUpon>NavMenu.razor</DependentUpon>
+    </Compile>
+
   </ItemGroup>
 
 </Project>
