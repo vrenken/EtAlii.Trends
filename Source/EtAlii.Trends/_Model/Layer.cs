@@ -6,7 +6,7 @@ public class Layer
 {
     public int Id { get; set; }
     public int? ParentId { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public bool Expanded { get; set; }
     public bool? IsChecked { get; set; }
     public bool HasChild { get; set; }

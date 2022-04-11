@@ -2,13 +2,18 @@
 
 namespace EtAlii.Trends;
 
-public record Trend(string Id)
+public record Trend(Guid Id)
 {
-    public string Name;
+    public string Name = string.Empty;
     public DateTime Begin;
     public DateTime End;
     public double X;
     public double Y;
 
+    public Component[] Components = Array.Empty<Component>();
+
     public Layer Layer;
-};
+    public bool IsExpanded;
+
+    public Diagram Diagram;
+}

@@ -42,14 +42,14 @@ public partial class TrendMap
             Data = trend,
             Height = 100,
             Width = 100,
-            ID = trend.Id,
+            ID = trend.Id.ToString(),
             OffsetX = trend.X,
             OffsetY = trend.Y,
             Annotations = new DiagramObjectCollection<ShapeAnnotation>
             {
                 new()
                 {
-                    Content = trend.Id,
+                    Content = trend.Name,
                 }
             }
         };
@@ -66,10 +66,15 @@ public partial class TrendMap
 
     private void AddNewTrend(DiagramPoint position)
     {
-        AddTrend(new Trend(Guid.NewGuid().ToString())
+        AddTrend(new Trend(Guid.NewGuid())
         {
+            Name = $"New trend {_nodes.Count + 1}",
             X = position.X,
             Y = position.Y,
+            Components = new[]
+            {
+                new Component(Guid.NewGuid())
+            }
         });
     }
 }

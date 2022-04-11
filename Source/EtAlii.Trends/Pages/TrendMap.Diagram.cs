@@ -51,12 +51,31 @@ public partial class TrendMap
         }
 
         var trend = (Trend)node.Data!;
-        node.Style = new ShapeStyle { Fill = "#659be5", StrokeColor = "none", StrokeWidth = 2, };
-        node.BackgroundColor = "#659be5";
+        node.Style = new ShapeStyle { Fill = "white", StrokeColor = "black", StrokeWidth = 2, };
+        node.BackgroundColor = "white";
         node.Width = 150;
         node.Height = 50;
         node.OffsetX = trend.X;
         node.OffsetY = trend.Y;
-        node.Annotations = new DiagramObjectCollection<ShapeAnnotation> { new ShapeAnnotation { Content = trend.Id, Style = new TextStyle { Color = "white" } } };
+        node.Annotations = new DiagramObjectCollection<ShapeAnnotation>
+        {
+            new()
+            {
+                Content = trend.Name,
+                Style = new TextStyle
+                {
+                    Color = "black"
+                }
+            }
+        };
+        node.Constraints = NodeConstraints.Default & ~NodeConstraints.Rotate;
+    }
+
+    private void OnNodeTextChanged(TextChangeEventArgs e)
+    {
+        if (e.Element is Node { Data: Trend trend })
+        {
+            trend.Name = e.NewValue;
+        }
     }
 }
