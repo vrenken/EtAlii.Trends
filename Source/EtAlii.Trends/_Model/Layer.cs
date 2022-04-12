@@ -2,12 +2,13 @@
 
 namespace EtAlii.Trends;
 
-public class Layer
+public class Layer : Entity
 {
-    public int Id { get; set; }
-    public int? ParentId { get; set; }
+    public Guid ParentId { get; set; }
     public string Name { get; set; } = string.Empty;
     public bool Expanded { get; set; }
     public bool? IsChecked { get; set; }
     public bool HasChild { get; set; }
+
+    public Diagram Diagram { get; init; }
 }

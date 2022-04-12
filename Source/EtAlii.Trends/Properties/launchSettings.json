@@ -14,14 +14,8 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7125;http://localhost:5125",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+          "SERILOG_SERVER_URL": "http://seq.avalon:5341"
       }
     }
   }

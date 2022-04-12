@@ -66,8 +66,9 @@ public partial class TrendMap
 
     private void AddNewTrend(DiagramPoint position)
     {
-        AddTrend(new Trend(Guid.NewGuid())
+        AddTrend(new Trend
         {
+            Id = Guid.NewGuid(),
             Name = $"New trend {_nodes.Count + 1}",
             X = position.X,
             Y = position.Y,

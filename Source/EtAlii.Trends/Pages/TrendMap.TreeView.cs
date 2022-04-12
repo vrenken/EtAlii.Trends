@@ -10,31 +10,31 @@ public partial class TrendMap
     {
         _layers.Add(new Layer
         {
-            Id = 1,
+            Id = Guid.NewGuid(),
             Name = "Discover Music",
             HasChild = true,
         });
         _layers.Add(new Layer
         {
-            Id = 2,
-            ParentId = 1,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[0].Id,
             Name = "Hot Singles"
         });
         _layers.Add(new Layer
         {
-            Id = 3,
-            ParentId = 1,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[0].Id,
             Name = "Rising Artists"
         });
         _layers.Add(new Layer
         {
-            Id = 4,
-            ParentId = 1,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[0].Id,
             Name = "Live Music"
         });
         _layers.Add(new Layer
         {
-            Id = 14,
+            Id = Guid.NewGuid(),
             HasChild = true,
             Name = "MP3 Albums",
             Expanded = true,
@@ -42,26 +42,26 @@ public partial class TrendMap
         });
         _layers.Add(new Layer
         {
-            Id = 15,
-            ParentId = 14,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[3].Id,
             Name = "Rock"
         });
         _layers.Add(new Layer
         {
-            Id = 16,
+            Id = Guid.NewGuid(),
             Name = "Gospel",
-            ParentId = 14,
+            ParentId = _layers[3].Id,
         });
         _layers.Add(new Layer
         {
-            Id = 17,
-            ParentId = 14,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[3].Id,
             Name = "Latin Music"
         });
         _layers.Add(new Layer
         {
-            Id = 18,
-            ParentId = 14,
+            Id = Guid.NewGuid(),
+            ParentId = _layers[3].Id,
             Name = "Jazz"
         });
     }
