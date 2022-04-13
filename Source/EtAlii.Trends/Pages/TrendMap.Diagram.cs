@@ -80,4 +80,20 @@ public partial class TrendMap
             trend.Name = e.NewValue;
         }
     }
+
+    private async Task OnNodePositionChanged(PositionChangedEventArgs e)
+    {
+        var settings = (DiagramSelectionSettings)e.Element;
+        foreach (var node in settings.Nodes)
+        {
+            var trend = (Trend)node.Data;
+
+            trend.X = node.OffsetX;
+            trend.Y = node.OffsetY;
+
+            await _commandDispatcher
+                .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
+                .ConfigureAwait(false);
+        }
+    }
 }

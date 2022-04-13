@@ -66,7 +66,7 @@ public partial class TrendMap
 
     private async Task AddNewTrend(DiagramPoint position)
     {
-        var command = new AddTrendsCommand
+        var command = new AddTrendCommand
         (
             Trend: diagram => new Trend
             {

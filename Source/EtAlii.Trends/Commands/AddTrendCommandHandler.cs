@@ -5,13 +5,13 @@ namespace EtAlii.Trends;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-public record AddTrendsCommand(Func<Diagram, Trend> Trend, Guid DiagramId) : AsyncCommandWithResult<IAddTrendsCommandHandler>;
+public record AddTrendCommand(Func<Diagram, Trend> Trend, Guid DiagramId) : AsyncCommandWithResult<IAddTrendCommandHandler>;
 
-public interface IAddTrendsCommandHandler : IAsyncCommandHandlerWithResult<AddTrendsCommand, Trend> {}
+public interface IAddTrendCommandHandler : IAsyncCommandHandlerWithResult<AddTrendCommand, Trend> {}
 
-public class AddTrendsCommandHandler : IAddTrendsCommandHandler
+public class AddTrendCommandHandler : IAddTrendCommandHandler
 {
-    public async Task<Trend> Handle(AddTrendsCommand command)
+    public async Task<Trend> Handle(AddTrendCommand command)
     {
         // ReSharper disable once UseAwaitUsing
         using var data = new DataContext();
