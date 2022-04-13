@@ -11,6 +11,15 @@ builder.WebHost.ConfigureAppConfiguration(configuration => configuration.ExpandE
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
+
+builder.Services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
+builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
+builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();
+builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
+builder.Services.AddSingleton<IGetAllLayersQueryHandler, GetAllLayersQueryHandler>();
+builder.Services.AddSingleton<IGetAllTrendsQueryHandler, GetAllTrendsQueryHandler>();
+
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
 var systemContext = new ApplicationContext();
