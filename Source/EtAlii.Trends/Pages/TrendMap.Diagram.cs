@@ -73,11 +73,23 @@ public partial class TrendMap
         node.Constraints = NodeConstraints.Default & ~NodeConstraints.Rotate;
     }
 
-    private void OnNodeTextChanged(TextChangeEventArgs e)
+    private async Task OnNodeTextChanged(TextChangeEventArgs e)
     {
+
         if (e.Element is Node { Data: Trend trend })
         {
-            trend.Name = e.NewValue;
+            if (!string.IsNullOrWhiteSpace(e.NewValue))
+            {
+                trend.Name = e.NewValue;
+
+                await _commandDispatcher
+                    .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
     }
 
