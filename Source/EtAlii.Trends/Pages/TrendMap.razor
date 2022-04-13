@@ -4,6 +4,8 @@
 
 @inject IJSRuntime JsRuntime
 
+@inject IQueryDispatcher _queryDispatcher;
+@inject ICommandDispatcher _commandDispatcher;
 
 <SfSplitter Height="100%" Width="100%" SeparatorSize=4>
     <SplitterEvents Resizing="@OnSplitterResized"></SplitterEvents>

@@ -6,46 +6,21 @@ namespace EtAlii.Trends
     /// use this base class to define non-async commands that do not return a result.
     /// </summary>
     /// <typeparam name="THandler"></typeparam>
-    public abstract class Command<THandler> : Command
-        where THandler : ICommandHandler
-    {
-        protected Command() : base(typeof(THandler))
-        {
-        }
-    }
+    public abstract record Command<THandler>() : Command(typeof(THandler)) where THandler : ICommandHandler;
 
     /// <summary>
     /// use this base class to define non-async commands that do return a result.
     /// </summary>
     /// <typeparam name="THandler"></typeparam>
-    public abstract class CommandWithResult<THandler> : CommandWithResult
-        where THandler : ICommandHandlerWithResult
-    {
-        protected CommandWithResult() : base(typeof(THandler))
-        {
-        }
-    }
+    public abstract record CommandWithResult<THandler>() : CommandWithResult(typeof(THandler)) where THandler : ICommandHandlerWithResult;
 
     /// <summary>
     /// Do not use this base class - it should only be used by the dispatcher itself.
     /// </summary>
-    public abstract class CommandWithResult : Command
-    {
-        protected CommandWithResult(Type handlerType) : base(handlerType)
-        {
-        }
-    }
+    public abstract record CommandWithResult(Type HandlerType) : Command(HandlerType);
 
     /// <summary>
     /// Do not use this base class - it should only be used by the dispatcher itself.
     /// </summary>
-    public abstract class Command
-    {
-        public Type HandlerType { get; }
-
-        protected Command(Type handlerType)
-        {
-            HandlerType = handlerType;
-        }
-    }
+    public abstract record Command(Type HandlerType);
 }

@@ -2,22 +2,6 @@
 
 namespace EtAlii.Trends.Pages;
 
-using Microsoft.EntityFrameworkCore;
-
 public partial class TrendMap
 {
-    private readonly List<Layer> _layers = new();
-
-    private async Task InitializeTreeView(DataContext dataContext)
-    {
-        var layers = dataContext.Layers
-            .Where(l => l.Diagram == _diagram)
-            .AsAsyncEnumerable()
-            .ConfigureAwait(false);
-
-        await foreach (var layer in layers)
-        {
-            _layers.Add(layer);
-        }
-    }
 }

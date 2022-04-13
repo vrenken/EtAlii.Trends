@@ -5,6 +5,6 @@ namespace EtAlii.Trends;
 public class DiagramEntity : Entity
 {
 #pragma warning disable CS8618
-    public Diagram Diagram { get; init; }
+    public Diagram Diagram { get; set; }
 #pragma warning restore CS8618
 }

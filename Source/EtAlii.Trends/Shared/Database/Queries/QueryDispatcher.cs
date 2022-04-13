@@ -16,9 +16,19 @@ public class QueryDispatcher : IQueryDispatcher
     private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
 
     private readonly ILogger _log = Log.ForContext<QueryDispatcher>();
-    public QueryDispatcher(IServiceProvider serviceProvider) // Func<Type, object> queryHandlerResolver
+    public QueryDispatcher(IServiceProvider serviceProvider)
     {
-        _queryHandlerResolver = type => serviceProvider.GetService(type)!; // queryHandlerResolver;
+        _queryHandlerResolver = type =>
+        {
+            var handler = serviceProvider.GetService(type);
+            if (handler == null)
+            {
+                _log.Fatal("Unable to find query handler for {HandlerType}", type.Name);
+            }
+
+            return handler!;
+        };
+
     }
 
     /// <inheritdoc />

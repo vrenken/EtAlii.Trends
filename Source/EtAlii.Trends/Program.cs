@@ -19,6 +19,7 @@ builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>()
 builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
 builder.Services.AddSingleton<IGetAllLayersQueryHandler, GetAllLayersQueryHandler>();
 builder.Services.AddSingleton<IGetAllTrendsQueryHandler, GetAllTrendsQueryHandler>();
+builder.Services.AddSingleton<IAddTrendsCommandHandler, AddTrendsCommandHandler>();
 
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();

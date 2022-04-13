@@ -66,26 +66,22 @@ public partial class TrendMap
 
     private async Task AddNewTrend(DiagramPoint position)
     {
-        // ReSharper disable once UseAwaitUsing
-        using var data = new DataContext();
-
-        await using (data.ConfigureAwait(false))
-        {
-            var trend = new Trend
+        var command = new AddTrendsCommand
+        (
+            Trend: diagram => new Trend
             {
                 Name = $"New trend {_nodes.Count + 1}",
-                X = position.X,
-                Y = position.Y,
+                X = position.X, Y = position.Y,
+                Diagram = diagram,
                 Components = new[] { new Component(Guid.NewGuid()) },
-                Diagram = _diagram,
-            };
+            },
+            DiagramId: _diagramId
+        );
 
-            data.Trends.Add(trend);
-            await data
-                .SaveChangesAsync()
-                .ConfigureAwait(false);
+        var trend = await _commandDispatcher
+            .DispatchAsync<Trend>(command)
+            .ConfigureAwait(false);
 
-            AddTrend(trend);
-        }
+        AddTrend(trend);
     }
 }

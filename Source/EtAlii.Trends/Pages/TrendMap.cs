@@ -3,7 +3,6 @@
 namespace EtAlii.Trends.Pages;
 
 using System.Collections.ObjectModel;
-using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
@@ -13,34 +12,28 @@ public partial class TrendMap
 
     private readonly ObservableCollection<Trend> _trends = new();
 
-#pragma warning disable CS8618
-    private Diagram _diagram;
-#pragma warning restore CS8618
+    private Guid _diagramId;
 
     protected override async Task OnInitializedAsync()
     {
-        // ReSharper disable once UseAwaitUsing
-        using var data = new DataContext();
+        var user = await _queryDispatcher.DispatchAsync<User>(new GetUserQuery(Guid.Empty)).ConfigureAwait(false);
+        // var diagrams = _queryDispatcher
+        //     .DispatchAsync<Diagram>(new GetAllDiagramsForUserQuery(user.Id))
+        //     .ConfigureAwait(false);
+        var diagram = await _queryDispatcher.DispatchAsync<Diagram>(new GetDiagramQuery(Guid.Empty)).ConfigureAwait(false);
 
-        await using (data.ConfigureAwait(false))
+        _diagramId = diagram.Id;
+
+        await InitializeLayers().ConfigureAwait(false);
+
+        _trends.CollectionChanged += OnTrendsChanged;
+
+        var trends = _queryDispatcher
+            .DispatchAsync<Trend>(new GetAllTrendsQuery(_diagramId))
+            .ConfigureAwait(false);
+        await foreach (var trend in trends)
         {
-            _diagram = await data.Diagrams
-                .FirstAsync()
-                .ConfigureAwait(false);
-
-            await InitializeTreeView(data).ConfigureAwait(false);
-
-            _trends.CollectionChanged += OnTrendsChanged;
-
-            var trends = data.Trends
-                .Where(t => t.Diagram == _diagram)
-                .AsAsyncEnumerable()
-                .ConfigureAwait(false);
-
-            await foreach (var trend in trends)
-            {
-                _trends.Add(trend);
-            }
+            _trends.Add(trend);
         }
     }
 

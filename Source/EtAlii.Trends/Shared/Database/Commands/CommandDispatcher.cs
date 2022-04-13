@@ -15,9 +15,18 @@ namespace EtAlii.Trends
 
         private readonly ILogger _log = Log.ForContext<CommandDispatcher>();
 
-        public CommandDispatcher(IServiceProvider serviceProvider) // Func<Type, object> commandHandlerResolver
+        public CommandDispatcher(IServiceProvider serviceProvider)
         {
-            _commandHandlerResolver = type => serviceProvider.GetService(type)!; // commandHandlerResolver;
+            _commandHandlerResolver = type =>
+            {
+                var handler = serviceProvider.GetService(type);
+                if (handler == null)
+                {
+                    _log.Fatal("Unable to find command handler for {HandlerType}", type.Name);
+                }
+
+                return handler!;
+            };
         }
 
         /// <inheritdoc />
