@@ -10,6 +10,7 @@ public class DataContext : DbContext
     public DbSet<Trend> Trends { get; init; }
     public DbSet<User> Users { get; init; }
     public DbSet<Diagram> Diagrams { get; init; }
+    public DbSet<Layer> Layers { get; init; }
 #pragma warning restore CS8618
 
     private readonly ILogger _logger = Log.ForContext<DataContext>();

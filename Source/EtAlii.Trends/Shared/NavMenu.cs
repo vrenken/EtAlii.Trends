@@ -1,6 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Shared;
+namespace EtAlii.Trends;
 
 public partial class NavMenu
 {
@@ -12,6 +12,4 @@ public partial class NavMenu
     {
         _collapseNavMenu = !_collapseNavMenu;
     }
-
-
 }

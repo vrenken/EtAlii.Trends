@@ -6,6 +6,7 @@ public class Entity
     /// This is the identifier that we use to identify each Entity in the EF Core
     /// code/datastore with.
     /// </summary>
-    public Guid Id { get; init; }
-    //public Guid Id { get; protected set; } // TODO: Revert to protected Id.
+#pragma warning disable CS8618
+    public Guid Id { get; protected set; }
+#pragma warning restore CS8618
 }

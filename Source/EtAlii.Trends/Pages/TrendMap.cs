@@ -3,6 +3,7 @@
 namespace EtAlii.Trends.Pages;
 
 using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
@@ -12,10 +13,35 @@ public partial class TrendMap
 
     private readonly ObservableCollection<Trend> _trends = new();
 
-    protected override void OnInitialized()
+#pragma warning disable CS8618
+    private Diagram _diagram;
+#pragma warning restore CS8618
+
+    protected override async Task OnInitializedAsync()
     {
-        InitializeTreeView();
-        _trends.CollectionChanged += OnTrendsChanged;
+        // ReSharper disable once UseAwaitUsing
+        using var data = new DataContext();
+
+        await using (data.ConfigureAwait(false))
+        {
+            _diagram = await data.Diagrams
+                .FirstAsync()
+                .ConfigureAwait(false);
+
+            await InitializeTreeView(data).ConfigureAwait(false);
+
+            _trends.CollectionChanged += OnTrendsChanged;
+
+            var trends = data.Trends
+                .Where(t => t.Diagram == _diagram)
+                .AsAsyncEnumerable()
+                .ConfigureAwait(false);
+
+            await foreach (var trend in trends)
+            {
+                _trends.Add(trend);
+            }
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,11 +66,11 @@ public partial class TrendMap
         public int Height { get; set; }
     }
 
-    private void OnClicked(ClickEventArgs e)
+    private async Task OnClicked(ClickEventArgs e)
     {
         if (e.Count == 2 && e.ActualObject == null)
         {
-            AddNewTrend(e.Position);
+            await AddNewTrend(e.Position).ConfigureAwait(false);
         }
     }
 

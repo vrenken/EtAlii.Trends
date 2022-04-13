@@ -8,7 +8,7 @@
 <SfSplitter Height="100%" Width="100%" SeparatorSize=4>
     <SplitterEvents Resizing="@OnSplitterResized"></SplitterEvents>
     <SplitterPanes>
-        <SplitterPane Size="200px" Min="20%" Max="40%">
+        <SplitterPane Size="300px" Min="20%" Max="40%">
             <ContentTemplate>
                 <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
                     <TreeViewFieldsSettings
@@ -43,7 +43,7 @@
                     </ToolbarItems>
                 </SfToolbar>
                 <SfDiagramComponent
-                    @ref="@_diagram"
+                    @ref="@_diagramComponent"
                     Width="@_diagramWidth"
                     Height="@_diagramHeight"
                     InteractionController="@_diagramTool"

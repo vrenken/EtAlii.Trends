@@ -6,7 +6,9 @@ using Syncfusion.Blazor.Diagram;
 
 public partial class TrendMap
 {
-    private SfDiagramComponent? _diagram;
+#pragma warning disable CS8618
+    private SfDiagramComponent _diagramComponent;
+#pragma warning restore CS8618
 
     // Specify the orientation of the layout.
     private LayoutOrientation _orientation = LayoutOrientation.TopToBottom;

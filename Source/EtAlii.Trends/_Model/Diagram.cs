@@ -10,6 +10,8 @@ public class Diagram : Entity
     public IList<Trend> Trends { get; private set; } = new List<Trend>();
     public IList<Layer> Layers { get; private set; } = new List<Layer>();
 
+#pragma warning disable CS8618
     public User User { get; init; }
+#pragma warning restore CS8618
 
 }

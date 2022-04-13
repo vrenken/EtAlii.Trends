@@ -50,7 +50,7 @@ public partial class TrendMap
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _diagram!.Zoom(1.2, new DiagramPoint() { X = 100, Y = 100 });
+        _diagramComponent.Zoom(1.2, new DiagramPoint { X = 100, Y = 100 });
     }
     private void OnZoomOutItemClick()
     {
@@ -69,7 +69,7 @@ public partial class TrendMap
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _diagram!.Zoom(1 / 1.2, new DiagramPoint() { X = 100, Y = 100 });
+        _diagramComponent.Zoom(1 / 1.2, new DiagramPoint { X = 100, Y = 100 });
     }
      private void OnPanClick()
     {
@@ -102,7 +102,7 @@ public partial class TrendMap
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-middle tb-item-selected";
-        _diagram!.FitToPage();
+        _diagramComponent.FitToPage();
     }
     private void OnBringIntoViewClick()
     {
@@ -115,11 +115,11 @@ public partial class TrendMap
         _pointerItemCssClass = _diagramTool == InteractionController.Default
             ? "tb-item-middle tb-item-selected"
             : "tb-item-start";
-        if (_diagram!.SelectionSettings.Nodes.Count > 0)
+        if (_diagramComponent.SelectionSettings.Nodes.Count > 0)
         {
-            var node = _diagram.SelectionSettings.Nodes[0];
+            var node = _diagramComponent.SelectionSettings.Nodes[0];
             var bound = new DiagramRect((node.OffsetX - (node.Width / 2)), node.OffsetY - (node.Height / 2), node.Width, node.Height);
-            _diagram.BringIntoView(bound);
+            _diagramComponent.BringIntoView(bound);
         }
     }
     private void OnBringIntoCenterClick()
@@ -133,11 +133,11 @@ public partial class TrendMap
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-middle tb-item-selected";
         _fitCssClass = "tb-item-start";
-        if (_diagram!.SelectionSettings.Nodes.Count > 0)
+        if (_diagramComponent.SelectionSettings.Nodes.Count > 0)
         {
-            var node = _diagram.SelectionSettings.Nodes[0];
+            var node = _diagramComponent.SelectionSettings.Nodes[0];
             var bound = new DiagramRect((node.OffsetX - (node.Width / 2)), node.OffsetY - (node.Height / 2), node.Width, node.Height);
-            _diagram.BringIntoCenter(bound);
+            _diagramComponent.BringIntoCenter(bound);
         }
     }
     private void OnPointerClick()

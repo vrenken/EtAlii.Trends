@@ -54,15 +54,15 @@
     </Content>
 
     <Compile Update="Pages\TrendMap.cs">
-      <DependentUpon>TimeMap.razor</DependentUpon>
+      <DependentUpon>TrendMap.razor</DependentUpon>
     </Compile>
 
     <Compile Update="Pages\TrendMap.Diagram.cs">
-      <DependentUpon>TimeMap.razor</DependentUpon>
+      <DependentUpon>TrendMap.razor</DependentUpon>
     </Compile>
 
     <Compile Update="Pages\TrendMap.TreeView.cs">
-      <DependentUpon>TimeMap.razor</DependentUpon>
+      <DependentUpon>TrendMap.razor</DependentUpon>
     </Compile>
 
     <Compile Update="Shared\NavMenu.cs">
@@ -72,6 +72,14 @@
     <Content Update="appsettings.Development.json">
       <DependentUpon>appsettings.json</DependentUpon>
     </Content>
+
+    <Compile Update="Pages\TrendMap.Toolbar.cs">
+      <DependentUpon>TrendMap.razor</DependentUpon>
+    </Compile>
+
+    <Compile Update="Pages\TrendMap.Trends.cs">
+      <DependentUpon>TrendMap.razor</DependentUpon>
+    </Compile>
 
   </ItemGroup>
 

@@ -2,67 +2,22 @@
 
 namespace EtAlii.Trends.Pages;
 
+using Microsoft.EntityFrameworkCore;
+
 public partial class TrendMap
 {
     private readonly List<Layer> _layers = new();
 
-    private void InitializeTreeView()
+    private async Task InitializeTreeView(DataContext dataContext)
     {
-        _layers.Add(new Layer
+        var layers = dataContext.Layers
+            .Where(l => l.Diagram == _diagram)
+            .AsAsyncEnumerable()
+            .ConfigureAwait(false);
+
+        await foreach (var layer in layers)
         {
-            Id = Guid.NewGuid(),
-            Name = "Discover Music",
-            HasChild = true,
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[0].Id,
-            Name = "Hot Singles"
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[0].Id,
-            Name = "Rising Artists"
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[0].Id,
-            Name = "Live Music"
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            HasChild = true,
-            Name = "MP3 Albums",
-            Expanded = true,
-            IsChecked = true
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[3].Id,
-            Name = "Rock"
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            Name = "Gospel",
-            ParentId = _layers[3].Id,
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[3].Id,
-            Name = "Latin Music"
-        });
-        _layers.Add(new Layer
-        {
-            Id = Guid.NewGuid(),
-            ParentId = _layers[3].Id,
-            Name = "Jazz"
-        });
+            _layers.Add(layer);
+        }
     }
 }
