@@ -2,7 +2,7 @@
 
 namespace EtAlii.Trends;
 
-public class Trend : Entity
+public class Trend : DiagramEntity
 {
     public string Name { get; set; } = string.Empty;
     public DateTime Begin { get; set; }
@@ -14,6 +14,4 @@ public class Trend : Entity
 
     public Layer? Layer { get; set; }
     public bool IsExpanded { get; set; }
-
-    public Diagram? Diagram { get; set; }
 }
