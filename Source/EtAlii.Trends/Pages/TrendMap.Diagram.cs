@@ -21,7 +21,6 @@ public partial class TrendMap
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
 
-
     // Defines the connector's default values.
     private void ApplyConnectorDefaults(IDiagramObject diagramObject)
     {
@@ -75,7 +74,6 @@ public partial class TrendMap
 
     private async Task OnNodeTextChanged(TextChangeEventArgs e)
     {
-
         if (e.Element is Node { Data: Trend trend })
         {
             if (!string.IsNullOrWhiteSpace(e.NewValue))
