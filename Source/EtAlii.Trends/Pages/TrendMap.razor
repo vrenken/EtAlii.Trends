@@ -12,7 +12,13 @@
     <SplitterPanes>
         <SplitterPane Size="300px" Min="20%" Max="40%">
             <ContentTemplate>
-                <SfTreeView TValue="Layer" ShowCheckBox="true" AutoCheck="true">
+                <SfTreeView
+                    TValue="Layer"
+                    ShowCheckBox="true"
+                    AutoCheck="true"
+                    AllowEditing="true"
+                    CheckedNodesChanged="@OnCheckedNodeChanged"
+                    ExpandedNodesChanged="@OnExpandedNodesChanged">
                     <TreeViewFieldsSettings
                         TValue="Layer"
                         Id="Id"

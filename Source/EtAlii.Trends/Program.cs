@@ -23,6 +23,8 @@ builder.Services.AddSingleton<IAddTrendCommandHandler, AddTrendCommandHandler>()
 builder.Services.AddSingleton<IUpdateTrendCommandHandler, UpdateTrendCommandHandler>();
 
 
+builder.Services.AddSingleton<IUpdateLayerCommandHandler, UpdateLayerCommandHandler>();
+
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
 var systemContext = new ApplicationContext();
