@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Layouts
 
@@ -28,6 +29,7 @@
                         HasChildren="HasChild"
                         Expanded="Expanded"
                         IsChecked="IsChecked"/>
+                     <TreeViewEvents TValue="Layer" NodeEdited="@OnNodeEdited"></TreeViewEvents>
                 </SfTreeView>
             </ContentTemplate>
         </SplitterPane>
