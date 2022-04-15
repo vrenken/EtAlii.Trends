@@ -87,6 +87,10 @@
 
     <Compile Remove="Managers\LayerManager.cs" />
 
+    <Compile Update="Pages\TrendMap.TreeView.ContextMenu.cs">
+      <DependentUpon>TrendMap.razor</DependentUpon>
+    </Compile>
+
   </ItemGroup>
 
   <ItemGroup>

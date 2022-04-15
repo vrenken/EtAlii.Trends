@@ -24,6 +24,8 @@ builder.Services.AddSingleton<IUpdateTrendCommandHandler, UpdateTrendCommandHand
 
 
 builder.Services.AddSingleton<IUpdateLayerCommandHandler, UpdateLayerCommandHandler>();
+builder.Services.AddSingleton<IAddLayerCommandHandler, AddLayerCommandHandler>();
+builder.Services.AddSingleton<IRemoveLayerCommandHandler, RemoveLayerCommandHandler>();
 
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
