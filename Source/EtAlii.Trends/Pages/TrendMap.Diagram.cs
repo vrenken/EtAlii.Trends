@@ -43,7 +43,7 @@ public partial class TrendMap
     }
 
     // Defines the node's default values.
-    private void ApplyNodeDefaults(IDiagramObject diagramObject)
+    private void ApplyTrendNodeDefaults(IDiagramObject diagramObject)
     {
         var node = (Node)diagramObject;
         if (node.Data is System.Text.Json.JsonElement)
@@ -72,7 +72,7 @@ public partial class TrendMap
         node.Constraints = NodeConstraints.Default & ~NodeConstraints.Rotate;
     }
 
-    private async Task OnNodeTextChanged(TextChangeEventArgs e)
+    private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)
     {
         if (e.Element is Node { Data: Trend trend })
         {
@@ -91,7 +91,7 @@ public partial class TrendMap
         }
     }
 
-    private async Task OnNodePositionChanged(PositionChangedEventArgs e)
+    private async Task OnTrendNodePositionChanged(PositionChangedEventArgs e)
     {
         var settings = (DiagramSelectionSettings)e.Element;
         foreach (var node in settings.Nodes)

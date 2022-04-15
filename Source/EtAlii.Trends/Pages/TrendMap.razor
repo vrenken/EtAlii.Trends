@@ -18,8 +18,8 @@
                     ShowCheckBox="true"
                     AutoCheck="true"
                     AllowEditing="true"
-                    CheckedNodesChanged="@OnCheckedNodeChanged"
-                    ExpandedNodesChanged="@OnExpandedNodesChanged">
+                    CheckedNodesChanged="@OnCheckedLayerNodeChanged"
+                    ExpandedNodesChanged="@OnExpandedLayerNodesChanged">
                     <TreeViewFieldsSettings
                         TValue="Layer"
                         Id="Id"
@@ -29,7 +29,7 @@
                         HasChildren="HasChild"
                         Expanded="Expanded"
                         IsChecked="IsChecked"/>
-                    <TreeViewEvents TValue="Layer" NodeEdited="@OnNodeEdited"></TreeViewEvents>
+                    <TreeViewEvents TValue="Layer" NodeEdited="@OnLayerNodeEdited"></TreeViewEvents>
                     <TreeViewNodeAnimationSettings>
                         <TreeViewAnimationExpand Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
                         <TreeViewAnimationCollapse Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
@@ -62,9 +62,9 @@
                     Height="@_diagramHeight"
                     InteractionController="@_diagramTool"
                     ConnectorCreating="@ApplyConnectorDefaults"
-                    NodeCreating="@ApplyNodeDefaults"
-                    TextChanged="@OnNodeTextChanged"
-                    PositionChanged="@OnNodePositionChanged"
+                    NodeCreating="@ApplyTrendNodeDefaults"
+                    TextChanged="@OnTrendNodeTextChanged"
+                    PositionChanged="@OnTrendNodePositionChanged"
                     Nodes="@_nodes"
                     Connectors="@_connectors"
                     Click="@OnClicked">

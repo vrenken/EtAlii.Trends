@@ -85,6 +85,12 @@
       <DependentUpon>TrendMap.razor</DependentUpon>
     </Compile>
 
+    <Compile Remove="Managers\LayerManager.cs" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Managers" />
   </ItemGroup>
 
 </Project>

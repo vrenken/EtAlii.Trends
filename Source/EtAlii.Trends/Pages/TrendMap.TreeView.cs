@@ -6,7 +6,7 @@ using Syncfusion.Blazor.Navigations;
 
 public partial class TrendMap
 {
-    private async Task OnCheckedNodeChanged(string[] ids)
+    private async Task OnCheckedLayerNodeChanged(string[] ids)
     {
         foreach (var id in ids)
         {
@@ -19,7 +19,7 @@ public partial class TrendMap
         }
     }
 
-    private async Task OnExpandedNodesChanged(string[] ids)
+    private async Task OnExpandedLayerNodesChanged(string[] ids)
     {
         foreach (var id in ids)
         {
@@ -32,7 +32,7 @@ public partial class TrendMap
         }
     }
 
-    private async Task OnNodeEdited(NodeEditEventArgs e)
+    private async Task OnLayerNodeEdited(NodeEditEventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(e.NewText))
         {
