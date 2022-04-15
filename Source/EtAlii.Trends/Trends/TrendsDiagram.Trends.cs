@@ -2,6 +2,7 @@
 
 namespace EtAlii.Trends.Trends;
 
+using System.Collections.Specialized;
 using Syncfusion.Blazor.Diagram;
 
 public partial class TrendsDiagram
