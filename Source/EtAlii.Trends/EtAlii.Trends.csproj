@@ -33,6 +33,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
 
   </ItemGroup>
 
@@ -74,6 +75,30 @@
     <Content Include="_Shared\wwwroot\css\open-iconic\README.md" />
     <Content Include="_Shared\wwwroot\css\site.css" />
     <Content Include="_Shared\wwwroot\favicon.ico" />
+    <Compile Update="Editor\Trends\TrendsDiagram.Sizing.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.Toolbar.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.Trends.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendPropertyGrid.cs">
+      <DependentUpon>TrendPropertyGrid.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Layers\LayersTreeView.ContextMenu.cs">
+      <DependentUpon>LayersTreeView.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Layers\LayersTreeView.cs">
+      <DependentUpon>LayersTreeView.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\EditorPage.cs">
+      <DependentUpon>EditorPage.razor</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
