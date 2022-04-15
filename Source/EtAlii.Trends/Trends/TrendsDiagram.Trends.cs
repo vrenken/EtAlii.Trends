@@ -73,7 +73,6 @@ public partial class TrendsDiagram
                 Name = $"New trend {_nodes.Count + 1}",
                 X = position.X, Y = position.Y,
                 Diagram = diagram,
-                Components = new[] { new Component(Guid.NewGuid()) },
             },
             DiagramId: DiagramId
         );
@@ -83,5 +82,7 @@ public partial class TrendsDiagram
             .ConfigureAwait(false);
 
         AddTrend(trend);
+
+        Trend = trend;
     }
 }
