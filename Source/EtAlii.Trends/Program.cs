@@ -16,17 +16,19 @@ builder.Services.AddSyncfusionBlazor();
 builder.Services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
 builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
+
 builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();
 builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
+builder.Services.AddSingleton<IUpdateDiagramCommandHandler, UpdateDiagramCommandHandler>();
+
 builder.Services.AddSingleton<IGetAllLayersQueryHandler, GetAllLayersQueryHandler>();
-builder.Services.AddSingleton<IGetAllTrendsQueryHandler, GetAllTrendsQueryHandler>();
-builder.Services.AddSingleton<IAddTrendCommandHandler, AddTrendCommandHandler>();
-builder.Services.AddSingleton<IUpdateTrendCommandHandler, UpdateTrendCommandHandler>();
-
-
 builder.Services.AddSingleton<IUpdateLayerCommandHandler, UpdateLayerCommandHandler>();
 builder.Services.AddSingleton<IAddLayerCommandHandler, AddLayerCommandHandler>();
 builder.Services.AddSingleton<IRemoveLayerCommandHandler, RemoveLayerCommandHandler>();
+
+builder.Services.AddSingleton<IGetAllTrendsQueryHandler, GetAllTrendsQueryHandler>();
+builder.Services.AddSingleton<IAddTrendCommandHandler, AddTrendCommandHandler>();
+builder.Services.AddSingleton<IUpdateTrendCommandHandler, UpdateTrendCommandHandler>();
 
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
