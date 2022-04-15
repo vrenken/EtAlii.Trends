@@ -2,9 +2,13 @@
 
 namespace EtAlii.Trends.Trends;
 
+using Microsoft.AspNetCore.Components;
+
 public partial class TrendPropertyGrid
 {
     private List<MailItem> _myFolder = new();
+
+    [Parameter] public Trend? Trend { get; set; }
 
     protected override void OnInitialized()
     {

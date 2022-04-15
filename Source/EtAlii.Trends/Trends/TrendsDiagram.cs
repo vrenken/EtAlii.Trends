@@ -10,6 +10,13 @@ public partial class TrendsDiagram
 {
     [Parameter] public Guid DiagramId { get; set; }
 
+
+    [Parameter] public Trend? Trend { get; set; }
+
+
+    [Parameter] public EventCallback<Trend?> TrendChanged { get; set; }
+
+
     private readonly ObservableCollection<Trend> _trends = new();
 
     #pragma warning disable CS8618
@@ -127,4 +134,19 @@ public partial class TrendsDiagram
         }
     }
 
+    private async Task OnTrendSelected(SelectionChangedEventArgs e)
+    {
+        if (e.NewValue.Count == 1)
+        {
+            var node = (Node)e.NewValue[0];
+            var trend = (Trend)node.Data;
+
+            Trend = trend;
+        }
+        else
+        {
+            Trend = null;
+        }
+        await TrendChanged.InvokeAsync(Trend).ConfigureAwait(false);
+    }
 }

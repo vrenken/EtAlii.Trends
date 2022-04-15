@@ -1,6 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends;
+namespace EtAlii.Trends.Diagrams;
 
 #pragma warning disable CA1724
 public class Diagram : Entity

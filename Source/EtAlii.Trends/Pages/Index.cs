@@ -10,8 +10,10 @@ public partial class Index
 
 #pragma warning disable CS8618
     private TrendsDiagram _trendsDiagram;
+    private TrendPropertyGrid _trendPropertyGrid;
 #pragma warning restore CS8618
 
+    private readonly EditorContext _context = new();
     protected override async Task OnInitializedAsync()
     {
         var user = await _queryDispatcher.DispatchAsync<User>(new GetUserQuery(Guid.Empty)).ConfigureAwait(false);

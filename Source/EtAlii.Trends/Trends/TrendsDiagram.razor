@@ -1,4 +1,5 @@
-@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations;
 
 @inject IJSRuntime _jsRuntime
 @inject IQueryDispatcher _queryDispatcher;
@@ -34,7 +35,8 @@
         PositionChanged="OnTrendNodePositionChanged"
         Nodes="@_nodes"
         Connectors="@_connectors"
-        Click="OnClicked">
+        Click="OnClicked"
+        SelectionChanged="OnTrendSelected">
         <Layout
             type="@LayoutType.None"
             HorizontalSpacing="_horizontalSpacing"
