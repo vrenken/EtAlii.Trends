@@ -6,6 +6,11 @@ using Syncfusion.Blazor.Navigations;
 
 public partial class TrendMap
 {
+#pragma warning disable CS8618
+    private SfTreeView<Layer> _layersTreeView;
+    private string _selectedLayerNodeId;
+#pragma warning restore CS8618
+
     private async Task OnCheckedLayerNodeChanged(string[] ids)
     {
         foreach (var id in ids)
@@ -13,6 +18,7 @@ public partial class TrendMap
             var layerId = Guid.Parse(id);
 
             var layer = _layers.Single(l => l.Id == layerId);
+
             await _commandDispatcher
                 .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
                 .ConfigureAwait(false);
@@ -51,4 +57,7 @@ public partial class TrendMap
             e.Cancel = true;
         }
     }
+
+    private void OnLayerNodeSelect(NodeSelectEventArgs e) => _selectedLayerNodeId = e.NodeData.Id;
+    private void OnLayerNodeClicked(NodeClickEventArgs e) => _selectedLayerNodeId = e.NodeData.Id;
 }

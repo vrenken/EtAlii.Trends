@@ -13,28 +13,39 @@
     <SplitterPanes>
         <SplitterPane Size="300px" Min="20%" Max="90%">
             <ContentTemplate>
-                <SfTreeView
-                    TValue="Layer"
-                    ShowCheckBox="true"
-                    AutoCheck="true"
-                    AllowEditing="true"
-                    CheckedNodesChanged="@OnCheckedLayerNodeChanged"
-                    ExpandedNodesChanged="@OnExpandedLayerNodesChanged">
-                    <TreeViewFieldsSettings
+                <div id="layerTreeView">
+                    <SfTreeView
                         TValue="Layer"
-                        Id="Id"
-                        DataSource="@_layers"
-                        Text="Name"
-                        ParentID="ParentId"
-                        HasChildren="HasChild"
-                        Expanded="Expanded"
-                        IsChecked="IsChecked"/>
-                    <TreeViewEvents TValue="Layer" NodeEdited="@OnLayerNodeEdited"></TreeViewEvents>
-                    <TreeViewNodeAnimationSettings>
-                        <TreeViewAnimationExpand Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
-                        <TreeViewAnimationCollapse Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
-                    </TreeViewNodeAnimationSettings>
-                </SfTreeView>
+                        @ref="_layersTreeView"
+                        ShowCheckBox="true"
+                        AutoCheck="true"
+                        AllowEditing="true"
+                        AllowDragAndDrop="true"
+                        CheckedNodesChanged="OnCheckedLayerNodeChanged"
+                        ExpandedNodesChanged="OnExpandedLayerNodesChanged">
+                        <TreeViewFieldsSettings
+                            TValue="Layer"
+                            Id="Id"
+                            DataSource="@_layers"
+                            Text="Name"
+                            ParentID="ParentId"
+                            HasChildren="HasChild"
+                            Expanded="Expanded"
+                            IsChecked="IsChecked"/>
+                        <TreeViewEvents
+                            TValue="Layer"
+                            NodeSelected="OnLayerNodeSelect"
+                            NodeClicked="OnLayerNodeClicked"
+                            NodeEdited="OnLayerNodeEdited"></TreeViewEvents>
+                        <SfContextMenu TValue="MenuItem" @ref="_layerTreeViewMenu" Target="#layerTreeView" Items="_layerTreeViewMenuItems">
+                            <MenuEvents TValue="MenuItem" ItemSelected="OnLayerTreeViewMenuItemSelect"></MenuEvents>
+                        </SfContextMenu>
+                        <TreeViewNodeAnimationSettings>
+                            <TreeViewAnimationExpand Duration="0" Effect="AnimationEffect.None" Easing="Linear"/>
+                            <TreeViewAnimationCollapse Duration="0" Effect="AnimationEffect.None" Easing="Linear"/>
+                        </TreeViewNodeAnimationSettings>
+                    </SfTreeView>
+                </div>
             </ContentTemplate>
         </SplitterPane>
         <SplitterPane Size="200px" Min="40%" Max="90%">
@@ -57,24 +68,24 @@
                     </ToolbarItems>
                 </SfToolbar>
                 <SfDiagramComponent
-                    @ref="@_diagramComponent"
+                    @ref="_trendsDiagram"
                     Width="@_diagramWidth"
                     Height="@_diagramHeight"
                     InteractionController="@_diagramTool"
-                    ConnectorCreating="@ApplyConnectorDefaults"
-                    NodeCreating="@ApplyTrendNodeDefaults"
-                    TextChanged="@OnTrendNodeTextChanged"
-                    PositionChanged="@OnTrendNodePositionChanged"
+                    ConnectorCreating="ApplyConnectorDefaults"
+                    NodeCreating="ApplyTrendNodeDefaults"
+                    TextChanged="OnTrendNodeTextChanged"
+                    PositionChanged="OnTrendNodePositionChanged"
                     Nodes="@_nodes"
                     Connectors="@_connectors"
-                    Click="@OnClicked">
+                    Click="OnClicked">
                     <Layout
                         type="@LayoutType.None"
-                        @bind-HorizontalSpacing="@_horizontalSpacing"
-                        @bind-Orientation="@_orientation"
-                        @bind-VerticalSpacing="@_verticalSpacing"
-                        @bind-HorizontalAlignment="@_horizontalAlignment"
-                        @bind-VerticalAlignment="@_verticalAlignment"
+                        HorizontalSpacing="_horizontalSpacing"
+                        Orientation="_orientation"
+                        VerticalSpacing="_verticalSpacing"
+                        HorizontalAlignment="_horizontalAlignment"
+                        VerticalAlignment="_verticalAlignment"
                         GetLayoutInfo="GetLayoutInfo">
                         <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
                     </Layout>
