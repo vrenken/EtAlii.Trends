@@ -3,21 +3,35 @@
 @using Syncfusion.Blazor.Layouts
 @using EtAlii.Trends.Layers
 @using EtAlii.Trends.Trends
+@using Orientation = Syncfusion.Blazor.Layouts.Orientation
 
 @inject IQueryDispatcher _queryDispatcher;
 @inject ICommandDispatcher _commandDispatcher;
 
-<SfSplitter Height="100%" Width="100%" SeparatorSize=4>
+<SfSplitter SeparatorSize="1">
     <SplitterEvents Resizing="OnSplitterResized"></SplitterEvents>
     <SplitterPanes>
         <SplitterPane Size="300px" Min="20%" Max="90%">
             <ContentTemplate>
-                <LayersTreeView DiagramId="@_diagramId" />
+                <SfSplitter Orientation="Orientation.Vertical" SeparatorSize=4>
+                    <SplitterPanes>
+                        <SplitterPane Size="75%" Min="10%" Max="90%">
+                            <ContentTemplate>
+                                <LayersTreeView DiagramId="@_diagramId" />
+                            </ContentTemplate>
+                        </SplitterPane>
+                        <SplitterPane Size="25%" Min="10%" Max="90%">
+                            <ContentTemplate>
+                                <TrendPropertyGrid />
+                            </ContentTemplate>
+                        </SplitterPane>
+                    </SplitterPanes>
+                </SfSplitter>
             </ContentTemplate>
         </SplitterPane>
         <SplitterPane Size="200px" Min="40%" Max="90%">
             <ContentTemplate>
-                <TrendsDiagram  @ref="_trendsDiagram" DiagramId="@_diagramId" />
+                <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId"/>
             </ContentTemplate>
         </SplitterPane>
     </SplitterPanes>

@@ -21,26 +21,29 @@
         </ToolbarItem>
     </ToolbarItems>
 </SfToolbar>
-<SfDiagramComponent
-    @ref="_trendsDiagram"
-    Width="@_diagramWidth"
-    Height="@_diagramHeight"
-    InteractionController="@_diagramTool"
-    ConnectorCreating="ApplyConnectorDefaults"
-    NodeCreating="ApplyTrendNodeDefaults"
-    TextChanged="OnTrendNodeTextChanged"
-    PositionChanged="OnTrendNodePositionChanged"
-    Nodes="@_nodes"
-    Connectors="@_connectors"
-    Click="OnClicked">
-    <Layout
-        type="@LayoutType.None"
-        HorizontalSpacing="_horizontalSpacing"
-        Orientation="_orientation"
-        VerticalSpacing="_verticalSpacing"
-        HorizontalAlignment="_horizontalAlignment"
-        VerticalAlignment="_verticalAlignment"
-        GetLayoutInfo="GetLayoutInfo">
-        <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
-    </Layout>
-</SfDiagramComponent>
+<div>
+    <h4 class="overlay-panel-header">Trends</h4>
+    <SfDiagramComponent
+        @ref="_trendsDiagram"
+        Width="@_diagramWidth"
+        Height="@_diagramHeight"
+        InteractionController="@_diagramTool"
+        ConnectorCreating="ApplyConnectorDefaults"
+        NodeCreating="ApplyTrendNodeDefaults"
+        TextChanged="OnTrendNodeTextChanged"
+        PositionChanged="OnTrendNodePositionChanged"
+        Nodes="@_nodes"
+        Connectors="@_connectors"
+        Click="OnClicked">
+        <Layout
+            type="@LayoutType.None"
+            HorizontalSpacing="_horizontalSpacing"
+            Orientation="_orientation"
+            VerticalSpacing="_verticalSpacing"
+            HorizontalAlignment="_horizontalAlignment"
+            VerticalAlignment="_verticalAlignment"
+            GetLayoutInfo="GetLayoutInfo">
+            <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
+        </Layout>
+    </SfDiagramComponent>
+</div>

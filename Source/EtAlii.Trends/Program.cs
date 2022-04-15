@@ -1,8 +1,8 @@
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+var options = new WebApplicationOptions { Args = args, WebRootPath = @"Shared\wwwroot" };
+var builder = WebApplication.CreateBuilder(options);
 
-builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.ConfigureAppConfiguration(configuration => configuration.ExpandEnvironmentVariablesInJson());
 
 // Add services to the container.

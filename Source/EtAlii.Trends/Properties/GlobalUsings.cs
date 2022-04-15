@@ -1,7 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
 global using System.Linq;
-global using System.Collections.Specialized;
 
 global using Microsoft.EntityFrameworkCore;
 global using ILogger = Serilog.ILogger;

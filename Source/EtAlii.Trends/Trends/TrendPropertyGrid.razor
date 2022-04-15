@@ -1,0 +1,7 @@
+@using Syncfusion.Blazor.Navigations
+
+<h4 class="panel-header">Properties</h4>
+
+<SfTreeView TValue="MailItem">
+    <TreeViewFieldsSettings TValue="MailItem" Id="Id" DataSource="@_myFolder" Text="FolderName" ParentID="ParentId" HasChildren="HasSubFolders" Expanded="Expanded"></TreeViewFieldsSettings>
+</SfTreeView>

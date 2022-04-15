@@ -65,3 +65,15 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.overlay-panel-header {
+    z-index: 10;
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 3px;
+}
+
+.panel-header {
+    margin-left: 5px;
+    margin-top: 3px;
+}
