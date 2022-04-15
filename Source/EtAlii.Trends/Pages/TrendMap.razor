@@ -11,7 +11,7 @@
 <SfSplitter Height="100%" Width="100%" SeparatorSize=4>
     <SplitterEvents Resizing="@OnSplitterResized"></SplitterEvents>
     <SplitterPanes>
-        <SplitterPane Size="300px" Min="20%" Max="40%">
+        <SplitterPane Size="300px" Min="20%" Max="90%">
             <ContentTemplate>
                 <SfTreeView
                     TValue="Layer"
@@ -29,11 +29,15 @@
                         HasChildren="HasChild"
                         Expanded="Expanded"
                         IsChecked="IsChecked"/>
-                     <TreeViewEvents TValue="Layer" NodeEdited="@OnNodeEdited"></TreeViewEvents>
+                    <TreeViewEvents TValue="Layer" NodeEdited="@OnNodeEdited"></TreeViewEvents>
+                    <TreeViewNodeAnimationSettings>
+                        <TreeViewAnimationExpand Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
+                        <TreeViewAnimationCollapse Duration="0" Effect="AnimationEffect.None" Easing="Linear" />
+                    </TreeViewNodeAnimationSettings>
                 </SfTreeView>
             </ContentTemplate>
         </SplitterPane>
-        <SplitterPane Size="200px" Min="30%" Max="60%">
+        <SplitterPane Size="200px" Min="40%" Max="90%">
             <ContentTemplate>
                 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
                     <ToolbarItems>
