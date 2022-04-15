@@ -1,12 +1,12 @@
 using Serilog;
 
-var options = new WebApplicationOptions { Args = args, WebRootPath = @"Shared\wwwroot" };
+var options = new WebApplicationOptions { Args = args, WebRootPath = @"_Shared\wwwroot" };
 var builder = WebApplication.CreateBuilder(options);
 
 builder.WebHost.ConfigureAppConfiguration(configuration => configuration.ExpandEnvironmentVariablesInJson());
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(o => o.RootDirectory = "/Pages");
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 

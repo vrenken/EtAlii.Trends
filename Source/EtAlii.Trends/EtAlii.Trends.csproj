@@ -85,39 +85,35 @@
       <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
 
-    <Compile Update="Pages\Index.cs">
-      <DependentUpon>Index.razor</DependentUpon>
-    </Compile>
-
     <Compile Update="Trends\TrendPropertyGrid.cs">
       <DependentUpon>TrendPropertyGrid.razor</DependentUpon>
     </Compile>
 
-    <Content Include="Shared\wwwroot\css\bootstrap\bootstrap.min.css" />
+    <Content Include="_Shared\wwwroot\css\bootstrap\bootstrap.min.css" />
 
-    <Content Include="Shared\wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <Content Include="_Shared\wwwroot\css\bootstrap\bootstrap.min.css.map" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\FONT-LICENSE" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\FONT-LICENSE" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\ICON-LICENSE" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\ICON-LICENSE" />
 
-    <Content Include="Shared\wwwroot\css\open-iconic\README.md" />
+    <Content Include="_Shared\wwwroot\css\open-iconic\README.md" />
 
-    <Content Include="Shared\wwwroot\css\site.css" />
+    <Content Include="_Shared\wwwroot\css\site.css" />
 
-    <Content Include="Shared\wwwroot\favicon.ico" />
+    <Content Include="_Shared\wwwroot\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>

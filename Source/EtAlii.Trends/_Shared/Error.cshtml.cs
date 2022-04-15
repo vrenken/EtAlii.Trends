@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EtAlii.Trends.Pages;
+// ReSharper disable once CheckNamespace
+namespace EtAlii.Trends._Shared;
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
