@@ -1,0 +1,44 @@
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Layouts
+
+@inject IQueryDispatcher _queryDispatcher;
+@inject ICommandDispatcher _commandDispatcher;
+
+<div id="layerTreeView">
+    @* <h3>Layers</h3> *@
+    <SfTreeView
+        TValue="Layer"
+        @ref="_layersTreeView"
+        ShowCheckBox="true"
+        AutoCheck="false"
+        AllowEditing="true"
+        AllowDragAndDrop="true"
+        @bind-CheckedNodes="@_checkedLayerNodes"
+        @bind-ExpandedNodes="@_expandedLayerNodes">
+        <TreeViewFieldsSettings
+            TValue="Layer"
+            Id="Id"
+            DataSource="@_layers"
+            Text="Name"
+            ParentID="ParentId"
+            HasChildren="HasChildren"
+            Expanded="IsExpanded"
+            IsChecked="IsChecked"/>
+        <TreeViewEvents
+            TValue="Layer"
+            NodeExpanded="OnLayerNodeExpandedChanged"
+            NodeChecked="OnLayerNodeCheckedChanged"
+            NodeSelected="OnLayerNodeSelect"
+            NodeClicked="OnLayerNodeClicked"
+            OnNodeDragged="OnLayerNodeDragged"
+            NodeEditing="OnLayerNodeEditing"
+            NodeEdited="OnLayerNodeEdited"></TreeViewEvents>
+        <SfContextMenu TValue="MenuItem" @ref="_layerTreeViewMenu" Target="#layerTreeView" Items="_layerTreeViewMenuItems">
+            <MenuEvents TValue="MenuItem" ItemSelected="OnLayerTreeViewMenuItemSelect"></MenuEvents>
+        </SfContextMenu>
+        <TreeViewNodeAnimationSettings>
+            <TreeViewAnimationExpand Duration="0" Effect="AnimationEffect.None" Easing="Linear"/>
+            <TreeViewAnimationCollapse Duration="0" Effect="AnimationEffect.None" Easing="Linear"/>
+        </TreeViewNodeAnimationSettings>
+    </SfTreeView>
+</div>

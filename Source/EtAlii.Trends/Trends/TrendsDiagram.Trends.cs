@@ -1,11 +1,10 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Pages;
+namespace EtAlii.Trends.Trends;
 
-using System.Collections.Specialized;
 using Syncfusion.Blazor.Diagram;
 
-public partial class TrendMap
+public partial class TrendsDiagram
 {
 
     private void OnTrendsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -75,7 +74,7 @@ public partial class TrendMap
                 Diagram = diagram,
                 Components = new[] { new Component(Guid.NewGuid()) },
             },
-            DiagramId: _diagramId
+            DiagramId: DiagramId
         );
 
         var trend = await _commandDispatcher

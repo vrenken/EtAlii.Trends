@@ -1,0 +1,46 @@
+@using Syncfusion.Blazor.Navigations
+
+@inject IJSRuntime _jsRuntime
+@inject IQueryDispatcher _queryDispatcher;
+@inject ICommandDispatcher _commandDispatcher;
+
+<SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
+    <ToolbarItems>
+        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
+        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick"></ToolbarItem>
+        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick"></ToolbarItem>
+        <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" OnClick="@OnPointerClick"></ToolbarItem>
+        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick">
+        </ToolbarItem>
+        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick">
+        </ToolbarItem>
+        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
+        <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="@OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page">
+        </ToolbarItem>
+    </ToolbarItems>
+</SfToolbar>
+<SfDiagramComponent
+    @ref="_trendsDiagram"
+    Width="@_diagramWidth"
+    Height="@_diagramHeight"
+    InteractionController="@_diagramTool"
+    ConnectorCreating="ApplyConnectorDefaults"
+    NodeCreating="ApplyTrendNodeDefaults"
+    TextChanged="OnTrendNodeTextChanged"
+    PositionChanged="OnTrendNodePositionChanged"
+    Nodes="@_nodes"
+    Connectors="@_connectors"
+    Click="OnClicked">
+    <Layout
+        type="@LayoutType.None"
+        HorizontalSpacing="_horizontalSpacing"
+        Orientation="_orientation"
+        VerticalSpacing="_verticalSpacing"
+        HorizontalAlignment="_horizontalAlignment"
+        VerticalAlignment="_verticalAlignment"
+        GetLayoutInfo="GetLayoutInfo">
+        <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
+    </Layout>
+</SfDiagramComponent>

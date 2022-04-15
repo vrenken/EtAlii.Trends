@@ -1,7 +1,5 @@
 namespace EtAlii.Trends;
 
-using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Serilog.Extensions.Logging;
 
 public class DataContext : DbContext

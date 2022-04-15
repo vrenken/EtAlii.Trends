@@ -2,8 +2,6 @@
 
 namespace EtAlii.Trends;
 
-using Microsoft.EntityFrameworkCore;
-
 public record GetUserQuery(Guid UserId) : AsyncQuery<IGetUserQueryHandler>;
 
 public interface IGetUserQueryHandler : IAsyncQueryHandler<GetUserQuery, User> {}

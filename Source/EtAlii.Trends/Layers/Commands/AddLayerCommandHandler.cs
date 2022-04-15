@@ -1,9 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends;
-
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+namespace EtAlii.Trends.Layers;
 
 public record AddLayerCommand(Func<Diagram, Layer, Layer> Layer, Guid DiagramId, Guid? ParentLayerId) : AsyncCommandWithResult<IAddLayerCommandHandler>;
 

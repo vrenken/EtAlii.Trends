@@ -1,6 +1,4 @@
-using EtAlii.Trends;
 using Serilog;
-using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,11 +1,11 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Pages;
+namespace EtAlii.Trends.Trends;
 
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Navigations;
 
-public partial class TrendMap
+public partial class TrendsDiagram
 {
     private string _toolbarHeight = "60px";
 

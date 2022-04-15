@@ -1,11 +1,14 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Pages;
+namespace EtAlii.Trends.Layers;
 
+using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.Navigations;
 
-public partial class TrendMap
+public partial class LayersTreeView
 {
+    [Parameter] public Guid DiagramId { get; set; }
+
 #pragma warning disable CS8618
     private SfTreeView<Layer> _layersTreeView;
     private string _selectedLayerNodeId;
@@ -13,6 +16,20 @@ public partial class TrendMap
 
     private string[] _checkedLayerNodes = Array.Empty<string>();
     private string[] _expandedLayerNodes = Array.Empty<string>();
+    private readonly List<Layer> _layers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GetAllLayersQuery(DiagramId);
+        var layers = _queryDispatcher
+            .DispatchAsync<Layer>(query)
+            .ConfigureAwait(false);
+
+        await foreach (var layer in layers)
+        {
+            _layers.Add(layer);
+        }
+    }
 
     private void OnLayerNodeEditing()
     {
@@ -63,5 +80,10 @@ public partial class TrendMap
         await _commandDispatcher
             .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
             .ConfigureAwait(false);
+    }
+
+    private Task OnLayerNodeDragged(DragAndDropEventArgs e)
+    {
+        return Task.CompletedTask;
     }
 }

@@ -1,10 +1,10 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Pages;
+namespace EtAlii.Trends.Layers;
 
 using Syncfusion.Blazor.Navigations;
 
-public partial class TrendMap
+public partial class LayersTreeView
 {
 
 #pragma warning disable CS8618
@@ -12,7 +12,8 @@ public partial class TrendMap
 #pragma warning restore CS8618
 
     // Datasource for menu items
-    private readonly List<MenuItem> _layerTreeViewMenuItems = new(){
+    private readonly List<MenuItem> _layerTreeViewMenuItems = new()
+    {
         new MenuItem { Text = "Edit" },
         new MenuItem { Text = "Remove" },
         new MenuItem { Text = "Add" }
@@ -55,7 +56,7 @@ public partial class TrendMap
                 Parent = parent,
                 IsChecked = true,
             },
-            DiagramId: _diagramId,
+            DiagramId: DiagramId,
             ParentLayerId: parentId
         );
         var layer = await _commandDispatcher
@@ -75,13 +76,13 @@ public partial class TrendMap
 
         _checkedLayerNodes = _checkedLayerNodes
             .Concat(_layers.Where(l => l.IsChecked).Select(l => l.Id.ToString()))
-            .Where(l => l != null)
+            //.Where(l => l != null)
             .Distinct()
             .ToArray();
 
         _expandedLayerNodes = _expandedLayerNodes
             .Concat(new[] { parentId.ToString() })
-            .Where(l => l != null)
+            //.Where(l => l != null)
             .Distinct()
             .ToArray();
 

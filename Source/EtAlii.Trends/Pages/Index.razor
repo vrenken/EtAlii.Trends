@@ -1,9 +1,24 @@
-@page "/map"
+﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using Syncfusion.Blazor.Layouts
+@using EtAlii.Trends.Layers
+@using EtAlii.Trends.Trends
 
-<h1>Hello, world!</h1>
+@inject IQueryDispatcher _queryDispatcher;
+@inject ICommandDispatcher _commandDispatcher;
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<SfSplitter Height="100%" Width="100%" SeparatorSize=4>
+    <SplitterEvents Resizing="OnSplitterResized"></SplitterEvents>
+    <SplitterPanes>
+        <SplitterPane Size="300px" Min="20%" Max="90%">
+            <ContentTemplate>
+                <LayersTreeView DiagramId="@_diagramId" />
+            </ContentTemplate>
+        </SplitterPane>
+        <SplitterPane Size="200px" Min="40%" Max="90%">
+            <ContentTemplate>
+                <TrendsDiagram  @ref="_trendsDiagram" DiagramId="@_diagramId" />
+            </ContentTemplate>
+        </SplitterPane>
+    </SplitterPanes>
+</SfSplitter>

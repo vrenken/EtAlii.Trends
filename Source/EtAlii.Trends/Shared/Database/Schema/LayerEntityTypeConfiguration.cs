@@ -1,6 +1,5 @@
 namespace EtAlii.Trends;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class LayerEntityTypeConfiguration : IEntityTypeConfiguration<Layer>

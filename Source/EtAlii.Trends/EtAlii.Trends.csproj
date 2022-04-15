@@ -53,18 +53,6 @@
       <DependentUpon>MainLayout.razor</DependentUpon>
     </Content>
 
-    <Compile Update="Pages\TrendMap.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
-    </Compile>
-
-    <Compile Update="Pages\TrendMap.Diagram.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
-    </Compile>
-
-    <Compile Update="Pages\TrendMap.TreeView.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
-    </Compile>
-
     <Compile Update="Shared\NavMenu.cs">
       <DependentUpon>NavMenu.razor</DependentUpon>
     </Compile>
@@ -73,30 +61,34 @@
       <DependentUpon>appsettings.json</DependentUpon>
     </Content>
 
-    <Compile Update="Pages\TrendMap.Toolbar.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
+    <Compile Update="Layers\LayersTreeView.cs">
+      <DependentUpon>LayersTreeView.razor</DependentUpon>
     </Compile>
 
-    <Compile Update="Pages\TrendMap.Trends.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
+    <Compile Update="Layers\LayersTreeView.ContextMenu.cs">
+      <DependentUpon>LayersTreeView.razor</DependentUpon>
     </Compile>
 
-    <Compile Update="Pages\TrendMap.Layers.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
+    <Compile Update="Trends\TrendsDiagram.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
 
-    <Compile Remove="Managers\LayerManager.cs" />
-
-    <Compile Update="Pages\TrendMap.TreeView.ContextMenu.cs">
-      <DependentUpon>TrendMap.razor</DependentUpon>
+    <Compile Update="Trends\TrendsDiagram.Toolbar.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
 
+    <Compile Update="Trends\TrendsDiagram.Trends.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+
+    <Compile Update="Pages\Index.cs">
+      <DependentUpon>Index.razor</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Layers" />
+    <Folder Include="Diagrams\Commands" />
     <Folder Include="Managers" />
-    <Folder Include="Trends" />
+    <Folder Include="Users\Commands" />
   </ItemGroup>
-
 </Project>

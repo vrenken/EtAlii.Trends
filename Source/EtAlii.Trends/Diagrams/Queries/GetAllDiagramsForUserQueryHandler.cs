@@ -1,9 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends;
-
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+namespace EtAlii.Trends.Diagrams;
 
 public record GetAllDiagramsForUserQuery(Guid UserId) : AsyncEnumerableQuery<IGetAllDiagramsForUserQueryHandler>;
 

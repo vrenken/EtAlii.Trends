@@ -1,25 +1,36 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Pages;
+namespace EtAlii.Trends.Trends;
 
+using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.Diagram;
 
-public partial class TrendMap
+public partial class TrendsDiagram
 {
-#pragma warning disable CS8618
-    private SfDiagramComponent _trendsDiagram;
-#pragma warning restore CS8618
+    [Parameter] public Guid DiagramId { get; set; }
 
-    // Specify the orientation of the layout.
-    private LayoutOrientation _orientation = LayoutOrientation.TopToBottom;
-    private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Auto;
-    private VerticalAlignment _verticalAlignment = VerticalAlignment.Auto;
-    private int _horizontalSpacing = 30;
-    private int _verticalSpacing = 30;
-    private string _diagramHeight = "900px";
-    private string _diagramWidth = "100%";
+    private readonly ObservableCollection<Trend> _trends = new();
+
+    #pragma warning disable CS8618
+    private SfDiagramComponent _trendsDiagram;
+    #pragma warning restore CS8618
+
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _trends.CollectionChanged += OnTrendsChanged;
+
+        var trends = _queryDispatcher
+            .DispatchAsync<Trend>(new GetAllTrendsQuery(DiagramId))
+            .ConfigureAwait(false);
+        await foreach (var trend in trends)
+        {
+            _trends.Add(trend);
+        }
+    }
 
     // Defines the connector's default values.
     private void ApplyConnectorDefaults(IDiagramObject diagramObject)
@@ -106,4 +117,14 @@ public partial class TrendMap
                 .ConfigureAwait(false);
         }
     }
+
+
+    private async Task OnClicked(ClickEventArgs e)
+    {
+        if (e.Count == 2 && e.ActualObject == null)
+        {
+            await AddNewTrend(e.Position).ConfigureAwait(false);
+        }
+    }
+
 }

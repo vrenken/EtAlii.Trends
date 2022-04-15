@@ -1,7 +1,5 @@
 namespace EtAlii.Trends;
 
-using Microsoft.EntityFrameworkCore;
-
 public class DatabaseInitializer
 {
     public void InitializeWhenNeeded()
