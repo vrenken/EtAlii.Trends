@@ -1,6 +1,9 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Trends;
+namespace EtAlii.Trends.Editor.Trends;
+
+using EtAlii.Trends.Diagrams;
+using EtAlii.Trends.Editor.Layers;
 
 public class Trend : DiagramEntity
 {

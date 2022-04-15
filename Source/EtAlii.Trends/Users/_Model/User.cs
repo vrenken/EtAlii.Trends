@@ -2,6 +2,8 @@
 
 namespace EtAlii.Trends;
 
+using EtAlii.Trends.Diagrams;
+
 public class User : Entity
 {
     public string Name { get; set; } = string.Empty;

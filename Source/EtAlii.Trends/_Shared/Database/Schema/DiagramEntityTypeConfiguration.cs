@@ -1,5 +1,6 @@
 namespace EtAlii.Trends;
 
+using EtAlii.Trends.Diagrams;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

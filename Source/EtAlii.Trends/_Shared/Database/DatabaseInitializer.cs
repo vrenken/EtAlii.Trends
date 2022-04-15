@@ -1,5 +1,8 @@
 namespace EtAlii.Trends;
 
+using EtAlii.Trends.Diagrams;
+using EtAlii.Trends.Editor.Layers;
+
 public class DatabaseInitializer
 {
     public void InitializeWhenNeeded()
@@ -13,7 +16,14 @@ public class DatabaseInitializer
         {
             // Initialize the database.
             var user = new User { Name = "test", Password = "123", };
-            var diagram = new Diagram { Name = "Test diagram", User = user };
+
+            var nowAsString = DateTime.Now.ToString("yyyyMd");
+            var diagram = new Diagram
+            {
+                Name = "Test diagram", User = user,
+                DiagramTimePosition = int.Parse(nowAsString),
+                DiagramVerticalPosition = 2000,
+            };
             data.Users.Add(user);
             data.Diagrams.Add(diagram);
             data.Entry(user).State = EntityState.Added;

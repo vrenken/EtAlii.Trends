@@ -1,4 +1,6 @@
-namespace EtAlii.Trends;
+namespace EtAlii.Trends.Editor;
+
+using EtAlii.Trends.Editor.Trends;
 
 public class EditorContext
 {

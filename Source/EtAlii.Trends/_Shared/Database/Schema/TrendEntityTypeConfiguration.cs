@@ -1,5 +1,6 @@
 namespace EtAlii.Trends;
 
+using EtAlii.Trends.Editor.Trends;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class TrendEntityTypeConfiguration : IEntityTypeConfiguration<Trend>

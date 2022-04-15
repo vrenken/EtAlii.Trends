@@ -1,6 +1,6 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
-namespace EtAlii.Trends.Layers;
+namespace EtAlii.Trends.Editor.Layers;
 
 using Syncfusion.Blazor.Navigations;
 

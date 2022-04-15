@@ -2,6 +2,8 @@
 
 namespace EtAlii.Trends.Editor;
 
+using EtAlii.Trends.Diagrams;
+using EtAlii.Trends.Editor.Trends;
 using Syncfusion.Blazor.Layouts;
 
 public partial class EditorPage

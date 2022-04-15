@@ -1,5 +1,8 @@
 namespace EtAlii.Trends;
 
+using EtAlii.Trends.Diagrams;
+using EtAlii.Trends.Editor.Layers;
+using EtAlii.Trends.Editor.Trends;
 using Serilog.Extensions.Logging;
 
 public class DataContext : DbContext

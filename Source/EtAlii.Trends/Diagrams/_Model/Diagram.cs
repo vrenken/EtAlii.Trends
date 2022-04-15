@@ -2,10 +2,19 @@
 
 namespace EtAlii.Trends.Diagrams;
 
+using EtAlii.Trends.Editor.Layers;
+using EtAlii.Trends.Editor.Trends;
+
 #pragma warning disable CA1724
 public class Diagram : Entity
 {
     public string Name { get; set; } = string.Empty;
+
+    public float DiagramWidth { get; set; }
+    public float PropertyGridHeight { get; set; }
+
+    public int DiagramTimePosition { get; set; }
+    public int DiagramVerticalPosition { get; set; }
 
     public IList<Trend> Trends { get; private set; } = new List<Trend>();
     public IList<Layer> Layers { get; private set; } = new List<Layer>();

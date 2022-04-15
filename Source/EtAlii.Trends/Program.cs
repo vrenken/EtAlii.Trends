@@ -1,3 +1,6 @@
+using EtAlii.Trends.Diagrams;
+using EtAlii.Trends.Editor.Layers;
+using EtAlii.Trends.Editor.Trends;
 using Serilog;
 
 var options = new WebApplicationOptions { Args = args, WebRootPath = @"_Shared\wwwroot" };

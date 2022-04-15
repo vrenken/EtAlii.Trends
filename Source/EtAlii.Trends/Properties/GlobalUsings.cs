@@ -8,8 +8,4 @@ global using Log = Serilog.Log;
 
 global using Syncfusion.Blazor;
 
-
 global using EtAlii.Trends;
-global using EtAlii.Trends.Layers;
-global using EtAlii.Trends.Trends;
-global using EtAlii.Trends.Diagrams;
