@@ -18,24 +18,27 @@
                         TValue="Layer"
                         @ref="_layersTreeView"
                         ShowCheckBox="true"
-                        AutoCheck="true"
+                        AutoCheck="false"
                         AllowEditing="true"
                         AllowDragAndDrop="true"
-                        CheckedNodesChanged="OnCheckedLayerNodeChanged"
-                        ExpandedNodesChanged="OnExpandedLayerNodesChanged">
+                        @bind-CheckedNodes="@_checkedLayerNodes"
+                        @bind-ExpandedNodes="@_expandedLayerNodes">
                         <TreeViewFieldsSettings
                             TValue="Layer"
                             Id="Id"
                             DataSource="@_layers"
                             Text="Name"
                             ParentID="ParentId"
-                            HasChildren="HasChild"
-                            Expanded="Expanded"
+                            HasChildren="HasChildren"
+                            Expanded="IsExpanded"
                             IsChecked="IsChecked"/>
                         <TreeViewEvents
                             TValue="Layer"
+                            NodeExpanded="OnLayerNodeExpandedChanged"
+                            NodeChecked="OnLayerNodeCheckedChanged"
                             NodeSelected="OnLayerNodeSelect"
                             NodeClicked="OnLayerNodeClicked"
+                            NodeEditing="OnLayerNodeEditing"
                             NodeEdited="OnLayerNodeEdited"></TreeViewEvents>
                         <SfContextMenu TValue="MenuItem" @ref="_layerTreeViewMenu" Target="#layerTreeView" Items="_layerTreeViewMenuItems">
                             <MenuEvents TValue="MenuItem" ItemSelected="OnLayerTreeViewMenuItemSelect"></MenuEvents>

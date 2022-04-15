@@ -21,7 +21,7 @@ public class DatabaseInitializer
             data.Entry(user).State = EntityState.Added;
             data.Entry(diagram).State = EntityState.Added;
 
-            var layer1 = new Layer { Name = "Hierarchical layers", Expanded = true, Diagram = diagram};
+            var layer1 = new Layer { Name = "Hierarchical layers", IsExpanded = true, Diagram = diagram};
             data.Add(layer1);
             data.Entry(layer1).State = EntityState.Added;
 
@@ -49,7 +49,7 @@ public class DatabaseInitializer
             data.Add(layer7);
             data.Entry(layer7).State = EntityState.Added;
 
-            var layer14 = new Layer { Name = "Global trends", Expanded = true, Diagram = diagram };
+            var layer14 = new Layer { Name = "Global trends", IsExpanded = true, Diagram = diagram };
             data.Add(layer14);
             data.Entry(layer14).State = EntityState.Added;
 

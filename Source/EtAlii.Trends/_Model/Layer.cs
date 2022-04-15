@@ -9,7 +9,8 @@ public class Layer : DiagramEntity
 
     public IList<Layer> Children { get; protected set; } = new List<Layer>();
     public string Name { get; set; } = string.Empty;
-    public bool Expanded { get; set; }
-    public bool? IsChecked { get; set; }
-    public bool HasChild => Children.Any();
+    public bool IsExpanded { get; set; }
+    public bool IsChecked { get; set; }
+    public int Order { get; set; }
+    public bool HasChildren => Children.Any();
 }

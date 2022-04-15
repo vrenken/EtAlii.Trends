@@ -11,31 +11,12 @@ public partial class TrendMap
     private string _selectedLayerNodeId;
 #pragma warning restore CS8618
 
-    private async Task OnCheckedLayerNodeChanged(string[] ids)
+    private string[] _checkedLayerNodes = Array.Empty<string>();
+    private string[] _expandedLayerNodes = Array.Empty<string>();
+
+    private void OnLayerNodeEditing()
     {
-        foreach (var id in ids)
-        {
-            var layerId = Guid.Parse(id);
-
-            var layer = _layers.Single(l => l.Id == layerId);
-
-            await _commandDispatcher
-                .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
-                .ConfigureAwait(false);
-        }
-    }
-
-    private async Task OnExpandedLayerNodesChanged(string[] ids)
-    {
-        foreach (var id in ids)
-        {
-            var layerId = Guid.Parse(id);
-
-            var layer = _layers.Single(l => l.Id == layerId);
-            await _commandDispatcher
-                .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
-                .ConfigureAwait(false);
-        }
+        //_layerTreeViewMenuItems.ForEach(mi => mi.Disabled = true);
     }
 
     private async Task OnLayerNodeEdited(NodeEditEventArgs e)
@@ -56,8 +37,31 @@ public partial class TrendMap
         {
             e.Cancel = true;
         }
+
+        //_layerTreeViewMenuItems.ForEach(mi => mi.Disabled = false);
     }
 
     private void OnLayerNodeSelect(NodeSelectEventArgs e) => _selectedLayerNodeId = e.NodeData.Id;
     private void OnLayerNodeClicked(NodeClickEventArgs e) => _selectedLayerNodeId = e.NodeData.Id;
+
+    private async Task OnLayerNodeExpandedChanged(NodeExpandEventArgs e)
+    {
+        var layerId = Guid.Parse(e.NodeData.Id);
+
+        var layer = _layers.Single(l => l.Id == layerId);
+        await _commandDispatcher
+            .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
+            .ConfigureAwait(false);
+    }
+
+    private async Task OnLayerNodeCheckedChanged(NodeCheckEventArgs e)
+    {
+        var layerId = Guid.Parse(e.NodeData.Id);
+
+        var layer = _layers.Single(l => l.Id == layerId);
+
+        await _commandDispatcher
+            .DispatchAsync<Layer>(new UpdateLayerCommand(layer))
+            .ConfigureAwait(false);
+    }
 }

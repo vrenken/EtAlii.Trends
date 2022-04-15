@@ -23,20 +23,19 @@ public partial class TrendMap
     private async Task OnLayerTreeViewMenuItemSelect(MenuEventArgs<MenuItem> args)
     {
         var selectedMenuItem = args.Item.Text;
-        if (selectedMenuItem == "Edit")
+        switch (selectedMenuItem)
         {
-            await _layersTreeView
-                .BeginEdit(_selectedLayerNodeId)
-                .ConfigureAwait(false);
-
-        }
-        else if (selectedMenuItem == "Remove")
-        {
-            await RemoveNodes().ConfigureAwait(false);
-        }
-        else if (selectedMenuItem == "Add")
-        {
-            await AddNodes().ConfigureAwait(false);
+            case "Edit":
+                await _layersTreeView
+                    .BeginEdit(_selectedLayerNodeId)
+                    .ConfigureAwait(false);
+                break;
+            case "Remove":
+                await RemoveNodes().ConfigureAwait(false);
+                break;
+            case "Add":
+                await AddNodes().ConfigureAwait(false);
+                break;
         }
     }
 
@@ -46,11 +45,6 @@ public partial class TrendMap
         var parentId = Guid.Parse(_selectedLayerNodeId);
 
         var parentLayer = _layers.Single(l => l.Id == parentId);
-
-        // _expandedLayerNodes = _expandedLayerNodes
-        //     .Concat(new[] { _selectedLayerNodeId })
-        //     .Distinct()
-        //     .ToArray();
 
         var command = new AddLayerCommand
         (
@@ -69,12 +63,29 @@ public partial class TrendMap
             .ConfigureAwait(false);
 
         parentLayer.Children.Add(layer);
-        parentLayer.Expanded = true;
+        parentLayer.IsExpanded = true;
 
-        _selectedLayerNodeId = layer.Id.ToString();
+        await _commandDispatcher
+            .DispatchAsync<Layer>(new UpdateLayerCommand(parentLayer))
+            .ConfigureAwait(false);
+
         _layers.Add(layer);
 
-        //_layersTreeView.ExpandedNodes = _layersTreeView.ExpandedNodes.Concat(new[] { _selectedLayerNodeId }).Distinct().ToArray();
+        _layersTreeView.AddNodes(new() {layer}, parentId.ToString());
+
+        _checkedLayerNodes = _checkedLayerNodes
+            .Concat(_layers.Where(l => l.IsChecked).Select(l => l.Id.ToString()))
+            .Where(l => l != null)
+            .Distinct()
+            .ToArray();
+
+        _expandedLayerNodes = _expandedLayerNodes
+            .Concat(new[] { parentId.ToString() })
+            .Where(l => l != null)
+            .Distinct()
+            .ToArray();
+
+        _selectedLayerNodeId = layer.Id.ToString();
 
         // Edit the added node.
         await Task.Delay(100).ConfigureAwait(false);
@@ -88,11 +99,13 @@ public partial class TrendMap
     {
         var layerId = Guid.Parse(_selectedLayerNodeId);
 
+        var layer = _layers.Single(l => l.Id == layerId);
+        layer.IsChecked = false;
+
         await _commandDispatcher
             .DispatchAsync(new RemoveLayerCommand(layerId))
             .ConfigureAwait(false);
 
-        var layer = _layers.Single(l => l.Id == layerId);
         _layers.Remove(layer);
     }
 }

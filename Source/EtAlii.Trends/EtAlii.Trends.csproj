@@ -94,7 +94,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Layers" />
     <Folder Include="Managers" />
+    <Folder Include="Trends" />
   </ItemGroup>
 
 </Project>

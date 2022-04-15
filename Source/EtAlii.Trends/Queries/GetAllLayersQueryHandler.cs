@@ -20,6 +20,7 @@ public class GetAllLayersQueryHandler : IGetAllLayersQueryHandler
             .AsNoTracking()
             .Include(l => l.Diagram)
             .Where(l => l.Diagram.Id == query.DiagramId)
+            .OrderBy(l => l.Order)
             .AsAsyncEnumerable()
             .ConfigureAwait(false);
         await foreach (var item in items)
