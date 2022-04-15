@@ -13,7 +13,7 @@
 <SfSplitter SeparatorSize="1">
     <SplitterEvents Resizing="OnSplitterResized"></SplitterEvents>
     <SplitterPanes>
-        <SplitterPane Size="300px" Min="20%" Max="90%">
+        <SplitterPane Size="15%" Min="10%" Max="90%">
             <ContentTemplate>
                 <SfSplitter Orientation="Orientation.Vertical" SeparatorSize=4>
                     <SplitterPanes>
@@ -31,7 +31,7 @@
                 </SfSplitter>
             </ContentTemplate>
         </SplitterPane>
-        <SplitterPane Size="200px" Min="40%" Max="90%">
+        <SplitterPane Size="85%" Min="40%" Max="90%">
             <ContentTemplate>
                 <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId" @bind-Trend="@_context.SelectedTrend" />
             </ContentTemplate>
