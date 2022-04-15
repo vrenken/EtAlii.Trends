@@ -17,13 +17,12 @@ public class DatabaseInitializer
             // Initialize the database.
             var user = new User { Name = "test", Password = "123", };
 
-            var nowAsString = DateTime.Now.ToString("yyyyMd");
             var diagram = new Diagram
             {
                 Name = "Test diagram", User = user,
-                DiagramTimePosition = int.Parse(nowAsString),
-                DiagramVerticalPosition = 2000,
             };
+            Diagram.ResetPanZoom(diagram);
+
             data.Users.Add(user);
             data.Diagrams.Add(diagram);
             data.Entry(user).State = EntityState.Added;

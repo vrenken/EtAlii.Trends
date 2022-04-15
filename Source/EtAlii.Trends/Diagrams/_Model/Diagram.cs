@@ -12,9 +12,10 @@ public class Diagram : Entity
 
     public float DiagramWidth { get; set; }
     public float PropertyGridHeight { get; set; }
+    public double DiagramZoom { get; set; }
 
-    public int DiagramTimePosition { get; set; }
-    public int DiagramVerticalPosition { get; set; }
+    public double DiagramTimePosition { get; set; }
+    public double DiagramVerticalPosition { get; set; }
 
     public IList<Trend> Trends { get; private set; } = new List<Trend>();
     public IList<Layer> Layers { get; private set; } = new List<Layer>();
@@ -23,4 +24,11 @@ public class Diagram : Entity
     public User User { get; init; }
 #pragma warning restore CS8618
 
+    public static void ResetPanZoom(Diagram diagram)
+    {
+        var nowAsString = DateTime.Now.ToString("yyyyMd");
+        diagram.DiagramTimePosition = int.Parse(nowAsString);
+        diagram.DiagramVerticalPosition = 2000;
+        diagram.DiagramZoom = 1d;
+    }
 }
