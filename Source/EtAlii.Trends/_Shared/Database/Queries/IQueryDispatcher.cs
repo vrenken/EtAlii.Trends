@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 public interface IQueryDispatcher
 {
+    event Action Started;
+    event Action Stopped;
+
     /// <summary>
     /// Dispatch a non-async query, without returning any results.
     /// </summary>

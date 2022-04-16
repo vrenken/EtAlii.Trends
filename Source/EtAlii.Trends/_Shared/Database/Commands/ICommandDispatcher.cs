@@ -4,6 +4,9 @@ namespace EtAlii.Trends
 
     public interface ICommandDispatcher
     {
+        event Action Started;
+        event Action Stopped;
+
         /// <summary>
         /// Dispatch a non-async command, without returning any results.
         /// </summary>

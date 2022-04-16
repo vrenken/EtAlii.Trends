@@ -15,6 +15,9 @@ namespace EtAlii.Trends
 
         private readonly ILogger _log = Log.ForContext<CommandDispatcher>();
 
+        public event Action Started = () => { };
+        public event Action Stopped = () => { };
+
         public CommandDispatcher(IServiceProvider serviceProvider)
         {
             _commandHandlerResolver = type =>
@@ -45,11 +48,13 @@ namespace EtAlii.Trends
 #endif
             try
             {
+                Started.Invoke();
                 var handler = (ICommandHandler)_commandHandlerResolver(command.HandlerType);
                 handler.Handle(command);
             }
             finally
             {
+                Stopped.Invoke();
                 _lock.Release();
             }
 
@@ -74,11 +79,13 @@ namespace EtAlii.Trends
 #endif
             try
             {
+                Started.Invoke();
                 var handler = (ICommandHandlerWithResult)_commandHandlerResolver(command.HandlerType);
                 result = (TResult)handler.Handle(command);
             }
             finally
             {
+                Stopped.Invoke();
                 _lock.Release();
             }
 
@@ -104,6 +111,7 @@ namespace EtAlii.Trends
 #endif
             try
             {
+                Started.Invoke();
                 var handler = (IAsyncCommandHandler)_commandHandlerResolver(command.HandlerType);
                 await handler
                     .Handle(command)
@@ -111,6 +119,7 @@ namespace EtAlii.Trends
             }
             finally
             {
+                Stopped.Invoke();
                 _lock.Release();
             }
 
@@ -139,6 +148,7 @@ namespace EtAlii.Trends
 #endif
             try
             {
+                Started.Invoke();
                 foreach (var command in commands)
                 {
                     var handler = (IAsyncCommandHandler)_commandHandlerResolver(command.HandlerType);
@@ -149,6 +159,7 @@ namespace EtAlii.Trends
             }
             finally
             {
+                Stopped.Invoke();
                 _lock.Release();
             }
 
@@ -176,6 +187,7 @@ namespace EtAlii.Trends
 #endif
             try
             {
+                Started.Invoke();
                 var handler = (IAsyncCommandHandlerWithResult)_commandHandlerResolver(command.HandlerType);
                 result = (TResult)await handler
                     .Handle(command)
@@ -184,6 +196,7 @@ namespace EtAlii.Trends
             }
             finally
             {
+                Stopped.Invoke();
                 _lock.Release();
             }
 

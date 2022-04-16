@@ -16,6 +16,10 @@ public class QueryDispatcher : IQueryDispatcher
     private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
 
     private readonly ILogger _log = Log.ForContext<QueryDispatcher>();
+
+    public event Action Started = () => { };
+    public event Action Stopped = () => { };
+
     public QueryDispatcher(IServiceProvider serviceProvider)
     {
         _queryHandlerResolver = type =>
@@ -28,7 +32,6 @@ public class QueryDispatcher : IQueryDispatcher
 
             return handler!;
         };
-
     }
 
     /// <inheritdoc />
@@ -43,11 +46,13 @@ public class QueryDispatcher : IQueryDispatcher
         _lock.Wait();
         try
         {
+            Started.Invoke();
             var handler = (IQueryHandler)_queryHandlerResolver(query.HandlerType);
             result = (TResult)handler.Handle(query);
         }
         finally
         {
+            Stopped.Invoke();
             _lock.Release();
         }
 
@@ -79,14 +84,15 @@ public class QueryDispatcher : IQueryDispatcher
 
         try
         {
+            Started.Invoke();
             var handler = (IAsyncQueryHandler)_queryHandlerResolver(query.HandlerType);
             result = (TResult)await handler
                 .Handle(query)
                 .ConfigureAwait(false);
-
         }
         finally
         {
+            Stopped.Invoke();
             _lock.Release();
         }
 
@@ -117,6 +123,7 @@ public class QueryDispatcher : IQueryDispatcher
 
         try
         {
+            Started.Invoke();
             var handler = (IAsyncEnumerableQueryHandler)_queryHandlerResolver(query.HandlerType);
             var items = handler
                 .Handle(query)
@@ -129,6 +136,7 @@ public class QueryDispatcher : IQueryDispatcher
         }
         finally
         {
+            Stopped.Invoke();
             _lock.Release();
         }
 
