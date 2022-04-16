@@ -1,0 +1,20 @@
+@using Syncfusion.Blazor.Spinner
+
+@inject IJSRuntime _jsRuntime
+@inject IQueryDispatcher _queryDispatcher;
+@inject ICommandDispatcher _commandDispatcher;
+
+<div class="activity-indicator">
+    <SfSpinner Size="40" Type="SpinnerType.Bootstrap5" Visible="@_showIndicator"/>
+</div>
+
+<style>
+
+.activity-indicator {
+    z-index: 10;
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+}
+
+</style>
