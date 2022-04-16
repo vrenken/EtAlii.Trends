@@ -1,7 +1,62 @@
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Calendars
+@using TextAlign = Syncfusion.Blazor.Grids.TextAlign
 
 <h4 class="panel-header">@(Trend?.Name ?? "Properties")</h4>
+<div class="property-grid">
+    <div class="aspect-container">
+        <label class="aspect-header">Begin</label>
+        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@Trend?.Begin" ShowClearButton="true" WeekNumber="true" />
+    </div>
+    <div class="aspect-container">
+        <label class="aspect-header">End</label>
+        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@Trend?.End" ShowClearButton="true" WeekNumber="true" />
+    </div>
+    <div class="aspect-container">
+        <label class="aspect-header">Components</label>
+        <SfGrid DataSource="@_components" AllowRowDragAndDrop="true">
+            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" />
+            <GridSelectionSettings Type="SelectionType.Multiple"/>
+            @* <GridTemplates> *@
+            @*     <RowTemplate> *@
+            @*         @{ *@
+            @*             var component = (context as MailItem); *@
+            @*             <td> *@
+            @*                 <table class="CardTable" cellpadding="3" cellspacing="2" cols="2"> *@
+            @*                     <tbody> *@
+            @*                     <tr> *@
+            @*                         <td class="CardHeader" colspan="2">@component.Name</td> *@
+            @*                     </tr> *@
+            @*                     <tr> *@
+            @*                         <td >@component.Begin</td> *@
+            @*                         <td>@component.End</td> *@
+            @*                     </tr> *@
+            @*                     </tbody> *@
+            @*                 </table> *@
+            @*             </td> *@
+            @*         } *@
+            @*     </RowTemplate> *@
+            @* </GridTemplates> *@
+            <GridColumns>
+                <GridColumn Field="@nameof(Component.Name)" HeaderText="Name"/>
+                <GridColumn Field="@nameof(Component.Moment)" Format="yyyy-M-d" HeaderText="Moment"/>
+            </GridColumns>
+        </SfGrid>
+    </div>
+</div>
 
-<SfTreeView TValue="MailItem">
-    <TreeViewFieldsSettings TValue="MailItem" Id="Id" DataSource="@_myFolder" Text="FolderName" ParentID="ParentId" HasChildren="HasSubFolders" Expanded="Expanded"></TreeViewFieldsSettings>
-</SfTreeView>
+<style>
+    .property-grid {
+    margin: 5px;
+    }
+    .aspect-container {
+        margin: 5px;
+        padding: 0px 0px 0px 5px;
+    }
+    .aspect-header {
+        font-size: 14px;
+        margin-bottom: 5px;
+        margin-bottom: 2px;
+    }
+</style>

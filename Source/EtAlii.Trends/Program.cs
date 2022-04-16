@@ -13,8 +13,8 @@ builder.Services.AddRazorPages(o => o.RootDirectory = "/Pages");
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 
-builder.Services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
-builder.Services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
 
 builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();

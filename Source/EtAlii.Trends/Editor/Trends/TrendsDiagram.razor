@@ -1,5 +1,6 @@
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Navigations;
+@using Syncfusion.Blazor.Spinner
 
 @inject IJSRuntime _jsRuntime
 @inject IQueryDispatcher _queryDispatcher;
@@ -7,19 +8,20 @@
 
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>
-        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick"></ToolbarItem>
-        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick"></ToolbarItem>
-        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick"></ToolbarItem>
-        <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" OnClick="@OnPointerClick"></ToolbarItem>
-        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick">
-        </ToolbarItem>
-        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick">
-        </ToolbarItem>
-        <ToolbarItem Type="ItemType.Separator"></ToolbarItem>
-        <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="@OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page">
-        </ToolbarItem>
+        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick" />
+        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick" />
+        <ToolbarItem @ref="@_resetItem" TooltipText="Reset" CssClass="@_resetItemCssClass" PrefixIcon="e-icons e-refresh" OnClick="@OnResetItemClick" />
+        <ToolbarItem Type="ItemType.Separator" />
+        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick" />
+        <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" OnClick="@OnPointerClick" />
+        <ToolbarItem Type="ItemType.Separator" />
+        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick" />
+        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick" />
+        <ToolbarItem Type="ItemType.Separator" />
+        <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="@OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page" />
+
+        <ToolbarItem PrefixIcon="e-tbar-search-icon tb-icons" TooltipText="Search" Align="@ItemAlign.Right" />
+        <ToolbarItem PrefixIcon="e-tbar-settings-icon tb-icons" TooltipText="Settings" Align="@ItemAlign.Right" />
     </ToolbarItems>
 </SfToolbar>
 <div>
@@ -37,6 +39,18 @@
         Connectors="@_connectors"
         Click="OnClicked"
         SelectionChanged="OnTrendSelected">
+        <ScrollSettings
+            CurrentZoom="@_currentZoom"
+            HorizontalOffset="@_horizontalOffset"
+            VerticalOffset="@_verticalOffset"
+            CurrentZoomChanged="OnCurrentZoomChanged"
+            HorizontalOffsetChanged="OnHorizontalOffsetChanged"
+            VerticalOffsetChanged="OnVerticalOffsetChanged"
+            ScrollLimit="ScrollLimitMode.Infinity" />
+        <SnapSettings Constraints="_snapConstraints">
+            <HorizontalGridLines LineColor="#e0e0e0" SnapIntervals="@_lineInterval" />
+            <VerticalGridLines LineColor="#e0e0e0" SnapIntervals="@_lineInterval" />
+        </SnapSettings>
         <Layout
             type="@LayoutType.None"
             HorizontalSpacing="_horizontalSpacing"
@@ -48,4 +62,5 @@
             <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
         </Layout>
     </SfDiagramComponent>
+    <ActivityIndicator />
 </div>

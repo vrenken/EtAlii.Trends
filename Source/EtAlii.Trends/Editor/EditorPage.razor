@@ -15,14 +15,14 @@
     <SplitterPanes>
         <SplitterPane Size="15%" Min="10%" Max="90%">
             <ContentTemplate>
-                <SfSplitter Orientation="Orientation.Vertical" SeparatorSize=4>
+                <SfSplitter Orientation="Orientation.Vertical" SeparatorSize="1">
                     <SplitterPanes>
-                        <SplitterPane Size="75%" Min="10%" Max="90%">
+                        <SplitterPane Size="60%" Min="10%" Max="90%">
                             <ContentTemplate>
                                 <LayersTreeView DiagramId="@_diagramId" />
                             </ContentTemplate>
                         </SplitterPane>
-                        <SplitterPane Size="25%" Min="10%" Max="90%">
+                        <SplitterPane Size="40%" Min="10%" Max="90%">
                             <ContentTemplate>
                                 <TrendPropertyGrid @ref="_trendPropertyGrid" Trend="@_context.SelectedTrend" />
                             </ContentTemplate>

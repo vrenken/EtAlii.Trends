@@ -2,6 +2,7 @@
 
 namespace EtAlii.Trends.Editor.Trends;
 
+using EtAlii.Trends.Diagrams;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Navigations;
 
@@ -13,6 +14,9 @@ public partial class TrendsDiagram
     private string? _zoomInItemCssClass;
     private ToolbarItem? _zoomOutItem;
     private string? _zoomOutItemCssClass;
+
+    private ToolbarItem? _resetItem;
+    private string? _resetItemCssClass;
 
     private ToolbarItem? _panItem;
     private string? _panItemCssClass;
@@ -33,6 +37,24 @@ public partial class TrendsDiagram
     private InteractionController _diagramTool;
     private SfToolbar? _toolbar;
 
+    private async Task OnResetItemClick()
+    {
+        var diagram = await _queryDispatcher
+            .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
+            .ConfigureAwait(false);
+
+        Diagram.ResetPanZoom(diagram);
+
+        await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
+            .ConfigureAwait(false);
+
+        _currentZoom = diagram.DiagramZoom;
+        _horizontalOffset = diagram.DiagramTimePosition;
+        _verticalOffset = diagram.DiagramVerticalPosition;
+
+        StateHasChanged();
+    }
+
     private void OnZoomInItemClick()
     {
         if (_diagramTool == InteractionController.Default)
@@ -50,7 +72,7 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _trendsDiagram.Zoom(1.2, new DiagramPoint { X = 100, Y = 100 });
+        _trendsDiagram.Zoom(1.1, new DiagramPoint { X = _horizontalOffset, Y = _verticalOffset });
     }
     private void OnZoomOutItemClick()
     {
@@ -69,7 +91,7 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _trendsDiagram.Zoom(1 / 1.2, new DiagramPoint { X = 100, Y = 100 });
+        _trendsDiagram.Zoom(1 / 1.1, new DiagramPoint { X = _horizontalOffset, Y = _verticalOffset });
     }
      private void OnPanClick()
     {

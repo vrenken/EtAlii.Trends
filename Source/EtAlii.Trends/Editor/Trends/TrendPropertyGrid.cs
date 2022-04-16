@@ -6,45 +6,32 @@ using Microsoft.AspNetCore.Components;
 
 public partial class TrendPropertyGrid
 {
-    private List<MailItem> _myFolder = new();
+    private List<Component> _components = new();
 
     [Parameter] public Trend? Trend { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _myFolder.Add(new MailItem
+        _components.Add(new Component
         {
-            Id = "1",
-            FolderName = "Inbox",
-            HasSubFolders = true,
-            Expanded = true
+            Name = "Inbox",
         });
-        _myFolder.Add(new MailItem
+        _components.Add(new Component
         {
-            Id = "2",
-            ParentId = "1",
-            FolderName = "Categories",
-            Expanded = true,
-            HasSubFolders = true
+            Name = "Categories",
         });
-        _myFolder.Add(new MailItem
+        _components.Add(new Component
         {
-            Id = "3",
-            ParentId = "2",
-            FolderName = "Primary"
+            Name = "Primary"
         });
-        _myFolder.Add(new MailItem
+        _components.Add(new Component
         {
-            Id = "4",
-            ParentId = "2",
-            FolderName = "Social"
+            Name = "Social"
         });
-        _myFolder.Add(new MailItem
+        _components.Add(new Component
         {
-            Id = "5",
-            ParentId = "2",
-            FolderName = "Promotions"
+            Name = "Promotions"
         });
     }
 }

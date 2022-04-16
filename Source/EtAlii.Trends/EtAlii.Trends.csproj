@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="6.0.4" />
     <PackageReference Include="Syncfusion.Blazor.Diagram" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.1.0.48" />
     <PackageReference Include="Syncfusion.Blazor.Layouts" Version="20.1.0.48" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.1.0.48" />
 
@@ -98,6 +99,12 @@
     </Compile>
     <Compile Update="Editor\EditorPage.cs">
       <DependentUpon>EditorPage.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.PanZoom.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\ActivityIndicator.cs">
+      <DependentUpon>ActivityIndicator.razor</DependentUpon>
     </Compile>
   </ItemGroup>
 

@@ -3,6 +3,7 @@
 namespace EtAlii.Trends.Editor.Trends;
 
 using System.Collections.ObjectModel;
+using EtAlii.Trends.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.Diagram;
 
@@ -19,15 +20,38 @@ public partial class TrendsDiagram
 
     private readonly ObservableCollection<Trend> _trends = new();
 
-    #pragma warning disable CS8618
     private SfDiagramComponent _trendsDiagram;
-    #pragma warning restore CS8618
 
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
 
+#pragma warning disable CS8618
+    public TrendsDiagram()
+#pragma warning restore CS8618
+    {
+        _persistPanAndZoom = new ThrottledInvocation(TimeSpan.FromSeconds(2), async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                var diagram = await _queryDispatcher
+                    .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
+                    .ConfigureAwait(false);
+
+                diagram.DiagramZoom = _currentZoom;
+                diagram.DiagramTimePosition = _horizontalOffset;
+                diagram.DiagramVerticalPosition = _verticalOffset;
+
+
+                await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        });
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        await InitializePositionAndZoom().ConfigureAwait(false);
+
         _trends.CollectionChanged += OnTrendsChanged;
 
         var trends = _queryDispatcher
@@ -87,7 +111,15 @@ public partial class TrendsDiagram
                 }
             }
         };
-        node.Constraints = NodeConstraints.Default & ~NodeConstraints.Rotate;
+
+        node.Constraints = NodeConstraints.Default &
+                           ~NodeConstraints.Rotate &
+                           ~NodeConstraints.ResizeNorth &
+                           ~NodeConstraints.ResizeNorthWest &
+                           ~NodeConstraints.ResizeNorthEast &
+                           ~NodeConstraints.ResizeSouth &
+                           ~NodeConstraints.ResizeSouthEast &
+                           ~NodeConstraints.ResizeSouthWest;
     }
 
     private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)
