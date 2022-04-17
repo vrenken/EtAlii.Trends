@@ -31,6 +31,11 @@ builder.Services.AddSingleton<IGetAllTrendsQueryHandler, GetAllTrendsQueryHandle
 builder.Services.AddSingleton<IAddTrendCommandHandler, AddTrendCommandHandler>();
 builder.Services.AddSingleton<IUpdateTrendCommandHandler, UpdateTrendCommandHandler>();
 
+builder.Services.AddSingleton<IGetComponentsForTrendQueryHandler, GetComponentsForTrendQueryHandler>();
+builder.Services.AddSingleton<IAddComponentCommandHandler, AddComponentCommandHandler>();
+builder.Services.AddSingleton<IUpdateComponentCommandHandler, UpdateComponentCommandHandler>();
+builder.Services.AddSingleton<IRemoveComponentCommandHandler, RemoveComponentCommandHandler>();
+
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
 var systemContext = new ApplicationContext();
