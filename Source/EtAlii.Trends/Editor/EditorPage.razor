@@ -10,31 +10,35 @@
 @inject IQueryDispatcher _queryDispatcher;
 @inject ICommandDispatcher _commandDispatcher;
 
-<SfSplitter SeparatorSize="1">
-    <SplitterEvents Resizing="OnSplitterResized"></SplitterEvents>
-    <SplitterPanes>
-        <SplitterPane Size="15%" Min="10%" Max="90%">
-            <ContentTemplate>
-                <SfSplitter Orientation="Orientation.Vertical" SeparatorSize="1">
-                    <SplitterPanes>
-                        <SplitterPane Size="60%" Min="10%" Max="90%">
-                            <ContentTemplate>
-                                <LayersTreeView DiagramId="@_diagramId" />
-                            </ContentTemplate>
-                        </SplitterPane>
-                        <SplitterPane Size="40%" Min="10%" Max="90%">
-                            <ContentTemplate>
-                                <TrendPropertyGrid @ref="_trendPropertyGrid" Trend="@_context.SelectedTrend" />
-                            </ContentTemplate>
-                        </SplitterPane>
-                    </SplitterPanes>
-                </SfSplitter>
-            </ContentTemplate>
-        </SplitterPane>
-        <SplitterPane Size="85%" Min="40%" Max="90%">
-            <ContentTemplate>
-                <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId" @bind-Trend="@_context.SelectedTrend" />
-            </ContentTemplate>
-        </SplitterPane>
-    </SplitterPanes>
-</SfSplitter>
+<CascadingValue TValue="Trend" Value="@_selectedTrend" Name="SelectedTrend">
+
+    <SfSplitter SeparatorSize="1">
+        <SplitterEvents Resizing="OnSplitterResized"></SplitterEvents>
+        <SplitterPanes>
+            <SplitterPane Size="15%" Min="10%" Max="90%">
+                <ContentTemplate>
+                    <SfSplitter Orientation="Orientation.Vertical" SeparatorSize="1">
+                        <SplitterPanes>
+                            <SplitterPane Size="60%" Min="10%" Max="90%">
+                                <ContentTemplate>
+                                    <LayersTreeView DiagramId="@_diagramId" />
+                                </ContentTemplate>
+                            </SplitterPane>
+                            <SplitterPane Size="40%" Min="10%" Max="90%">
+                                <ContentTemplate>
+                                    <TrendPropertyGrid @ref="_trendPropertyGrid" SelectedTrendChanged="OnSelectedTrendChanged"/>
+                                </ContentTemplate>
+                            </SplitterPane>
+                        </SplitterPanes>
+                    </SfSplitter>
+                </ContentTemplate>
+            </SplitterPane>
+            <SplitterPane Size="85%" Min="40%" Max="90%">
+                <ContentTemplate>
+                    <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId" SelectedTrendChanged="OnSelectedTrendChanged"/>
+                </ContentTemplate>
+            </SplitterPane>
+        </SplitterPanes>
+    </SfSplitter>
+
+</CascadingValue>

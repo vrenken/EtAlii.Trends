@@ -16,6 +16,8 @@ public partial class EditorPage
 #pragma warning restore CS8618
 
     private readonly EditorContext _context = new();
+
+    private Trend? _selectedTrend;
     protected override async Task OnInitializedAsync()
     {
         var user = await _queryDispatcher.DispatchAsync<User>(new GetUserQuery(Guid.Empty)).ConfigureAwait(false);
@@ -28,4 +30,9 @@ public partial class EditorPage
     }
 
     private void OnSplitterResized(ResizingEventArgs arg) => _trendsDiagram.OnSplitterResized(arg);
+
+    private void OnSelectedTrendChanged(Trend? trend)
+    {
+        _selectedTrend = trend;
+    }
 }
