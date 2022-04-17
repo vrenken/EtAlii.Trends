@@ -6,4 +6,5 @@ public class Component : Entity
 {
     public string Name { get; set; }
     public DateTime Moment { get; set; }
+    public Trend Trend { get; set; }
 }

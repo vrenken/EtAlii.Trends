@@ -7,12 +7,12 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.Property(e => e.Name).IsRequired();
-        builder.Property(e => e.Password).IsRequired();
+        builder.Property(entity => entity.Name).IsRequired();
+        builder.Property(entity => entity.Password).IsRequired();
 
         builder
-            .HasMany(e => e.Diagrams)
-            .WithOne(e => e.User)
+            .HasMany(entity => entity.Diagrams)
+            .WithOne(entity => entity.User)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

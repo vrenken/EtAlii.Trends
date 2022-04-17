@@ -42,5 +42,6 @@ public class DataContext : DbContext
         modelBuilder.ApplyConfiguration(new DiagramEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new LayerEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TrendEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ComponentEntityTypeConfiguration());
     }
 }

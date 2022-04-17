@@ -2,6 +2,7 @@ namespace EtAlii.Trends;
 
 using EtAlii.Trends.Diagrams;
 using EtAlii.Trends.Editor.Layers;
+using EtAlii.Trends.Editor.Trends;
 
 public class DatabaseInitializer
 {
@@ -71,6 +72,66 @@ public class DatabaseInitializer
             var layer17 = new Layer { Name = "Data Ecosystem Platforms", Parent = layer14, Diagram = diagram };
             data.Add(layer17);
             data.Entry(layer17).State = EntityState.Added;
+
+            // Trends
+            var trends = new List<Trend>
+            {
+                new()
+                {
+                    Name = "Internet",
+                    Diagram = diagram,
+                    Begin = new DateTime(1960),
+                    End = new DateTime(2023),
+                    Components = new []
+                    {
+                        new Component
+                        {
+                            Name = "DARPA",
+                            Moment = new DateTime(1960),
+                        },
+                        new Component
+                        {
+                            Name = "Now",
+                            Moment = new DateTime(2023)
+                        }
+                    }
+                },
+                new()
+                {
+                    Name = "Mobile phones",
+                    Diagram = diagram,
+                    Begin = new DateTime(1992),
+                    End = new DateTime(2014),
+                    Components = new []
+                    {
+                        new Component
+                        {
+                            Name = "Motorola 8900X-2",
+                            Moment = new DateTime(1992),
+                        },
+                        new Component
+                        {
+                            Name = "iPhone",
+                            Moment = new DateTime(2014)
+                        }
+                    }
+                },
+            };
+
+            foreach (var trend in trends)
+            {
+                data.Trends.Add(trend);
+                data.Entry(trend).State = EntityState.Added;
+            }
+
+            // foreach (var component in trends.SelectMany(t => t.Components))
+            // {
+            //     data.Co.Add(trend);
+            //     data.Entry(trend).State = EntityState.Added;
+            // }
+            //
+            // data.Trends.Add(mobilePhones);
+            // data.Entry(mobilePhones).State = EntityState.Added;
 
             data.SaveChanges();
         }

@@ -11,14 +11,14 @@ public class DiagramEntityTypeConfiguration : IEntityTypeConfiguration<Diagram>
         builder.Property(e => e.Name).IsRequired();
 
         builder
-            .HasMany(e => e.Trends)
-            .WithOne(e => e.Diagram)
+            .HasMany(entity => entity.Trends)
+            .WithOne(entity => entity.Diagram)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .HasMany(e => e.Layers)
-            .WithOne(e => e.Diagram)
+            .HasMany(entity => entity.Layers)
+            .WithOne(entity => entity.Diagram)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

@@ -13,7 +13,7 @@ public class Trend : DiagramEntity
     public double X { get; set; }
     public double Y { get; set; }
 
-    public Component[] Components = Array.Empty<Component>();
+    public IList<Component> Components { get; init; } = new List<Component>();
 
     public Layer? Layer { get; set; }
     public bool IsExpanded { get; set; }
