@@ -47,7 +47,7 @@ var app = builder.Build();
 app.Use(async (_, next) =>
 {
     CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-    CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;;
+    CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
 
     // Call the next delegate/middleware in the pipeline
     await next().ConfigureAwait(false);
