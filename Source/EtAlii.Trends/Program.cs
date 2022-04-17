@@ -1,3 +1,4 @@
+using System.Globalization;
 using EtAlii.Trends.Diagrams;
 using EtAlii.Trends.Editor.Layers;
 using EtAlii.Trends.Editor.Trends;
@@ -41,6 +42,16 @@ Logging.ConfigureGlobalLogging(builder.Configuration);
 builder.Host.UseSerilog((context, loggerConfiguration) => Logging.ConfigureWebHostLogging(context.Configuration, loggerConfiguration), true);
 
 var app = builder.Build();
+
+// Let's invariant culture for web presentation (i.e. have the whole application in english.
+app.Use(async (_, next) =>
+{
+    CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+    CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;;
+
+    // Call the next delegate/middleware in the pipeline
+    await next().ConfigureAwait(false);
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
