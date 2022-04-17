@@ -136,8 +136,6 @@ public partial class TrendPropertyGrid
             .DispatchAsync<Component>(command)
             .ConfigureAwait(false);
 
-        _components!.Add(component);
-
         await SelectedTrendChanged.InvokeAsync(SelectedTrend).ConfigureAwait(false);
     }
 }
