@@ -6,16 +6,18 @@ using System.Collections.ObjectModel;
 using EtAlii.Trends.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Syncfusion.Blazor.Diagram;
+using Syncfusion.Blazor.Navigations;
+using ClickEventArgs = Syncfusion.Blazor.Diagram.ClickEventArgs;
+using Orientation = Syncfusion.Blazor.Diagram.Orientation;
 
 public partial class TrendsDiagram
 {
     [Parameter] public Guid DiagramId { get; set; }
 
 
-    [Parameter] public Trend? Trend { get; set; }
+    [CascadingParameter(Name = "SelectedTrend")] public Trend? SelectedTrend { get; set; }
 
-
-    [Parameter] public EventCallback<Trend?> TrendChanged { get; set; }
+    [Parameter] public EventCallback<Trend?> SelectedTrendChanged { get; set; }
 
 
     private readonly ObservableCollection<Trend> _trends = new();
@@ -96,10 +98,10 @@ public partial class TrendsDiagram
         var trend = (Trend)node.Data!;
         node.Style = new ShapeStyle { Fill = "white", StrokeColor = "black", StrokeWidth = 2, };
         node.BackgroundColor = "white";
-        node.Width = 150;
-        node.Height = 50;
         node.OffsetX = trend.X;
         node.OffsetY = trend.Y;
+        node.Width = trend.W == 0 ? 150 : trend.W;
+        node.Height = trend.H == 0 ? 50 : trend.H;
         node.Annotations = new DiagramObjectCollection<ShapeAnnotation>
         {
             new()
@@ -133,6 +135,9 @@ public partial class TrendsDiagram
                 await _commandDispatcher
                     .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
                     .ConfigureAwait(false);
+
+                SelectedTrend = trend;
+                await SelectedTrendChanged.InvokeAsync(SelectedTrend).ConfigureAwait(false);
             }
             else
             {
@@ -157,6 +162,21 @@ public partial class TrendsDiagram
         }
     }
 
+    private async Task OnTrendNodeSizeChanged(SizeChangedEventArgs e)
+    {
+        var settings = e.Element;
+        foreach (var node in settings.Nodes)
+        {
+            var trend = (Trend)node.Data;
+
+            trend.W = node.Width!.Value;
+            trend.H = node.Height!.Value;
+
+            await _commandDispatcher
+                .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
+                .ConfigureAwait(false);
+        }
+    }
 
     private async Task OnClicked(ClickEventArgs e)
     {
@@ -173,12 +193,12 @@ public partial class TrendsDiagram
             var node = (Node)e.NewValue[0];
             var trend = (Trend)node.Data;
 
-            Trend = trend;
+            SelectedTrend = trend;
         }
         else
         {
-            Trend = null;
+            SelectedTrend = null;
         }
-        await TrendChanged.InvokeAsync(Trend).ConfigureAwait(false);
+        await SelectedTrendChanged.InvokeAsync(SelectedTrend).ConfigureAwait(false);
     }
 }

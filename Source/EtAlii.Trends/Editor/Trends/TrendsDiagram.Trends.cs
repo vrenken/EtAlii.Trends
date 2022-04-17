@@ -73,6 +73,8 @@ public partial class TrendsDiagram
                 Name = $"New trend {_nodes.Count + 1}",
                 X = position.X, Y = position.Y,
                 Diagram = diagram,
+                Begin = DateTime.Now,
+                End = DateTime.Now.AddMonths(1)
             },
             DiagramId: DiagramId
         );
@@ -83,6 +85,6 @@ public partial class TrendsDiagram
 
         AddTrend(trend);
 
-        Trend = trend;
+        SelectedTrend = trend;
     }
 }
