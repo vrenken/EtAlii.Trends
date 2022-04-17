@@ -16,6 +16,7 @@ public class GetAllTrendsQueryHandler : IGetAllTrendsQueryHandler
         var items = data.Trends
             .AsNoTracking()
             .Include(t => t.Diagram)
+            .Include(t => t.Components)
             .Where(t => t.Diagram.Id == query.DiagramId)
             .AsAsyncEnumerable()
             .ConfigureAwait(false);
