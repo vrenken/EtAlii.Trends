@@ -22,6 +22,9 @@
         <SfGrid DataSource="@_components" AllowPaging="false" AllowSorting="true" Toolbar="@(new List<string> { "Add", "Edit", "Delete", "Update", "Cancel" })">
             <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" />
             <GridEvents TValue="Component" OnActionComplete="OnActionComplete"  />
+            <GridTemplates>
+                <EmptyRecordTemplate>No components assigned</EmptyRecordTemplate>
+            </GridTemplates>
             <GridSortSettings>
                 <GridSortColumns>
                     <GridSortColumn Field="@nameof(Component.Moment)" />
