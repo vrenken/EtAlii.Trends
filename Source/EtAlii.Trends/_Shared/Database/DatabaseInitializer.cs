@@ -80,19 +80,19 @@ public class DatabaseInitializer
                 {
                     Name = "Internet",
                     Diagram = diagram,
-                    Begin = new DateTime(1960),
-                    End = new DateTime(2023),
+                    Begin = new DateTime(1960, 1, 1),
+                    End = new DateTime(2023, 1, 1),
                     Components = new []
                     {
                         new Component
                         {
                             Name = "DARPA",
-                            Moment = new DateTime(1960),
+                            Moment = new DateTime(1960, 1, 1),
                         },
                         new Component
                         {
                             Name = "Now",
-                            Moment = new DateTime(2023)
+                            Moment = new DateTime(2023, 1, 1)
                         }
                     }
                 },
@@ -100,38 +100,49 @@ public class DatabaseInitializer
                 {
                     Name = "Mobile phones",
                     Diagram = diagram,
-                    Begin = new DateTime(1992),
-                    End = new DateTime(2014),
+                    Begin = new DateTime(1992, 1, 1),
+                    End = new DateTime(2014, 1, 1),
                     Components = new []
                     {
                         new Component
                         {
                             Name = "Motorola 8900X-2",
-                            Moment = new DateTime(1992),
+                            Moment = new DateTime(1992, 1, 1),
                         },
                         new Component
                         {
                             Name = "iPhone",
-                            Moment = new DateTime(2014)
+                            Moment = new DateTime(2014, 1, 1)
                         }
                     }
                 },
             };
 
+            double horizontalPosition = 0;
+            double verticalPosition = 2000;
+
             foreach (var trend in trends)
             {
+                trend.SetPositionToTime();
+                verticalPosition += 50L;
+                horizontalPosition = trend.X;
+
+                trend.Y = verticalPosition;
+
+
                 data.Trends.Add(trend);
                 data.Entry(trend).State = EntityState.Added;
             }
 
-            // foreach (var component in trends.SelectMany(t => t.Components))
-            // {
-            //     data.Co.Add(trend);
-            //     data.Entry(trend).State = EntityState.Added;
-            // }
-            //
-            // data.Trends.Add(mobilePhones);
-            // data.Entry(mobilePhones).State = EntityState.Added;
+            diagram.DiagramTimePosition = horizontalPosition;
+            diagram.DiagramVerticalPosition = verticalPosition;
+            data.Entry(diagram).State = EntityState.Added;
+
+            foreach (var component in trends.SelectMany(t => t.Components))
+            {
+                data.Components.Add(component);
+                data.Entry(component).State = EntityState.Added;
+            }
 
             data.SaveChanges();
         }
