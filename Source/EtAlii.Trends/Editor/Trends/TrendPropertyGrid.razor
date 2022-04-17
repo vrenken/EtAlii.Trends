@@ -3,44 +3,38 @@
 @using Syncfusion.Blazor.Calendars
 @using TextAlign = Syncfusion.Blazor.Grids.TextAlign
 
-<h4 class="panel-header">@(Trend?.Name ?? "Properties")</h4>
+@inject ICommandDispatcher _commandDispatcher;
+@inject IQueryDispatcher _queryDispatcher;
+
+<h4 class="panel-header">@(SelectedTrend?.Name ?? "Properties")</h4>
 <div class="property-grid">
     <div class="aspect-container">
         <label class="aspect-header">Begin</label>
-        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@Trend?.Begin" ShowClearButton="true" WeekNumber="true" />
+        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@_selectedTrendBegin" ValueChanged="UpdateSelectedTrendBegin" ShowClearButton="true" WeekNumber="true" Depth="CalendarView.Year" Start="CalendarView.Year" Format="MMMM yyyy" />
     </div>
     <div class="aspect-container">
         <label class="aspect-header">End</label>
-        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@Trend?.End" ShowClearButton="true" WeekNumber="true" />
+        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" Value="@_selectedTrendEnd" ValueChanged="UpdateSelectedTrendEnd" ShowClearButton="true" WeekNumber="true" Depth="CalendarView.Year" Start="CalendarView.Year" Format="MMMM yyyy" />
     </div>
     <div class="aspect-container">
         <label class="aspect-header">Components</label>
-        <SfGrid DataSource="@_components" AllowRowDragAndDrop="true">
+
+        <SfGrid DataSource="@_components" AllowPaging="false" AllowSorting="true" Toolbar="@(new List<string> { "Add", "Edit", "Delete", "Update", "Cancel" })">
             <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" />
-            <GridSelectionSettings Type="SelectionType.Multiple"/>
-            @* <GridTemplates> *@
-            @*     <RowTemplate> *@
-            @*         @{ *@
-            @*             var component = (context as MailItem); *@
-            @*             <td> *@
-            @*                 <table class="CardTable" cellpadding="3" cellspacing="2" cols="2"> *@
-            @*                     <tbody> *@
-            @*                     <tr> *@
-            @*                         <td class="CardHeader" colspan="2">@component.Name</td> *@
-            @*                     </tr> *@
-            @*                     <tr> *@
-            @*                         <td >@component.Begin</td> *@
-            @*                         <td>@component.End</td> *@
-            @*                     </tr> *@
-            @*                     </tbody> *@
-            @*                 </table> *@
-            @*             </td> *@
-            @*         } *@
-            @*     </RowTemplate> *@
-            @* </GridTemplates> *@
+            <GridEvents TValue="Component" OnActionComplete="OnActionComplete"  />
+            <GridSortSettings>
+                <GridSortColumns>
+                    <GridSortColumn Field="@nameof(Component.Moment)" />
+                </GridSortColumns>
+            </GridSortSettings>
             <GridColumns>
-                <GridColumn Field="@nameof(Component.Name)" HeaderText="Name"/>
-                <GridColumn Field="@nameof(Component.Moment)" Format="yyyy-M-d" HeaderText="Moment"/>
+                <GridColumn Field="@nameof(Component.Id)" HeaderText="Id" Visible="false" IsPrimaryKey="true" />
+                <GridColumn Field="@nameof(Component.Name)" HeaderText="Name" ValidationRules="@(new ValidationRules{ Required=true })" Type="ColumnType.String"/>
+                <GridColumn Field="@nameof(Component.Moment)" Format="MMMM yyyy" HeaderText="Moment"  ValidationRules="@(new ValidationRules{ Required=true})" Type="ColumnType.Date">
+                    <EditTemplate>
+                        <SfDatePicker TItem="Component" TValue="DateTime" ID="Moment" Placeholder="Choose a Date" @bind-Value="@((context as Component).Moment)" DataSource="@_components" WeekNumber="true" Depth="CalendarView.Year" Start="CalendarView.Year" Format="MMMM yyyy"/>
+                    </EditTemplate>
+                </GridColumn>
             </GridColumns>
         </SfGrid>
     </div>
@@ -59,4 +53,25 @@
         margin-bottom: 5px;
         margin-bottom: 2px;
     }
+
+    .e-toolbar .e-tbar-btn-text, .e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn-text {
+        visibility: collapse;
+        width: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .e-hscroll .e-scroll-nav.e-scroll-left-nav {
+        visibility: collapse;
+        width: 0;
+        margin: 0;
+        padding: 0;
+    }
+    .e-hscroll .e-scroll-nav.e-scroll-right-nav {
+        visibility: collapse;
+        width: 0;
+        margin: 0;
+        padding: 0;
+    }
+
 </style>
