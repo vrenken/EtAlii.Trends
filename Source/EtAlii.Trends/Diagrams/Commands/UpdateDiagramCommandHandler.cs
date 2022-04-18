@@ -1,4 +1,4 @@
-// Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Diagrams
+// Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Trends
 
 namespace EtAlii.Trends.Diagrams;
 
