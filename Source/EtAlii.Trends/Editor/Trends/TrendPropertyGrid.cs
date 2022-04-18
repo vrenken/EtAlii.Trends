@@ -130,7 +130,7 @@ public partial class TrendPropertyGrid
                 component.Trend = trend;
                 return component;
             },
-            TrendId: SelectedTrend.Id
+            TrendId: SelectedTrend!.Id
         );
         component = await _commandDispatcher
             .DispatchAsync<Component>(command)

@@ -35,7 +35,7 @@
                 <GridColumn Field="@nameof(Component.Name)" HeaderText="Name" ValidationRules="@(new ValidationRules{ Required=true })" Type="ColumnType.String"/>
                 <GridColumn Field="@nameof(Component.Moment)" Format="MMMM yyyy" HeaderText="Moment"  ValidationRules="@(new ValidationRules{ Required=true})" Type="ColumnType.Date">
                     <EditTemplate>
-                        <SfDatePicker TItem="Component" TValue="DateTime" ID="Moment" Placeholder="Choose a Date" @bind-Value="@((context as Component).Moment)" DataSource="@_components" WeekNumber="true" Depth="CalendarView.Year" Start="CalendarView.Year" Format="MMMM yyyy"/>
+                        <SfDatePicker TItem="Component" TValue="DateTime" ID="Moment" Placeholder="Choose a Date" @bind-Value="@(((Component)context).Moment)" DataSource="@_components" WeekNumber="true" Depth="CalendarView.Year" Start="CalendarView.Year" Format="MMMM yyyy"/>
                     </EditTemplate>
                 </GridColumn>
             </GridColumns>
