@@ -26,6 +26,7 @@ public partial class TrendsDiagram
 
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
+    private IDiagramObject? _drawingObject;
 
 #pragma warning disable CS8618
     public TrendsDiagram()
@@ -40,8 +41,8 @@ public partial class TrendsDiagram
                     .ConfigureAwait(false);
 
                 diagram.DiagramZoom = _currentZoom;
-                diagram.DiagramTimePosition = _horizontalOffset;
-                diagram.DiagramVerticalPosition = _verticalOffset;
+                diagram.HorizontalOffset = _horizontalOffset;
+                diagram.VerticalOffset = _verticalOffset;
 
 
                 await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
@@ -69,11 +70,10 @@ public partial class TrendsDiagram
     private void ApplyConnectorDefaults(IDiagramObject diagramObject)
     {
         var connector = (Connector)diagramObject;
-        connector.Type = ConnectorSegmentType.Orthogonal;
+        connector.Type = ConnectorSegmentType.Bezier;
         connector.TargetDecorator.Shape = DecoratorShape.None;
         connector.Style = new ShapeStyle { StrokeColor = "#6d6d6d" };
-        connector.Constraints = 0;
-        connector.CornerRadius = 5;
+        connector.Constraints = ConnectorConstraints.Default;
     }
 
     // Create the layout info.
@@ -102,6 +102,35 @@ public partial class TrendsDiagram
         node.OffsetY = trend.Y;
         node.Width = trend.W == 0 ? 150 : trend.W;
         node.Height = trend.H == 0 ? 50 : trend.H;
+
+        var position = 1f;
+
+        foreach (var component in trend.Components)
+        {
+            position += 0.3f;
+
+            node.Ports.Add(new PointPort
+            {
+                Shape = PortShapes.Circle,
+                Width = 16,
+                Height = 16,
+                Visibility = PortVisibility.Visible,
+                Offset = new DiagramPoint { X = position, Y = 0.5f },
+                Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
+                Constraints =  PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
+            });
+            node.Annotations.Add(new ShapeAnnotation
+            {
+                Constraints = AnnotationConstraints.ReadOnly,
+                Visibility = true,
+                Style = new TextStyle
+                {
+                    Color = "black"
+                },
+                Content = component.Name,
+                Offset = new DiagramPoint { X = position + 0.1f, Y = 0.4f }
+            });
+        }
         node.Annotations = new DiagramObjectCollection<ShapeAnnotation>
         {
             new()
@@ -114,14 +143,25 @@ public partial class TrendsDiagram
             }
         };
 
-        node.Constraints = NodeConstraints.Default &
-                           ~NodeConstraints.Rotate &
-                           ~NodeConstraints.ResizeNorth &
-                           ~NodeConstraints.ResizeNorthWest &
-                           ~NodeConstraints.ResizeNorthEast &
-                           ~NodeConstraints.ResizeSouth &
-                           ~NodeConstraints.ResizeSouthEast &
-                           ~NodeConstraints.ResizeSouthWest;
+        node.Constraints =
+            NodeConstraints.ResizeWest |
+            NodeConstraints.ResizeEast |
+            NodeConstraints.OutConnect |
+            NodeConstraints.InConnect |
+            NodeConstraints.Delete |
+            NodeConstraints.PointerEvents |
+            //NodeConstraints.Rotate |
+            NodeConstraints.Drag |
+            // NodeConstraints.InConnect |
+            // NodeConstraints.OutConnect |
+            // NodeConstraints.Rotate |
+            // NodeConstraints.ResizeNorth |
+            // NodeConstraints.ResizeNorthWest |
+            // NodeConstraints.ResizeNorthEast |
+            // NodeConstraints.ResizeSouth |
+            // NodeConstraints.ResizeSouthEast |
+            // NodeConstraints.ResizeSouthWest
+            NodeConstraints.Select;
     }
 
     private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)

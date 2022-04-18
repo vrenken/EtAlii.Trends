@@ -8,22 +8,21 @@
 
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>
-        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInItemCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick" />
-        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutItemCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick" />
+        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick" />
+        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="@OnZoomOutItemClick" />
         <ToolbarItem @ref="@_resetItem" TooltipText="Reset" CssClass="@_resetItemCssClass" PrefixIcon="e-icons e-refresh" OnClick="@OnResetItemClick" />
         <ToolbarItem Type="ItemType.Separator" />
-        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panItemCssClass" TooltipText="Pan Tool" />
-        @* OnClick="@OnPanClick" *@
-        <ToolbarItem @ref="@_pointerItem" PrefixIcon="e-icons e-mouse-pointer" CssClass="@_pointerItemCssClass" TooltipText="Pointer" />
-        @* OnClick="@OnPointerClick"  *@
+        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panZoomCssClass" TooltipText="Pan Tool" OnClick="@OnPanClick" />
+        <ToolbarItem @ref="@_editTrendItem" PrefixIcon="e-icons e-resize" CssClass="@_editTrendCssClass" TooltipText="Edit trend" OnClick="@OnEditTrendClick" />
+        <ToolbarItem @ref="@_editConnectionItem" PrefixIcon="e-icons e-length" CssClass="@_editConnectionCssClass" TooltipText="Edit connection" OnClick="@OnEditConnectionClick" />
         <ToolbarItem Type="ItemType.Separator" />
-        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" Disabled="@_view" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick" />
-        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" Disabled="@_center" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick" />
+        <ToolbarItem @ref="@_viewItem" CssClass="@_viewCssClass" PrefixIcon="e-icons e-bring-to-view" TooltipText="Bring into view" OnClick="@OnBringIntoViewClick" />
+        <ToolbarItem @ref="@_centerItem" CssClass="@_centerCssClass" PrefixIcon="e-icons e-bring-to-center" TooltipText="Bring into center" OnClick="@OnBringIntoCenterClick" />
         <ToolbarItem Type="ItemType.Separator" />
         <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="@OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page" />
 
-        <ToolbarItem PrefixIcon="e-icons e-tbar-search tb-icons" TooltipText="Search" Align="@ItemAlign.Right" />
-        <ToolbarItem PrefixIcon="e-icons e-tbar-settings tb-icons" TooltipText="Settings" Align="@ItemAlign.Right" />
+        <ToolbarItem PrefixIcon="e-icons e-search" TooltipText="Search" Align="@ItemAlign.Right" />
+        <ToolbarItem PrefixIcon="e-icons e-settings" TooltipText="Settings" Align="@ItemAlign.Right" />
     </ToolbarItems>
 </SfToolbar>
 <div>
@@ -34,10 +33,12 @@
         Height="@_diagramHeight"
         InteractionController="@_diagramTool"
         ConnectorCreating="ApplyConnectorDefaults"
+        DrawingObject="@_drawingObject"
         NodeCreating="ApplyTrendNodeDefaults"
         TextChanged="OnTrendNodeTextChanged"
         PositionChanged="OnTrendNodePositionChanged"
         SizeChanged="OnTrendNodeSizeChanged"
+        ConnectionChanging="OnConnectionChanging"
         Nodes="@_nodes"
         Connectors="@_connectors"
         Click="OnClicked"
