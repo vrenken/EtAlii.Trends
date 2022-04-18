@@ -22,7 +22,9 @@ public class DatabaseInitializer
             {
                 Name = "Test diagram", User = user,
             };
-            Diagram.ResetPanZoom(diagram);
+            diagram.HorizontalOffset = Diagram.StartOffset;
+            diagram.VerticalOffset = Diagram.StartOffset;
+            diagram.DiagramZoom = 1D;
 
             data.Users.Add(user);
             data.Diagrams.Add(diagram);
@@ -116,26 +118,47 @@ public class DatabaseInitializer
                         }
                     }
                 },
+                new()
+                {
+                    Name = "Metaverse",
+                    Diagram = diagram,
+                    Begin = new DateTime(2021, 1, 1),
+                    End = new DateTime(2035, 1, 1),
+                    Components = new []
+                    {
+                        new Component
+                        {
+                            Name = "Facebook announcement",
+                            Moment = new DateTime(2021, 1, 1),
+                        },
+                        new Component
+                        {
+                            Name = "Microsoft announcement",
+                            Moment = new DateTime(2022, 1, 1)
+                        },
+                        new Component
+                        {
+                        Name = "Apple announcement",
+                        Moment = new DateTime(2023, 1, 1)
+                        }
+                    }
+                },
             };
 
-            double horizontalPosition = 0;
-            double verticalPosition = 2000;
+            var horizontalPosition = Diagram.StartOffset;
+            var verticalPosition = Diagram.StartOffset;
 
             foreach (var trend in trends)
             {
-                trend.SetPositionToTime();
-                verticalPosition += 50L;
-                horizontalPosition = trend.X;
-
-                trend.Y = verticalPosition;
-
+                trend.X = horizontalPosition += 100D;
+                trend.Y = verticalPosition += 100D;
+                trend.W = 150;
+                trend.H = 50;
 
                 data.Trends.Add(trend);
                 data.Entry(trend).State = EntityState.Added;
             }
 
-            diagram.DiagramTimePosition = horizontalPosition;
-            diagram.DiagramVerticalPosition = verticalPosition;
             data.Entry(diagram).State = EntityState.Added;
 
             foreach (var component in trends.SelectMany(t => t.Components))

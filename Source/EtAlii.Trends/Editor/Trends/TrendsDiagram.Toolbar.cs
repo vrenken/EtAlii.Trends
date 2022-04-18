@@ -34,7 +34,7 @@ public partial class TrendsDiagram
     private ToolbarItem? _fitToPageItem;
     private string? _fitCssClass;
 
-    private InteractionController _diagramTool;
+    private InteractionController _diagramTool = InteractionController.Default | InteractionController.ContinuousDraw | InteractionController.ZoomPan;
     private SfToolbar? _toolbar;
 
     private async Task OnResetItemClick()
@@ -43,21 +43,23 @@ public partial class TrendsDiagram
             .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
             .ConfigureAwait(false);
 
-        Diagram.ResetPanZoom(diagram);
+        diagram.HorizontalOffset = Diagram.StartOffset;
+        diagram.VerticalOffset = Diagram.StartOffset;
+        diagram.DiagramZoom = Diagram.StartZoom;
 
         await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
             .ConfigureAwait(false);
 
         _currentZoom = diagram.DiagramZoom;
-        _horizontalOffset = diagram.DiagramTimePosition;
-        _verticalOffset = diagram.DiagramVerticalPosition;
+        _horizontalOffset = diagram.HorizontalOffset;
+        _verticalOffset = diagram.VerticalOffset;
 
         StateHasChanged();
     }
 
     private void OnZoomInItemClick()
     {
-        if (_diagramTool == InteractionController.Default)
+        if (_diagramTool.HasFlag(InteractionController.Default))
         {
             _pointerItemCssClass = "tb-item-middle tb-item-selected";
             _panItemCssClass= "tb-item-start";
@@ -72,11 +74,11 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _trendsDiagram.Zoom(1.1, new DiagramPoint { X = _horizontalOffset, Y = _verticalOffset });
+        _trendsDiagram.Zoom(1.1f, null); // null causes zoom to happen from the center of the diagram
     }
     private void OnZoomOutItemClick()
     {
-        if (_diagramTool == InteractionController.Default)
+        if (_diagramTool.HasFlag(InteractionController.Default))
         {
             _pointerItemCssClass = "tb-item-middle tb-item-selected";
             _panItemCssClass= "tb-item-start";
@@ -91,25 +93,25 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _trendsDiagram.Zoom(1 / 1.1, new DiagramPoint { X = _horizontalOffset, Y = _verticalOffset });
+        _trendsDiagram.Zoom(1 / 1.1f, null); // null causes zoom to happen from the center of the diagram
     }
-     private void OnPanClick()
-    {
-        _panItemCssClass = "tb-item-middle tb-item-selected";
-        _zoomInItemCssClass = "tb-item-start";
-        _zoomOutItemCssClass = "tb-item-start";
-        _viewCssClass = "tb-item-start";
-        _centerCssClass = "tb-item-start";
-        _fitCssClass = "tb-item-start";
-        _pointerItemCssClass = "tb-item-start";
-        _pointerItemCssClass = "tb-item-start";
-        _diagramTool = InteractionController.ZoomPan;
-        _view = true;
-        _center = true;
-    }
+    //  private void OnPanClick()
+    // {
+    //     _panItemCssClass = "tb-item-middle tb-item-selected";
+    //     _zoomInItemCssClass = "tb-item-start";
+    //     _zoomOutItemCssClass = "tb-item-start";
+    //     _viewCssClass = "tb-item-start";
+    //     _centerCssClass = "tb-item-start";
+    //     _fitCssClass = "tb-item-start";
+    //     _pointerItemCssClass = "tb-item-start";
+    //     _pointerItemCssClass = "tb-item-start";
+    //     _diagramTool = InteractionController.ZoomPan | InteractionController.ContinuousDraw;
+    //     _view = true;
+    //     _center = true;
+    // }
     private void OnFitToPageClick()
     {
-        if (_diagramTool == InteractionController.Default)
+        if (_diagramTool.HasFlag(InteractionController.Default))
         {
             _pointerItemCssClass = "tb-item-middle tb-item-selected";
             _panItemCssClass= "tb-item-start";
@@ -124,7 +126,32 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-start";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-middle tb-item-selected";
+
         _trendsDiagram.FitToPage();
+        // double? left = null, top = null, right = null, bottom = null;
+        //
+        // foreach (var node in _trendsDiagram.Nodes)
+        // {
+        //     left = !left.HasValue
+        //         ? node.OffsetX
+        //         : Math.Min(left.Value, node.OffsetX);
+        //     top = !top.HasValue
+        //         ? node.OffsetY
+        //         : Math.Min(top.Value, node.OffsetY);
+        //
+        //     var nodeRight = node.OffsetX + node.Width;
+        //     var nodeBottom = node.OffsetY + node.Height;
+        //
+        //     right = !right.HasValue
+        //         ? nodeRight
+        //         : Math.Max(right.Value, nodeRight!.Value);
+        //
+        //     bottom = !bottom.HasValue
+        //         ? nodeBottom
+        //         : Math.Max(bottom.Value, nodeBottom!.Value);
+        // }
+        // var bound = new DiagramRect(left, top, right - left, bottom - top);
+        // _trendsDiagram.BringIntoView(bound);
     }
     private void OnBringIntoViewClick()
     {
@@ -134,7 +161,7 @@ public partial class TrendsDiagram
         _viewCssClass = "tb-item-middle tb-item-selected";
         _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-        _pointerItemCssClass = _diagramTool == InteractionController.Default
+        _pointerItemCssClass = _diagramTool.HasFlag(InteractionController.Default)
             ? "tb-item-middle tb-item-selected"
             : "tb-item-start";
         if (_trendsDiagram.SelectionSettings.Nodes.Count > 0)
@@ -146,7 +173,7 @@ public partial class TrendsDiagram
     }
     private void OnBringIntoCenterClick()
     {
-        _pointerItemCssClass = _diagramTool == InteractionController.Default
+        _pointerItemCssClass = _diagramTool.HasFlag(InteractionController.Default)
             ? "tb-item-middle tb-item-selected"
             : "tb-item-start";
         _panItemCssClass = "tb-item-start";
@@ -162,17 +189,17 @@ public partial class TrendsDiagram
             _trendsDiagram.BringIntoCenter(bound);
         }
     }
-    private void OnPointerClick()
-    {
-        _diagramTool = InteractionController.SingleSelect | InteractionController.MultipleSelect;
-        _panItemCssClass = "tb-item-start";
-        _zoomInItemCssClass = "tb-item-start";
-        _zoomOutItemCssClass = "tb-item-start";
-        _viewCssClass = "tb-item-start";
-        _centerCssClass = "tb-item-start";
-        _fitCssClass = "tb-item-start";
-        _pointerItemCssClass = "tb-item-middle tb-item-selected";
-        _view = false;
-        _center = false;
-    }
+    // private void OnPointerClick()
+    // {
+    //     _diagramTool = InteractionController.Default | InteractionController.ContinuousDraw;
+    //     _panItemCssClass = "tb-item-start";
+    //     _zoomInItemCssClass = "tb-item-start";
+    //     _zoomOutItemCssClass = "tb-item-start";
+    //     _viewCssClass = "tb-item-start";
+    //     _centerCssClass = "tb-item-start";
+    //     _fitCssClass = "tb-item-start";
+    //     _pointerItemCssClass = "tb-item-middle tb-item-selected";
+    //     _view = false;
+    //     _center = false;
+    // }
 }

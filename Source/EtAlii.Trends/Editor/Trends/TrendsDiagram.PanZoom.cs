@@ -29,8 +29,8 @@ public partial class TrendsDiagram
             .ConfigureAwait(false);
 
         _currentZoom = diagram.DiagramZoom;
-        _horizontalOffset = diagram.DiagramTimePosition;
-        _verticalOffset = diagram.DiagramVerticalPosition;
+        _horizontalOffset = diagram.HorizontalOffset;
+        _verticalOffset = diagram.VerticalOffset;
 
         StateHasChanged();
     }
