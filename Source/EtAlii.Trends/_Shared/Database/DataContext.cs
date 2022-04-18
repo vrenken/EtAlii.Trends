@@ -13,6 +13,8 @@ public class DataContext : DbContext
     public DbSet<Diagram> Diagrams { get; init; }
     public DbSet<Layer> Layers { get; init; }
 
+    public DbSet<Connection> Connections { get; init; }
+
     public DbSet<Component> Components { get; init; }
 #pragma warning restore CS8618
 
@@ -45,5 +47,6 @@ public class DataContext : DbContext
         modelBuilder.ApplyConfiguration(new LayerEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TrendEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ComponentEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ConnectionEntityTypeConfiguration());
     }
 }

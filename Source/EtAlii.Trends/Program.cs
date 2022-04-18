@@ -36,6 +36,9 @@ builder.Services.AddSingleton<IAddComponentCommandHandler, AddComponentCommandHa
 builder.Services.AddSingleton<IUpdateComponentCommandHandler, UpdateComponentCommandHandler>();
 builder.Services.AddSingleton<IRemoveComponentCommandHandler, RemoveComponentCommandHandler>();
 
+builder.Services.AddSingleton<IGetAllConnectionsQueryHandler, GetAllConnectionsQueryHandler>();
+builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommandHandler>();
+
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
 var systemContext = new ApplicationContext();

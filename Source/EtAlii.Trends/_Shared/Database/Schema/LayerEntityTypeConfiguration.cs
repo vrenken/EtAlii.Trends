@@ -9,6 +9,8 @@ public class LayerEntityTypeConfiguration : IEntityTypeConfiguration<Layer>
     {
         builder.Property(entity => entity.Name).IsRequired();
 
+        builder.HasOne(entity => entity.Diagram);
+
         builder.HasOne(entity=> entity.Parent)
             .WithMany(entity=> entity.Children)
             .HasForeignKey(entity => entity.ParentId)
