@@ -11,15 +11,6 @@ public partial class LayersTreeView
     private SfContextMenu<MenuItem> _layerTreeViewMenu;
 #pragma warning restore CS8618
 
-    // Datasource for menu items
-    private readonly List<MenuItem> _layerTreeViewMenuItems = new()
-    {
-        new MenuItem { Text = "Edit" },
-        new MenuItem { Text = "Remove" },
-        new MenuItem { Text = "Add" }
-    };
-
-
     // Triggers when context menu is selected
     private async Task OnLayerTreeViewMenuItemSelect(MenuEventArgs<MenuItem> args)
     {

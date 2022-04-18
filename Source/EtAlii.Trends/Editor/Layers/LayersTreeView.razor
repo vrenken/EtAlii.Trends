@@ -33,7 +33,12 @@
             OnNodeDragged="OnLayerNodeDragged"
             NodeEditing="OnLayerNodeEditing"
             NodeEdited="OnLayerNodeEdited"></TreeViewEvents>
-        <SfContextMenu TValue="MenuItem" @ref="_layerTreeViewMenu" Target="#layerTreeView" Items="_layerTreeViewMenuItems">
+        <SfContextMenu TValue="MenuItem" @ref="_layerTreeViewMenu" Target="#layerTreeView">
+            <MenuItems>
+                <MenuItem Text="Edit"/>
+                <MenuItem Text="Remove"/>
+                <MenuItem Text="Add"/>
+            </MenuItems>
             <MenuEvents TValue="MenuItem" ItemSelected="OnLayerTreeViewMenuItemSelect"></MenuEvents>
         </SfContextMenu>
         <TreeViewNodeAnimationSettings>
