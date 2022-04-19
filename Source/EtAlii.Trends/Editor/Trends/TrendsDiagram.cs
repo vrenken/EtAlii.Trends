@@ -54,9 +54,11 @@ public partial class TrendsDiagram
     {
         await InitializePositionAndZoom().ConfigureAwait(false);
 
-        await LoadTrends().ConfigureAwait(false);
+        await _trendNodesLoader.Load(_nodes, DiagramId).ConfigureAwait(false);
 
-        await LoadConnections().ConfigureAwait(false);
+        await _componentConnectionLoader.Load(_connectors, DiagramId).ConfigureAwait(false);
+
+        _connectors.CollectionChanged += OnConnectorsChanged;
     }
 
     // Defines the connector's default values.

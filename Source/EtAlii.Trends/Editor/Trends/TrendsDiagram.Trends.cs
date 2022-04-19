@@ -7,33 +7,6 @@ using Syncfusion.Blazor.Diagram;
 
 public partial class TrendsDiagram
 {
-    private async Task LoadTrends()
-    {
-        var trends = _queryDispatcher
-            .DispatchAsync<Trend>(new GetAllTrendsQuery(DiagramId))
-            .ConfigureAwait(false);
-        await foreach (var trend in trends)
-        {
-            var node = new Node
-            {
-                Data = trend,
-                Height = 100,
-                Width = 100,
-                ID = trend.Id.ToString(),
-                OffsetX = trend.X,
-                OffsetY = trend.Y,
-                Annotations = new DiagramObjectCollection<ShapeAnnotation>
-                {
-                    new()
-                    {
-                        Content = trend.Name,
-                    }
-                }
-            };
-            _nodes.Add(node);
-        }
-    }
-
     private async Task AddNewTrend(DiagramPoint position)
     {
         var command = new AddTrendCommand

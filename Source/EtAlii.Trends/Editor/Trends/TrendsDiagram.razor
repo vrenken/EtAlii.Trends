@@ -6,6 +6,9 @@
 @inject IQueryDispatcher _queryDispatcher;
 @inject ICommandDispatcher _commandDispatcher;
 
+@inject ITrendNodesLoader _trendNodesLoader;
+@inject IComponentConnectionLoader _componentConnectionLoader;
+
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>
         <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="@OnZoomInItemClick" />

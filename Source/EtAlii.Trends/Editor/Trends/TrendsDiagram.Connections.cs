@@ -8,28 +8,6 @@ using Syncfusion.Blazor.Layouts;
 
 public partial class TrendsDiagram
 {
-    private async Task LoadConnections()
-    {
-        var connections = _queryDispatcher
-            .DispatchAsync<Connection>(new GetAllConnectionsQuery(DiagramId))
-            .ConfigureAwait(false);
-        await foreach (var connection in connections)
-        {
-            var connector = new Connector
-            {
-                CanAutoLayout = true,
-                ID = connection.Id.ToString(),
-                SourceID = connection.From.Trend.Id.ToString(),
-                SourcePortID = connection.From.Id.ToString(),
-                TargetID = connection.To.Trend.Id.ToString(),
-                TargetPortID = connection.To.Id.ToString()
-            };
-            _connectors.Add(connector);
-        }
-
-        _connectors.CollectionChanged += OnConnectorsChanged;
-    }
-
     private void OnConnectorsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
