@@ -7,4 +7,5 @@ using Syncfusion.Blazor.Diagram;
 public interface IConnectorFactory
 {
     Connector Create(Connection connection);
+    Connector CreateBlank();
 }

@@ -2,57 +2,43 @@
 
 namespace EtAlii.Trends.Editor.Trends;
 
-using System.Reflection;
 using Syncfusion.Blazor.Diagram;
 
 public class ConnectorFactory : IConnectorFactory
 {
-    private static readonly PropertyInfo _bezierPoint2Property;
-    private static readonly PropertyInfo _bezierPoint1Property;
-    private static readonly PropertyInfo _pointsProperty;
-    private static readonly MethodInfo _setParentMethod;
-
-    static ConnectorFactory()
-    {
-        var type = typeof(BezierSegment);
-        _bezierPoint2Property = type.GetProperty("BezierPoint2", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        _bezierPoint1Property = type.GetProperty("BezierPoint1", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        _pointsProperty = type.GetProperty("Points", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        _setParentMethod = type.GetMethod("SetParent", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-    }
-
     public Connector Create(Connection connection)
     {
-        // var sourcePoint = nodes
-        //     .Where(n => n.ID == connection.Source.Trend.Id.ToString())
-        //     .SelectMany(n => n.Ports)
-        //     .Where(n => n.ID == connection.Source.Id.ToString())
-        //     .Select(n => n.Offset)
-        //     .Single();
-        //
-        // var targetPoint = nodes
-        //     .Where(n => n.ID == connection.Target.Trend.Id.ToString())
-        //     .SelectMany(n => n.Ports)
-        //     .Where(n => n.ID == connection.Target.Id.ToString())
-        //     .Select(n => n.Offset)
-        //     .Single();
 
-        var segment = new BezierSegment();
+        var v1Distance = connection.SourceBezierDistance == 0 ? 50L : connection.SourceBezierDistance;
+        var v2Distance = connection.TargetBezierDistance == 0 ? 50L : connection.TargetBezierDistance;
 
-        var bezierPoint1 = new DiagramPoint(connection.SourceBezierX, connection.SourceBezierY);
-        _bezierPoint1Property.SetValue(segment, bezierPoint1);
+        // Defines the connector's default values.
+        var connector = CreateBlank();
+        connector.ID = connection.Id.ToString();
+        connector.AdditionalInfo = new Dictionary<string, object> { ["Connection"] = connection };
+        connector.Segments = new DiagramObjectCollection<ConnectorSegment>
+            {
+                new BezierSegment
+                {
+                    //Defines the Vector1 and Vector2 for the bezier connector.
+                    Vector1 = new Vector { Distance = v1Distance, Angle = connection.SourceBezierAngle },
+                    Vector2 = new Vector { Distance = v2Distance, Angle = connection.TargetBezierAngle }
+                }
+            };
+        connector.SourceID = connection.Source.Trend.Id.ToString();
+        connector.SourcePortID = connection.Source.Id.ToString();
+        connector.TargetID = connection.Target.Trend.Id.ToString();
+        connector.TargetPortID = connection.Target.Id.ToString();
 
-        var bezierPoint2 = new DiagramPoint(connection.TargetBezierX, connection.TargetBezierY);
-        _bezierPoint2Property.SetValue(segment, bezierPoint2);
+        return connector;
+    }
 
-        // var points = new List<DiagramPoint>( new [] { sourcePoint, targetPoint });
-        // _pointsProperty.SetValue(segment, points);
-
-
+    public Connector CreateBlank()
+    {
         // Defines the connector's default values.
         var connector = new Connector
         {
+            ID = $"New connector {Guid.NewGuid()}",
             Type = ConnectorSegmentType.Bezier,
             TargetDecorator =
             {
@@ -63,14 +49,16 @@ public class ConnectorFactory : IConnectorFactory
                 StrokeColor = "#6d6d6d"
             },
             Constraints = ConnectorConstraints.Default,
-            AdditionalInfo = new Dictionary<string, object> { ["Connection"] = connection },
-            Segments = new DiagramObjectCollection<ConnectorSegment> { segment },
+            Segments = new DiagramObjectCollection<ConnectorSegment>
+            {
+                new BezierSegment
+                {
+                    //Defines the Vector1 and Vector2 for the bezier connector.
+                    Vector1 = new Vector { Distance = 50L, Angle = -90L },
+                    Vector2 = new Vector { Distance = 50L, Angle = +90L }
+                }
+            },
             CanAutoLayout = false,
-            ID = connection.Id.ToString(),
-            SourceID = connection.Source.Trend.Id.ToString(),
-            SourcePortID = connection.Source.Id.ToString(),
-            TargetID = connection.Target.Trend.Id.ToString(),
-            TargetPortID = connection.Target.Id.ToString(),
         };
 
         return connector;
