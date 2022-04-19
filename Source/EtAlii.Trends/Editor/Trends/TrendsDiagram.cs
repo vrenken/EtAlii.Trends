@@ -5,6 +5,7 @@ namespace EtAlii.Trends.Editor.Trends;
 using System.Collections.ObjectModel;
 using EtAlii.Trends.Diagrams;
 using Microsoft.AspNetCore.Components;
+using Syncfusion.Blazor.Data;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Navigations;
 using ClickEventArgs = Syncfusion.Blazor.Diagram.ClickEventArgs;
@@ -19,14 +20,12 @@ public partial class TrendsDiagram
 
     [Parameter] public EventCallback<Trend?> SelectedTrendChanged { get; set; }
 
-
-    private readonly ObservableCollection<Trend> _trends = new();
-
     private SfDiagramComponent _trendsDiagram;
 
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
-    private IDiagramObject? _drawingObject;
+    private IDiagramObject? DrawingObject => _drawingObjectFactory?.Invoke();
+    private Func<IDiagramObject>? _drawingObjectFactory;
 
 #pragma warning disable CS8618
     public TrendsDiagram()
@@ -55,15 +54,9 @@ public partial class TrendsDiagram
     {
         await InitializePositionAndZoom().ConfigureAwait(false);
 
-        _trends.CollectionChanged += OnTrendsChanged;
+        await LoadTrends().ConfigureAwait(false);
 
-        var trends = _queryDispatcher
-            .DispatchAsync<Trend>(new GetAllTrendsQuery(DiagramId))
-            .ConfigureAwait(false);
-        await foreach (var trend in trends)
-        {
-            _trends.Add(trend);
-        }
+        await LoadConnections().ConfigureAwait(false);
     }
 
     // Defines the connector's default values.
@@ -102,15 +95,24 @@ public partial class TrendsDiagram
         node.OffsetY = trend.Y;
         node.Width = trend.W == 0 ? 150 : trend.W;
         node.Height = trend.H == 0 ? 50 : trend.H;
+        node.Annotations.Add(new()
+        {
+            Content = trend.Name,
+            Style = new TextStyle
+            {
+                Color = "black"
+            }
+        });
 
         var position = 1f;
 
-        foreach (var component in trend.Components)
+        foreach (var component in trend.Components.OrderBy(c => c.Moment))
         {
             position += 0.3f;
 
             node.Ports.Add(new PointPort
             {
+                ID = component.Id.ToString(),
                 Shape = PortShapes.Circle,
                 Width = 16,
                 Height = 16,
@@ -119,29 +121,35 @@ public partial class TrendsDiagram
                 Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
                 Constraints =  PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
             });
+
+            var characters = component.Name
+                .Split(" ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s[0])
+                .ToArray();
+            var name = new string(characters);
+
             node.Annotations.Add(new ShapeAnnotation
             {
                 Constraints = AnnotationConstraints.ReadOnly,
                 Visibility = true,
+                // Hyperlink = new HyperlinkSettings
+                // {
+                //     Content = component.Name,
+                //     TextDecoration = TextDecoration.None,
+                // },
                 Style = new TextStyle
                 {
+                    FontSize = 13,
+                    TextWrapping = TextWrap.NoWrap,
+                    Bold = false,
                     Color = "black"
                 },
-                Content = component.Name,
-                Offset = new DiagramPoint { X = position + 0.1f, Y = 0.4f }
+                Content = name,
+                Offset = new DiagramPoint { X = position - 0.15f, Y = 0.5f },
+                Width = 50,
+                Height = 50,
             });
         }
-        node.Annotations = new DiagramObjectCollection<ShapeAnnotation>
-        {
-            new()
-            {
-                Content = trend.Name,
-                Style = new TextStyle
-                {
-                    Color = "black"
-                }
-            }
-        };
 
         node.Constraints =
             NodeConstraints.ResizeWest |
@@ -220,9 +228,15 @@ public partial class TrendsDiagram
 
     private async Task OnClicked(ClickEventArgs e)
     {
-        if (e.Count == 2 && e.ActualObject == null)
+        switch (e.Count)
         {
-            await AddNewTrend(e.Position).ConfigureAwait(false);
+            case 2 when e.ActualObject == null:
+                await AddNewTrend(e.Position).ConfigureAwait(false);
+                break;
+
+            case 1 when e.ActualObject == null:
+                _trendsDiagram.ClearSelection();
+                break;
         }
     }
 

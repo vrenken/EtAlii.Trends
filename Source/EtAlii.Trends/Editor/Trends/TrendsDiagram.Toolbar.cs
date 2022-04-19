@@ -102,22 +102,23 @@ public partial class TrendsDiagram
     private void OnPanClick()
     {
         _diagramTool = _panZoomController;
-        _drawingObject = null;
+        _drawingObjectFactory = null;
         UpdateButtons();
     }
 
     private void OnEditTrendClick()
     {
         _diagramTool = _editTrendController;
-        _drawingObject = null;
+        _drawingObjectFactory = null;
         UpdateButtons();
     }
 
     private void OnEditConnectionClick()
     {
         _diagramTool = _editConnectionController;
-        _drawingObject = new Connector
+        _drawingObjectFactory = () => new Connector
         {
+            CanAutoLayout = true,
             ID = $"New connector {Guid.NewGuid()}",
             Type = ConnectorSegmentType.Bezier,
         };

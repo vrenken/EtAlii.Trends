@@ -2,18 +2,109 @@
 
 namespace EtAlii.Trends.Editor.Trends;
 
+using System.Collections.Specialized;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
 public partial class TrendsDiagram
 {
+    private async Task LoadConnections()
+    {
+        var connections = _queryDispatcher
+            .DispatchAsync<Connection>(new GetAllConnectionsQuery(DiagramId))
+            .ConfigureAwait(false);
+        await foreach (var connection in connections)
+        {
+            var connector = new Connector
+            {
+                CanAutoLayout = true,
+                ID = connection.Id.ToString(),
+                SourceID = connection.From.Trend.Id.ToString(),
+                SourcePortID = connection.From.Id.ToString(),
+                TargetID = connection.To.Trend.Id.ToString(),
+                TargetPortID = connection.To.Id.ToString()
+            };
+            _connectors.Add(connector);
+        }
+
+        _connectors.CollectionChanged += OnConnectorsChanged;
+    }
+
+    private void OnConnectorsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                foreach (Connector connector in e.NewItems!)
+                {
+                    // if (!string.IsNullOrWhiteSpace(connector.SourcePortID) && !string.IsNullOrWhiteSpace(connector.TargetPortID))
+                    // {
+                        var command = new AddConnectionCommand
+                        (
+                            DiagramId: DiagramId,
+                            FromComponentId: Guid.Parse(connector.SourcePortID),
+                            ToComponentId: Guid.Parse(connector.TargetPortID)
+                        );
+                        var task = _commandDispatcher
+                            .DispatchAsync<Connection>(command)
+                            .ConfigureAwait(false);
+
+                        var connection = task.GetAwaiter().GetResult();
+                        connector.ID = connection.Id.ToString();
+                    // }
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                break;
+        }
+    }
+
     private Task OnConnectionChanging(ConnectionChangingEventArgs e)
     {
+        switch (e.ConnectorAction)
+        {
+            case Actions.ConnectorSourceEnd:
+                if (string.IsNullOrWhiteSpace(e.NewValue.SourcePortID))
+                {
+                    // No port, let's cancel.
+                    e.Cancel = true;
+                }
+                break;
+            case Actions.ConnectorTargetEnd:
+                if (string.IsNullOrWhiteSpace(e.NewValue.TargetPortID))
+                {
+                    // No port, let's cancel.
+                    e.Cancel = true;
+
+                    if (string.IsNullOrWhiteSpace(e.NewValue.TargetPortID) ||
+                        string.IsNullOrWhiteSpace(e.NewValue.SourcePortID))
+                    {
+                        _connectors.Remove(e.Connector);
+                    }
+                }
+                else
+                {
+
+                }
+                break;
+        }
+
         return Task.CompletedTask;
     }
 
     private Task OnConnectionChanged(ConnectionChangedEventArgs e)
     {
+        switch (e.ConnectorAction)
+        {
+            case Actions.ConnectorSourceEnd:
+            case Actions.ConnectorTargetEnd:
+                if (string.IsNullOrWhiteSpace(e.NewValue.TargetPortID) ||
+                    string.IsNullOrWhiteSpace(e.NewValue.SourcePortID))
+                {
+                    _connectors.Remove(e.Connector);
+                }
+                break;
+        }
         return Task.CompletedTask;
     }
 }
