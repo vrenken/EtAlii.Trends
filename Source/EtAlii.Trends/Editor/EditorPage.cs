@@ -15,8 +15,6 @@ public partial class EditorPage
     private TrendPropertyGrid _trendPropertyGrid;
 #pragma warning restore CS8618
 
-    private readonly EditorContext _context = new();
-
     private Trend? _selectedTrend;
     protected override async Task OnInitializedAsync()
     {
