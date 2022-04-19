@@ -13,12 +13,12 @@ public class RemoveTrendCommandHandler : IRemoveTrendCommandHandler
         // ReSharper disable once UseAwaitUsing
         using var data = new DataContext();
 
-        var layer = await data.Trends
+        var trend = await data.Trends
             .AsNoTracking()
             .SingleAsync(l => l.Id == command.TrendId)
             .ConfigureAwait(false);
 
-        data.Entry(layer).State = EntityState.Deleted;
+        data.Entry(trend).State = EntityState.Deleted;
         await data
             .SaveChangesAsync()
             .ConfigureAwait(false);
