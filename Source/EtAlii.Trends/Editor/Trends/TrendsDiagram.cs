@@ -56,19 +56,9 @@ public partial class TrendsDiagram
 
         await _trendNodesLoader.Load(_nodes, DiagramId).ConfigureAwait(false);
 
-        await _componentConnectionLoader.Load(_connectors, DiagramId).ConfigureAwait(false);
+        await _componentConnectionLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
 
         _connectors.CollectionChanged += OnConnectorsChanged;
-    }
-
-    // Defines the connector's default values.
-    private void ApplyConnectorDefaults(IDiagramObject diagramObject)
-    {
-        var connector = (Connector)diagramObject;
-        connector.Type = ConnectorSegmentType.Bezier;
-        connector.TargetDecorator.Shape = DecoratorShape.None;
-        connector.Style = new ShapeStyle { StrokeColor = "#6d6d6d" };
-        connector.Constraints = ConnectorConstraints.Default;
     }
 
     // Create the layout info.
@@ -81,98 +71,6 @@ public partial class TrendsDiagram
         return options;
     }
 
-    // Defines the node's default values.
-    private void ApplyTrendNodeDefaults(IDiagramObject diagramObject)
-    {
-        var node = (Node)diagramObject;
-        if (node.Data is System.Text.Json.JsonElement)
-        {
-            node.Data = System.Text.Json.JsonSerializer.Deserialize<Trend>(node.Data.ToString()!);
-        }
-
-        var trend = (Trend)node.Data!;
-        node.Style = new ShapeStyle { Fill = "white", StrokeColor = "black", StrokeWidth = 2, };
-        node.BackgroundColor = "white";
-        node.OffsetX = trend.X;
-        node.OffsetY = trend.Y;
-        node.Width = trend.W == 0 ? 150 : trend.W;
-        node.Height = trend.H == 0 ? 50 : trend.H;
-        node.Annotations.Add(new()
-        {
-            Content = trend.Name,
-            Style = new TextStyle
-            {
-                Color = "black"
-            }
-        });
-
-        var position = 1f;
-
-        foreach (var component in trend.Components.OrderBy(c => c.Moment))
-        {
-            position += 0.3f;
-
-            node.Ports.Add(new PointPort
-            {
-                ID = component.Id.ToString(),
-                Shape = PortShapes.Circle,
-                Width = 16,
-                Height = 16,
-                Visibility = PortVisibility.Visible,
-                Offset = new DiagramPoint { X = position, Y = 0.5f },
-                Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
-                Constraints =  PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
-            });
-
-            var characters = component.Name
-                .Split(" ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s[0])
-                .ToArray();
-            var name = new string(characters);
-
-            node.Annotations.Add(new ShapeAnnotation
-            {
-                Constraints = AnnotationConstraints.ReadOnly,
-                Visibility = true,
-                // Hyperlink = new HyperlinkSettings
-                // {
-                //     Content = component.Name,
-                //     TextDecoration = TextDecoration.None,
-                // },
-                Style = new TextStyle
-                {
-                    FontSize = 13,
-                    TextWrapping = TextWrap.NoWrap,
-                    Bold = false,
-                    Color = "black"
-                },
-                Content = name,
-                Offset = new DiagramPoint { X = position - 0.15f, Y = 0.5f },
-                Width = 50,
-                Height = 50,
-            });
-        }
-
-        node.Constraints =
-            NodeConstraints.ResizeWest |
-            NodeConstraints.ResizeEast |
-            NodeConstraints.OutConnect |
-            NodeConstraints.InConnect |
-            NodeConstraints.Delete |
-            NodeConstraints.PointerEvents |
-            //NodeConstraints.Rotate |
-            NodeConstraints.Drag |
-            // NodeConstraints.InConnect |
-            // NodeConstraints.OutConnect |
-            // NodeConstraints.Rotate |
-            // NodeConstraints.ResizeNorth |
-            // NodeConstraints.ResizeNorthWest |
-            // NodeConstraints.ResizeNorthEast |
-            // NodeConstraints.ResizeSouth |
-            // NodeConstraints.ResizeSouthEast |
-            // NodeConstraints.ResizeSouthWest
-            NodeConstraints.Select;
-    }
 
     private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)
     {

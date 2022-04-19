@@ -106,9 +106,14 @@
     <Compile Update="Editor\Trends\ActivityIndicator.cs">
       <DependentUpon>ActivityIndicator.razor</DependentUpon>
     </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.Connections.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations" />
     <Folder Include="Users\Commands" />
+    <Folder Include="Viewer" />
   </ItemGroup>
 </Project>

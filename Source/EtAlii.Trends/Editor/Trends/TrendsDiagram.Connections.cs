@@ -3,6 +3,8 @@
 namespace EtAlii.Trends.Editor.Trends;
 
 using System.Collections.Specialized;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
@@ -15,21 +17,29 @@ public partial class TrendsDiagram
             case NotifyCollectionChangedAction.Add:
                 foreach (Connector connector in e.NewItems!)
                 {
-                    // if (!string.IsNullOrWhiteSpace(connector.SourcePortID) && !string.IsNullOrWhiteSpace(connector.TargetPortID))
-                    // {
-                        var command = new AddConnectionCommand
-                        (
-                            DiagramId: DiagramId,
-                            FromComponentId: Guid.Parse(connector.SourcePortID),
-                            ToComponentId: Guid.Parse(connector.TargetPortID)
-                        );
-                        var task = _commandDispatcher
-                            .DispatchAsync<Connection>(command)
-                            .ConfigureAwait(false);
+                    var command = new AddConnectionCommand
+                    (
+                        Connection: (diagram, source, target) =>
+                        {
+                            var connection = new Connection
+                            {
+                                Diagram = diagram,
+                                Source = source,
+                                Target = target
+                            };
+                            UpdateConnectionFromConnector(connector, connection);
+                            return connection;
+                        },
+                        DiagramId: DiagramId,
+                        SourceComponentId: Guid.Parse(connector.SourcePortID),
+                        TargetComponentId: Guid.Parse(connector.TargetPortID)
+                    );
+                    var task = _commandDispatcher
+                        .DispatchAsync<Connection>(command)
+                        .ConfigureAwait(false);
 
-                        var connection = task.GetAwaiter().GetResult();
-                        connector.ID = connection.Id.ToString();
-                    // }
+                    var connection = task.GetAwaiter().GetResult();
+                    UpdateConnectorFromConnection(connection, connector);
                 }
                 break;
             case NotifyCollectionChangedAction.Replace:
@@ -84,5 +94,62 @@ public partial class TrendsDiagram
                 break;
         }
         return Task.CompletedTask;
+    }
+
+    private Task OnTargetConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.Connector.SourcePortID, e.TargetPortID);
+
+    private Task OnSourceConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.TargetPortID, e.Connector.TargetPortID);
+
+    private async Task OnConnectionPointChanged(Connector connector, string sourceComponentId, string targetComponentId)
+    {
+        if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
+        {
+            var connection = (Connection)connectionObject;
+            var command = new UpdateConnectionCommand(
+                Connection: (source, target) =>
+                {
+                    UpdateConnectionFromConnector(connector, connection);
+                    connection.Source = source;
+                    connection.Target = target;
+                    return connection;
+                },
+                SourceComponentId: Guid.Parse(sourceComponentId),
+                TargetComponentId: Guid.Parse(targetComponentId));
+            await _commandDispatcher
+                .DispatchAsync<Connection>(command)
+                .ConfigureAwait(false);
+        }
+    }
+
+    private void UpdateConnectorFromConnection(Connection connection, Connector connector)
+    {
+        var segment = (BezierSegment)connector.Segments[0];
+        segment.Vector1.Angle = connection.SourceBezierAngle;
+        segment.Vector1.Distance = connection.SourceBezierDistance;
+        segment.Vector2.Angle = connection.TargetBezierAngle;
+        segment.Vector2.Distance = connection.TargetBezierDistance;
+
+        connector.ID = connection.Id.ToString();
+        connector.AdditionalInfo["Connection"] = connection;
+    }
+
+    private void UpdateConnectionFromConnector(Connector connector, Connection connection)
+    {
+        var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
+        var delta = sourceHigherThanTarget
+            ? connector.TargetPoint.Y - connector.SourcePoint.Y
+            : connector.SourcePoint.Y - connector.TargetPoint.Y;
+        connection.SourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
+        connection.SourceBezierDistance = delta / 3f * 2f;
+        connection.TargetBezierAngle = sourceHigherThanTarget ? -90 : +90;
+        connection.TargetBezierDistance = delta / 3f * 2f;
+
+        // The below angle and distances do not change. Feels weird.
+        // var segment = (BezierSegment)connector.Segments[0];
+        // connection.SourceBezierAngle = segment.Vector1.Angle;
+        // connection.SourceBezierDistance = segment.Vector1.Distance;
+        // connection.TargetBezierAngle = segment.Vector2.Angle;
+        // connection.TargetBezierDistance = segment.Vector2.Distance;
+
     }
 }

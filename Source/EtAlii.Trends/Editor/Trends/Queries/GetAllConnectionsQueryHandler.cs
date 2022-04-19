@@ -15,9 +15,9 @@ public class GetAllConnectionsQueryHandler : IGetAllConnectionsQueryHandler
 
         var items = data.Connections
             .AsNoTracking()
-            .Include(connection => connection.From)
+            .Include(connection => connection.Source)
             .ThenInclude(component => component.Trend)
-            .Include(connection => connection.To)
+            .Include(connection => connection.Target)
             .ThenInclude(component => component.Trend)
             .Include(connection => connection.Diagram)
             .Where(connection => connection.Diagram.Id == query.DiagramId)

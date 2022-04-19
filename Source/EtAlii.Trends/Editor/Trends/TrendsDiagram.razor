@@ -8,6 +8,7 @@
 
 @inject ITrendNodesLoader _trendNodesLoader;
 @inject IComponentConnectionLoader _componentConnectionLoader;
+@inject IConnectorFactory _connectorFactory;
 
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>
@@ -35,14 +36,14 @@
         Width="@_diagramWidth"
         Height="@_diagramHeight"
         InteractionController="@_diagramTool"
-        ConnectorCreating="ApplyConnectorDefaults"
         DrawingObject="@DrawingObject"
-        NodeCreating="ApplyTrendNodeDefaults"
         TextChanged="OnTrendNodeTextChanged"
         PositionChanged="OnTrendNodePositionChanged"
         SizeChanged="OnTrendNodeSizeChanged"
         ConnectionChanging="OnConnectionChanging"
         ConnectionChanged="OnConnectionChanged"
+        SourcePointChanged="OnSourceConnectionPointChanged"
+        TargetPointChanged="OnTargetConnectionPointChanged"
         Nodes="@_nodes"
         Connectors="@_connectors"
         Click="OnClicked"

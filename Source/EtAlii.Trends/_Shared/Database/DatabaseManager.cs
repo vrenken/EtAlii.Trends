@@ -4,14 +4,24 @@ using EtAlii.Trends.Diagrams;
 using EtAlii.Trends.Editor.Layers;
 using EtAlii.Trends.Editor.Trends;
 
-public class DatabaseInitializer
+public class DatabaseManager
 {
-    public void InitializeWhenNeeded()
+    public void Start(IServiceProvider services)
     {
-        // ReSharper disable once UseAwaitUsing
-        using var data = new DataContext();
+        // Migration is not recommended to be done in production, so maybe this should be wrapped in a #if DEBUG?
+        using (var scope = services.CreateScope())
+        {
+            var data = scope.ServiceProvider.GetRequiredService<DataContext>();
+            data.Database.EnsureCreated();
+            //data.Database.Migrate();
+        }
+        InitializeWhenNeeded(services);
+    }
 
-        data.Database.EnsureCreated();
+    private void InitializeWhenNeeded(IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
+        var data = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         if (!data.Users.Any())
         {
@@ -20,11 +30,12 @@ public class DatabaseInitializer
 
             var diagram = new Diagram
             {
-                Name = "Test diagram", User = user,
+                Name = "Test diagram",
+                User = user,
+                HorizontalOffset = Diagram.StartOffset,
+                VerticalOffset = Diagram.StartOffset,
+                DiagramZoom = 1D
             };
-            diagram.HorizontalOffset = Diagram.StartOffset;
-            diagram.VerticalOffset = Diagram.StartOffset;
-            diagram.DiagramZoom = 1D;
 
             data.Users.Add(user);
             data.Diagrams.Add(diagram);

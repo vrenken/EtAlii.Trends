@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(options);
 builder.WebHost.ConfigureAppConfiguration(configuration => configuration.ExpandEnvironmentVariablesInJson());
 
 // Add services to the container.
-builder.Services.AddRazorPages(o => o.RootDirectory = "/Pages");
+builder.Services.AddRazorPages(o => o.RootDirectory = "/_Shared/Pages");
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 
@@ -38,21 +38,27 @@ builder.Services.AddSingleton<IRemoveComponentCommandHandler, RemoveComponentCom
 
 builder.Services.AddSingleton<IGetAllConnectionsQueryHandler, GetAllConnectionsQueryHandler>();
 builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommandHandler>();
+builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionCommandHandler>();
+builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
-builder.Services.AddSingleton<ITrendNodesLoader, TrendNodesLoader>();
-builder.Services.AddSingleton<IComponentConnectionLoader, ComponentConnectionLoader>();
+builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
+builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
 
 builder.Services.AddSingleton<DataContext>();
-new DatabaseInitializer().InitializeWhenNeeded();
-var systemContext = new ApplicationContext();
-systemContext.Initialize();
-builder.Services.AddSingleton(systemContext);
+builder.Services.AddSingleton<DatabaseManager>();
+builder.Services.AddSingleton<ApplicationContext>();
+
+builder.Services.AddSingleton<INodeFactory, NodeFactory>();
+builder.Services.AddSingleton<IConnectorFactory, ConnectorFactory>();
 
 Logging.ConfigureGlobalLogging(builder.Configuration);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => Logging.ConfigureWebHostLogging(context.Configuration, loggerConfiguration), true);
 
 var app = builder.Build();
+
+app.Services.GetService<DatabaseManager>()!.Start(app.Services);
+app.Services.GetService<ApplicationContext>()!.Initialize();
 
 // Let's invariant culture for web presentation (i.e. have the whole application in english.
 app.Use(async (_, next) =>

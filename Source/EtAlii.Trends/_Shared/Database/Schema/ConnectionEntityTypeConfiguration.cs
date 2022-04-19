@@ -8,29 +8,16 @@ public class ConnectionEntityTypeConfiguration : IEntityTypeConfiguration<Connec
 {
     public void Configure(EntityTypeBuilder<Connection> builder)
     {
-        // builder.Property(entity => entity.From).IsRequired();
-        // builder.Property(entity => entity.To).IsRequired();
-
-        // builder
-        //     .HasOne(entity => entity.From)
-        //     .WithMany(entity => entity.Connections)
-        //     .IsRequired();
-            //.OnDelete(DeleteBehavior.SetNull);
-
         builder.HasOne(entity => entity.Diagram);
 
         builder
-            .HasOne(entity => entity.From);
-//            .IsRequired();
+            .HasOne(entity => entity.Source);
+        builder.Property(entity => entity.SourceBezierAngle).IsRequired();
+        builder.Property(entity => entity.SourceBezierDistance).IsRequired();
 
         builder
-            .HasOne(entity => entity.To);
-  //          .IsRequired();
-            //.HasOne(entity => entity.To)
-
-            //.WithMany(entity => entity.Connections)
-            //.IsRequired();
-            //.OnDelete(DeleteBehavior.Cascade);
-
+            .HasOne(entity => entity.Target);
+        builder.Property(entity => entity.TargetBezierAngle).IsRequired();
+        builder.Property(entity => entity.TargetBezierDistance).IsRequired();
     }
 }

@@ -116,12 +116,7 @@ public partial class TrendsDiagram
     private void OnEditConnectionClick()
     {
         _diagramTool = _editConnectionController;
-        _drawingObjectFactory = () => new Connector
-        {
-            CanAutoLayout = true,
-            ID = $"New connector {Guid.NewGuid()}",
-            Type = ConnectorSegmentType.Bezier,
-        };
+        _drawingObjectFactory = () => _connectorFactory.CreateBlank();
         UpdateButtons();
     }
 

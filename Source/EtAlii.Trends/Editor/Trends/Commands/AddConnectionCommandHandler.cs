@@ -2,7 +2,9 @@
 
 namespace EtAlii.Trends.Editor.Trends;
 
-public record AddConnectionCommand(Guid DiagramId, Guid FromComponentId, Guid ToComponentId) : AsyncCommandWithResult<IAddConnectionCommandHandler>;
+using EtAlii.Trends.Diagrams;
+
+public record AddConnectionCommand(Func<Diagram, Component, Component, Connection> Connection, Guid DiagramId, Guid SourceComponentId, Guid TargetComponentId) : AsyncCommandWithResult<IAddConnectionCommandHandler>;
 
 public interface IAddConnectionCommandHandler : IAsyncCommandHandlerWithResult<AddConnectionCommand, Connection> {}
 
@@ -18,22 +20,17 @@ public class AddConnectionCommandHandler : IAddConnectionCommandHandler
             .SingleAsync()
             .ConfigureAwait(false);
 
-        var from = await data.Components
-            .Where(d => d.Id == command.FromComponentId)
+        var source = await data.Components
+            .Where(d => d.Id == command.SourceComponentId)
             .SingleAsync()
             .ConfigureAwait(false);
 
-        var to = await data.Components
-            .Where(d => d.Id == command.ToComponentId)
+        var target = await data.Components
+            .Where(d => d.Id == command.TargetComponentId)
             .SingleAsync()
             .ConfigureAwait(false);
 
-        var connection = new Connection
-        {
-            Diagram = diagram,
-            From = from,
-            To = to
-        };
+        var connection = command.Connection(diagram, source, target);
 
         data.Entry(connection).State = EntityState.Added;
         await data
