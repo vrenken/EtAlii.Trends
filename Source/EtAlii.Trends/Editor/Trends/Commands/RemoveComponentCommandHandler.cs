@@ -13,12 +13,12 @@ public class RemoveComponentCommandHandler : IRemoveComponentCommandHandler
         // ReSharper disable once UseAwaitUsing
         using var data = new DataContext();
 
-        var layer = await data.Components
+        var component = await data.Components
             .AsNoTracking()
             .SingleAsync(l => l.Id == command.ComponentId)
             .ConfigureAwait(false);
 
-        data.Entry(layer).State = EntityState.Deleted;
+        data.Entry(component).State = EntityState.Deleted;
         await data
             .SaveChangesAsync()
             .ConfigureAwait(false);
