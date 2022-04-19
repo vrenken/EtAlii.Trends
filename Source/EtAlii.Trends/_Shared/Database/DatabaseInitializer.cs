@@ -20,7 +20,8 @@ public class DatabaseInitializer
 
             var diagram = new Diagram
             {
-                Name = "Test diagram", User = user,
+                Name = "Test diagram",
+                User = user,
             };
             diagram.HorizontalOffset = Diagram.StartOffset;
             diagram.VerticalOffset = Diagram.StartOffset;
