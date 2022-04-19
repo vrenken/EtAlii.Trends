@@ -38,14 +38,15 @@ builder.Services.AddSingleton<IRemoveComponentCommandHandler, RemoveComponentCom
 
 builder.Services.AddSingleton<IGetAllConnectionsQueryHandler, GetAllConnectionsQueryHandler>();
 builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommandHandler>();
+builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionCommandHandler>();
+builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
 builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
 builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
 
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
-var systemContext = new ApplicationContext();
-systemContext.Initialize();
+var systemContext = new ApplicationContext().Initialize();
 builder.Services.AddSingleton(systemContext);
 
 Logging.ConfigureGlobalLogging(builder.Configuration);
