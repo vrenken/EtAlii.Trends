@@ -8,29 +8,16 @@ public class ConnectionEntityTypeConfiguration : IEntityTypeConfiguration<Connec
 {
     public void Configure(EntityTypeBuilder<Connection> builder)
     {
-        // builder.Property(entity => entity.From).IsRequired();
-        // builder.Property(entity => entity.To).IsRequired();
-
-        // builder
-        //     .HasOne(entity => entity.From)
-        //     .WithMany(entity => entity.Connections)
-        //     .IsRequired();
-            //.OnDelete(DeleteBehavior.SetNull);
-
         builder.HasOne(entity => entity.Diagram);
 
         builder
             .HasOne(entity => entity.Source);
-//            .IsRequired();
+        builder.Property(entity => entity.SourceDirection).IsRequired();
+        builder.Property(entity => entity.SourceLength).IsRequired();
 
         builder
             .HasOne(entity => entity.Target);
-  //          .IsRequired();
-            //.HasOne(entity => entity.To)
-
-            //.WithMany(entity => entity.Connections)
-            //.IsRequired();
-            //.OnDelete(DeleteBehavior.Cascade);
-
+        builder.Property(entity => entity.TargetDirection).IsRequired();
+        builder.Property(entity => entity.TargetLength).IsRequired();
     }
 }
