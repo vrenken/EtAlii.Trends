@@ -45,15 +45,17 @@ builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
 builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
 
 builder.Services.AddSingleton<DataContext>();
-new DatabaseInitializer().InitializeWhenNeeded();
-var systemContext = new ApplicationContext().Initialize();
-builder.Services.AddSingleton(systemContext);
+builder.Services.AddSingleton<DatabaseManager>();
+builder.Services.AddSingleton<ApplicationContext>();
 
 Logging.ConfigureGlobalLogging(builder.Configuration);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => Logging.ConfigureWebHostLogging(context.Configuration, loggerConfiguration), true);
 
 var app = builder.Build();
+
+app.Services.GetService<DatabaseManager>()!.Start(app.Services);
+app.Services.GetService<ApplicationContext>()!.Initialize();
 
 // Let's invariant culture for web presentation (i.e. have the whole application in english.
 app.Use(async (_, next) =>
