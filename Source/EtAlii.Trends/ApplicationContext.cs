@@ -2,8 +2,9 @@ namespace EtAlii.Trends;
 
 public class ApplicationContext
 {
-    public void Initialize()
+    public ApplicationContext Initialize()
     {
         // Do stuff.
+        return this;
     }
 }
