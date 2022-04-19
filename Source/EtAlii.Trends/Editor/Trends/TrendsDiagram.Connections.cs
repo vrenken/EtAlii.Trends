@@ -3,6 +3,7 @@
 namespace EtAlii.Trends.Editor.Trends;
 
 using System.Collections.Specialized;
+using System.Reflection;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
@@ -15,21 +16,19 @@ public partial class TrendsDiagram
             case NotifyCollectionChangedAction.Add:
                 foreach (Connector connector in e.NewItems!)
                 {
-                    // if (!string.IsNullOrWhiteSpace(connector.SourcePortID) && !string.IsNullOrWhiteSpace(connector.TargetPortID))
-                    // {
-                        var command = new AddConnectionCommand
-                        (
-                            DiagramId: DiagramId,
-                            SourceComponentId: Guid.Parse(connector.SourcePortID),
-                            TargetComponentId: Guid.Parse(connector.TargetPortID)
-                        );
-                        var task = _commandDispatcher
-                            .DispatchAsync<Connection>(command)
-                            .ConfigureAwait(false);
+                    var command = new AddConnectionCommand
+                    (
+                        DiagramId: DiagramId,
+                        SourceComponentId: Guid.Parse(connector.SourcePortID),
+                        TargetComponentId: Guid.Parse(connector.TargetPortID)
+                    );
+                    var task = _commandDispatcher
+                        .DispatchAsync<Connection>(command)
+                        .ConfigureAwait(false);
 
-                        var connection = task.GetAwaiter().GetResult();
-                        connector.ID = connection.Id.ToString();
-                    // }
+                    var connection = task.GetAwaiter().GetResult();
+                    connector.ID = connection.Id.ToString();
+                    connector.AdditionalInfo["Connection"] = connection;
                 }
                 break;
             case NotifyCollectionChangedAction.Replace:
@@ -86,13 +85,28 @@ public partial class TrendsDiagram
         return Task.CompletedTask;
     }
 
-    private Task OnSourcePointChanged(EndPointChangedEventArgs e)
+    private async Task OnConnectionPointChanged(EndPointChangedEventArgs e)
     {
-        return Task.CompletedTask;
-    }
+        if (e.Connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
+        {
+            var connection = (Connection)connectionObject;
 
-    private Task OnTargetPointChanged(EndPointChangedEventArgs e)
-    {
-        return Task.CompletedTask;
+            var type = typeof(BezierSegment);
+            var segment = (BezierSegment)e.Connector.Segments[0];
+            var bezierPoint1Property = type.GetProperty("BezierPoint1", BindingFlags.Instance | BindingFlags.NonPublic);
+            var bezierPoint1 = (DiagramPoint)bezierPoint1Property!.GetValue(segment)!;
+            connection.SourceBezierX = bezierPoint1.X;
+            connection.SourceBezierY = bezierPoint1.Y;
+
+            var bezierPoint2Property = type.GetProperty("BezierPoint2", BindingFlags.Instance | BindingFlags.NonPublic);
+            var bezierPoint2 = (DiagramPoint)bezierPoint2Property!.GetValue(segment)!;
+            connection.TargetBezierX = bezierPoint2.X;
+            connection.TargetBezierY = bezierPoint2.Y;
+
+            var command = new UpdateConnectionCommand(connection);
+            await _commandDispatcher
+                .DispatchAsync<Connection>(command)
+                .ConfigureAwait(false);
+        }
     }
 }

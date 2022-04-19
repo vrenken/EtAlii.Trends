@@ -48,6 +48,9 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ApplicationContext>();
 
+builder.Services.AddSingleton<INodeFactory, NodeFactory>();
+builder.Services.AddSingleton<IConnectorFactory, ConnectorFactory>();
+
 Logging.ConfigureGlobalLogging(builder.Configuration);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => Logging.ConfigureWebHostLogging(context.Configuration, loggerConfiguration), true);

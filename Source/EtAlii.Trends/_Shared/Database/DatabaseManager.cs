@@ -12,7 +12,8 @@ public class DatabaseManager
         using (var scope = services.CreateScope())
         {
             var data = scope.ServiceProvider.GetRequiredService<DataContext>();
-            data.Database.Migrate();
+            data.Database.EnsureCreated();
+            //data.Database.Migrate();
         }
         InitializeWhenNeeded(services);
     }
@@ -31,10 +32,10 @@ public class DatabaseManager
             {
                 Name = "Test diagram",
                 User = user,
+                HorizontalOffset = Diagram.StartOffset,
+                VerticalOffset = Diagram.StartOffset,
+                DiagramZoom = 1D
             };
-            diagram.HorizontalOffset = Diagram.StartOffset;
-            diagram.VerticalOffset = Diagram.StartOffset;
-            diagram.DiagramZoom = 1D;
 
             data.Users.Add(user);
             data.Diagrams.Add(diagram);
