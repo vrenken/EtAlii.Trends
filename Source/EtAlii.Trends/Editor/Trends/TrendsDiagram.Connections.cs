@@ -4,6 +4,7 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Syncfusion.Blazor.Diagram;
 using Syncfusion.Blazor.Layouts;
 
@@ -91,17 +92,23 @@ public partial class TrendsDiagram
         {
             var connection = (Connection)connectionObject;
 
-            var type = typeof(BezierSegment);
-            var segment = (BezierSegment)e.Connector.Segments[0];
-            var bezierPoint1Property = type.GetProperty("BezierPoint1", BindingFlags.Instance | BindingFlags.NonPublic);
-            var bezierPoint1 = (DiagramPoint)bezierPoint1Property!.GetValue(segment)!;
-            connection.SourceBezierX = bezierPoint1.X;
-            connection.SourceBezierY = bezierPoint1.Y;
+            var sourceHigherThanTarget = e.Connector.SourcePoint.Y < e.Connector.TargetPoint.Y;
 
-            var bezierPoint2Property = type.GetProperty("BezierPoint2", BindingFlags.Instance | BindingFlags.NonPublic);
-            var bezierPoint2 = (DiagramPoint)bezierPoint2Property!.GetValue(segment)!;
-            connection.TargetBezierX = bezierPoint2.X;
-            connection.TargetBezierY = bezierPoint2.Y;
+            var delta = sourceHigherThanTarget
+                ? e.Connector.TargetPoint.Y - e.Connector.SourcePoint.Y
+                : e.Connector.SourcePoint.Y - e.Connector.TargetPoint.Y;
+
+            connection.SourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
+            connection.SourceBezierDistance = delta / 3f * 2f;
+            connection.TargetBezierAngle = sourceHigherThanTarget ? -90 : +90;
+            connection.TargetBezierDistance = delta / 3f * 2f;
+
+            // The below angle and distances do not change. Feels weird.
+            // var segment = (BezierSegment)e.Connector.Segments[0];
+            // connection.SourceBezierAngle = segment.Vector1.Angle;
+            // connection.SourceBezierDistance = segment.Vector1.Distance;
+            // connection.TargetBezierAngle = segment.Vector2.Angle;
+            // connection.TargetBezierDistance = segment.Vector2.Distance;
 
             var command = new UpdateConnectionCommand(connection);
             await _commandDispatcher
