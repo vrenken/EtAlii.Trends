@@ -39,8 +39,8 @@ builder.Services.AddSingleton<IRemoveComponentCommandHandler, RemoveComponentCom
 builder.Services.AddSingleton<IGetAllConnectionsQueryHandler, GetAllConnectionsQueryHandler>();
 builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommandHandler>();
 
-builder.Services.AddSingleton<ITrendNodesLoader, TrendNodesLoader>();
-builder.Services.AddSingleton<IComponentConnectionLoader, ComponentConnectionLoader>();
+builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
+builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
 
 builder.Services.AddSingleton<DataContext>();
 new DatabaseInitializer().InitializeWhenNeeded();
