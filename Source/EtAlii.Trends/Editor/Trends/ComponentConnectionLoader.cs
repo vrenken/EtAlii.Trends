@@ -24,10 +24,10 @@ public class ComponentConnectionLoader : IComponentConnectionLoader
             {
                 CanAutoLayout = true,
                 ID = connection.Id.ToString(),
-                SourceID = connection.From.Trend.Id.ToString(),
-                SourcePortID = connection.From.Id.ToString(),
-                TargetID = connection.To.Trend.Id.ToString(),
-                TargetPortID = connection.To.Id.ToString()
+                SourceID = connection.Source.Trend.Id.ToString(),
+                SourcePortID = connection.Source.Id.ToString(),
+                TargetID = connection.Target.Trend.Id.ToString(),
+                TargetPortID = connection.Target.Id.ToString()
             };
             connectors.Add(connector);
         }

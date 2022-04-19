@@ -20,8 +20,8 @@ public partial class TrendsDiagram
                         var command = new AddConnectionCommand
                         (
                             DiagramId: DiagramId,
-                            FromComponentId: Guid.Parse(connector.SourcePortID),
-                            ToComponentId: Guid.Parse(connector.TargetPortID)
+                            SourceComponentId: Guid.Parse(connector.SourcePortID),
+                            TargetComponentId: Guid.Parse(connector.TargetPortID)
                         );
                         var task = _commandDispatcher
                             .DispatchAsync<Connection>(command)
@@ -83,6 +83,16 @@ public partial class TrendsDiagram
                 }
                 break;
         }
+        return Task.CompletedTask;
+    }
+
+    private Task OnSourcePointChanged(EndPointChangedEventArgs e)
+    {
+        return Task.CompletedTask;
+    }
+
+    private Task OnTargetPointChanged(EndPointChangedEventArgs e)
+    {
         return Task.CompletedTask;
     }
 }

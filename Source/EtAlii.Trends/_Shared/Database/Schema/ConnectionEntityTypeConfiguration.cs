@@ -20,11 +20,11 @@ public class ConnectionEntityTypeConfiguration : IEntityTypeConfiguration<Connec
         builder.HasOne(entity => entity.Diagram);
 
         builder
-            .HasOne(entity => entity.From);
+            .HasOne(entity => entity.Source);
 //            .IsRequired();
 
         builder
-            .HasOne(entity => entity.To);
+            .HasOne(entity => entity.Target);
   //          .IsRequired();
             //.HasOne(entity => entity.To)
 
