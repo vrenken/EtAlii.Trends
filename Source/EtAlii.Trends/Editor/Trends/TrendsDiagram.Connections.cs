@@ -19,6 +19,17 @@ public partial class TrendsDiagram
                 {
                     var command = new AddConnectionCommand
                     (
+                        Connection: (diagram, source, target) =>
+                        {
+                            var connection = new Connection
+                            {
+                                Diagram = diagram,
+                                Source = source,
+                                Target = target
+                            };
+                            UpdateConnectionFromConnector(connector, connection);
+                            return connection;
+                        },
                         DiagramId: DiagramId,
                         SourceComponentId: Guid.Parse(connector.SourcePortID),
                         TargetComponentId: Guid.Parse(connector.TargetPortID)
@@ -28,8 +39,7 @@ public partial class TrendsDiagram
                         .ConfigureAwait(false);
 
                     var connection = task.GetAwaiter().GetResult();
-                    connector.ID = connection.Id.ToString();
-                    connector.AdditionalInfo["Connection"] = connection;
+                    UpdateConnectorFromConnection(connection, connector);
                 }
                 break;
             case NotifyCollectionChangedAction.Replace:
@@ -86,34 +96,60 @@ public partial class TrendsDiagram
         return Task.CompletedTask;
     }
 
-    private async Task OnConnectionPointChanged(EndPointChangedEventArgs e)
+    private Task OnTargetConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.Connector.SourcePortID, e.TargetPortID);
+
+    private Task OnSourceConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.TargetPortID, e.Connector.TargetPortID);
+
+    private async Task OnConnectionPointChanged(Connector connector, string sourceComponentId, string targetComponentId)
     {
-        if (e.Connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
+        if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
         {
             var connection = (Connection)connectionObject;
-
-            var sourceHigherThanTarget = e.Connector.SourcePoint.Y < e.Connector.TargetPoint.Y;
-
-            var delta = sourceHigherThanTarget
-                ? e.Connector.TargetPoint.Y - e.Connector.SourcePoint.Y
-                : e.Connector.SourcePoint.Y - e.Connector.TargetPoint.Y;
-
-            connection.SourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
-            connection.SourceBezierDistance = delta / 3f * 2f;
-            connection.TargetBezierAngle = sourceHigherThanTarget ? -90 : +90;
-            connection.TargetBezierDistance = delta / 3f * 2f;
-
-            // The below angle and distances do not change. Feels weird.
-            // var segment = (BezierSegment)e.Connector.Segments[0];
-            // connection.SourceBezierAngle = segment.Vector1.Angle;
-            // connection.SourceBezierDistance = segment.Vector1.Distance;
-            // connection.TargetBezierAngle = segment.Vector2.Angle;
-            // connection.TargetBezierDistance = segment.Vector2.Distance;
-
-            var command = new UpdateConnectionCommand(connection);
+            var command = new UpdateConnectionCommand(
+                Connection: (source, target) =>
+                {
+                    UpdateConnectionFromConnector(connector, connection);
+                    connection.Source = source;
+                    connection.Target = target;
+                    return connection;
+                },
+                SourceComponentId: Guid.Parse(sourceComponentId),
+                TargetComponentId: Guid.Parse(targetComponentId));
             await _commandDispatcher
                 .DispatchAsync<Connection>(command)
                 .ConfigureAwait(false);
         }
+    }
+
+    private void UpdateConnectorFromConnection(Connection connection, Connector connector)
+    {
+        var segment = (BezierSegment)connector.Segments[0];
+        segment.Vector1.Angle = connection.SourceBezierAngle;
+        segment.Vector1.Distance = connection.SourceBezierDistance;
+        segment.Vector2.Angle = connection.TargetBezierAngle;
+        segment.Vector2.Distance = connection.TargetBezierDistance;
+
+        connector.ID = connection.Id.ToString();
+        connector.AdditionalInfo["Connection"] = connection;
+    }
+
+    private void UpdateConnectionFromConnector(Connector connector, Connection connection)
+    {
+        var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
+        var delta = sourceHigherThanTarget
+            ? connector.TargetPoint.Y - connector.SourcePoint.Y
+            : connector.SourcePoint.Y - connector.TargetPoint.Y;
+        connection.SourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
+        connection.SourceBezierDistance = delta / 3f * 2f;
+        connection.TargetBezierAngle = sourceHigherThanTarget ? -90 : +90;
+        connection.TargetBezierDistance = delta / 3f * 2f;
+
+        // The below angle and distances do not change. Feels weird.
+        // var segment = (BezierSegment)connector.Segments[0];
+        // connection.SourceBezierAngle = segment.Vector1.Angle;
+        // connection.SourceBezierDistance = segment.Vector1.Distance;
+        // connection.TargetBezierAngle = segment.Vector2.Angle;
+        // connection.TargetBezierDistance = segment.Vector2.Distance;
+
     }
 }

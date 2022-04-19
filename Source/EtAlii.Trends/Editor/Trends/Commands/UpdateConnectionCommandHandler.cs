@@ -2,7 +2,7 @@
 
 namespace EtAlii.Trends.Editor.Trends;
 
-public record UpdateConnectionCommand(Connection Connection) : AsyncCommandWithResult<IUpdateConnectionCommandHandler>;
+public record UpdateConnectionCommand(Func<Component, Component, Connection> Connection, Guid SourceComponentId, Guid TargetComponentId) : AsyncCommandWithResult<IUpdateConnectionCommandHandler>;
 
 public interface IUpdateConnectionCommandHandler : IAsyncCommandHandlerWithResult<UpdateConnectionCommand, Connection> {}
 
@@ -13,12 +13,24 @@ public class UpdateConnectionCommandHandler : IUpdateConnectionCommandHandler
         // ReSharper disable once UseAwaitUsing
         using var data = new DataContext();
 
-        data.Entry(command.Connection).State = EntityState.Modified;
+        var source = await data.Components
+            .Where(d => d.Id == command.SourceComponentId)
+            .SingleAsync()
+            .ConfigureAwait(false);
+
+        var target = await data.Components
+            .Where(d => d.Id == command.TargetComponentId)
+            .SingleAsync()
+            .ConfigureAwait(false);
+
+        var connection = command.Connection(source, target);
+
+        data.Entry(connection).State = EntityState.Modified;
         await data
             .SaveChangesAsync()
             .ConfigureAwait(false);
 
-        return command.Connection;
+        return connection;
     }
 }
 
