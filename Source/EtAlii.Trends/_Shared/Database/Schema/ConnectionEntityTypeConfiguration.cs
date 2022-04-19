@@ -12,12 +12,12 @@ public class ConnectionEntityTypeConfiguration : IEntityTypeConfiguration<Connec
 
         builder
             .HasOne(entity => entity.Source);
-        builder.Property(entity => entity.SourceBezierX).IsRequired();
-        builder.Property(entity => entity.SourceBezierY).IsRequired();
+        builder.Property(entity => entity.SourceBezierAngle).IsRequired();
+        builder.Property(entity => entity.SourceBezierDistance).IsRequired();
 
         builder
             .HasOne(entity => entity.Target);
-        builder.Property(entity => entity.TargetBezierX).IsRequired();
-        builder.Property(entity => entity.TargetBezierY).IsRequired();
+        builder.Property(entity => entity.TargetBezierAngle).IsRequired();
+        builder.Property(entity => entity.TargetBezierDistance).IsRequired();
     }
 }
