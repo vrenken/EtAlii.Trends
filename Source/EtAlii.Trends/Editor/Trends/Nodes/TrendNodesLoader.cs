@@ -5,12 +5,12 @@ using Syncfusion.Blazor.Diagram;
 public class TrendNodesLoader : ITrendNodesLoader
 {
     private readonly IQueryDispatcher _queryDispatcher;
-    private readonly INodeFactory _nodeFactory;
+    private readonly INodeManager _nodeManager;
 
-    public TrendNodesLoader(IQueryDispatcher queryDispatcher, INodeFactory nodeFactory)
+    public TrendNodesLoader(IQueryDispatcher queryDispatcher, INodeManager nodeManager)
     {
         _queryDispatcher = queryDispatcher;
-        _nodeFactory = nodeFactory;
+        _nodeManager = nodeManager;
     }
 
     public async Task Load(DiagramObjectCollection<Node> nodes, Guid diagramId)
@@ -21,7 +21,7 @@ public class TrendNodesLoader : ITrendNodesLoader
 
         await foreach (var trend in trends)
         {
-            var node = _nodeFactory.Create(trend);
+            var node = _nodeManager.Create(trend);
             nodes.Add(node);
         }
     }

@@ -4,7 +4,9 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using Syncfusion.Blazor.Diagram;
 
-public interface INodeFactory
+public interface INodeManager
 {
     Node Create(Trend trend);
+
+    void Update(Trend trend, Node node);
 }

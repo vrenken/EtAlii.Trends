@@ -44,6 +44,8 @@ builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommand
 builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionCommandHandler>();
 builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
+builder.Services.AddSingleton<INodeManager, NodeManager>();
+builder.Services.AddSingleton<IPortManager, PortManager>();
 builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
 builder.Services.AddScoped<IConnectionConnectorLoader, ConnectionConnectorLoader>();
 
@@ -51,7 +53,6 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ApplicationContext>();
 
-builder.Services.AddSingleton<INodeFactory, NodeFactory>();
 builder.Services.AddSingleton<IConnectorFactory, ConnectorFactory>();
 
 Logging.ConfigureGlobalLogging(builder.Configuration);

@@ -59,6 +59,17 @@ public partial class TrendsDiagram
         _connectors.CollectionChanged += OnConnectorsChanged;
     }
 
+    protected override Task OnParametersSetAsync()
+    {
+        if (SelectedTrend != null)
+        {
+            var node = _nodes.Single(n => n.Data == SelectedTrend);
+            _nodeManager.Update(SelectedTrend, node);
+        }
+
+        return Task.CompletedTask;
+    }
+
     // Create the layout info.
     private TreeInfo GetLayoutInfo(IDiagramObject obj, TreeInfo options)
     {
