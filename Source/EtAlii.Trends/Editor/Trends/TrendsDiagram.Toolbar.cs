@@ -29,11 +29,6 @@ public partial class TrendsDiagram
     private ToolbarItem _editConnectionItem;
     private string _editConnectionCssClass;
     private InteractionController _editConnectionController = InteractionController.ContinuousDraw;
-    private ToolbarItem _viewItem;
-    private string? _viewCssClass;
-
-    private ToolbarItem _centerItem;
-    private string _centerCssClass;
 
     private ToolbarItem _fitToPageItem;
     private string _fitCssClass;
@@ -80,22 +75,62 @@ public partial class TrendsDiagram
     }
     private void OnBringIntoViewClick()
     {
-        if (_trendsDiagram.SelectionSettings.Nodes.Count > 0)
+        double? left = null, top = null, right = null, bottom = null;
+
+        foreach (var node in _selectedDiagramObjects.OfType<Node>())
         {
-            var node = _trendsDiagram.SelectionSettings.Nodes[0];
-            var bound = new DiagramRect(node.OffsetX - node.Width / 2, node.OffsetY - node.Height / 2, node.Width, node.Height);
-            _trendsDiagram.BringIntoView(bound);
+            left = !left.HasValue
+                ? node.OffsetX
+                : Math.Min(left.Value, node.OffsetX);
+            top = !top.HasValue
+                ? node.OffsetY
+                : Math.Min(top.Value, node.OffsetY);
+
+            var nodeRight = node.OffsetX + node.Width;
+            var nodeBottom = node.OffsetY + node.Height;
+
+            right = !right.HasValue
+                ? nodeRight
+                : Math.Max(right.Value, nodeRight!.Value);
+
+            bottom = !bottom.HasValue
+                ? nodeBottom
+                : Math.Max(bottom.Value, nodeBottom!.Value);
+
         }
+        var bound = new DiagramRect(left, top, right - left, bottom - top);
+        _trendsDiagram.BringIntoView(bound);
+
         UpdateButtons();
     }
     private void OnBringIntoCenterClick()
     {
-        if (_trendsDiagram.SelectionSettings.Nodes.Count > 0)
+        double? left = null, top = null, right = null, bottom = null;
+
+        foreach (var node in _selectedDiagramObjects.OfType<Node>())
         {
-            var node = _trendsDiagram.SelectionSettings.Nodes[0];
-            var bound = new DiagramRect(node.OffsetX - node.Width / 2, node.OffsetY - node.Height / 2, node.Width, node.Height);
-            _trendsDiagram.BringIntoCenter(bound);
+            left = !left.HasValue
+                ? node.OffsetX
+                : Math.Min(left.Value, node.OffsetX);
+            top = !top.HasValue
+                ? node.OffsetY
+                : Math.Min(top.Value, node.OffsetY);
+
+            var nodeRight = node.OffsetX + node.Width;
+            var nodeBottom = node.OffsetY + node.Height;
+
+            right = !right.HasValue
+                ? nodeRight
+                : Math.Max(right.Value, nodeRight!.Value);
+
+            bottom = !bottom.HasValue
+                ? nodeBottom
+                : Math.Max(bottom.Value, nodeBottom!.Value);
+
         }
+        var bound = new DiagramRect(left, top, right - left, bottom - top);
+        _trendsDiagram.BringIntoCenter(bound);
+
         UpdateButtons();
     }
 
@@ -130,8 +165,61 @@ public partial class TrendsDiagram
         _editConnectionCssClass = _diagramTool.HasFlag(_editConnectionController) ? "tb-item-middle tb-item-selected" : "tb-item-start";
 
         _resetItemCssClass = "tb-item-start";
-        _viewCssClass = "tb-item-start";
-        _centerCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
+    }
+
+    private async Task OnDeleteItemsClicked()
+    {
+        var nodesToRemove = _selectedDiagramObjects
+            .OfType<Node>()
+            .ToArray();
+
+        var trendsToDelete = nodesToRemove
+            .Select(n => n.Data)
+            .Where(t => t != null)
+            .Cast<Trend>()
+            .ToArray();
+
+        var connectorsToRemove = _selectedDiagramObjects
+            .OfType<Connector>()
+            .ToArray();
+
+        var connectionsToDelete = connectorsToRemove
+            .Select(n =>
+            {
+                if(n.AdditionalInfo.TryGetValue("Connection", out var connection))
+                {
+                    return connection;
+                }
+                return null;
+            })
+            .Where(c => c != null)
+            .Cast<Connection>();
+
+        foreach (var trend in trendsToDelete)
+        {
+            var command = new RemoveTrendCommand(trend.Id);
+            await _commandDispatcher
+                .DispatchAsync(command)
+                .ConfigureAwait(false);
+        }
+
+        foreach (var connection in connectionsToDelete)
+        {
+            var command = new RemoveConnectionCommand(connection.Id);
+            await _commandDispatcher
+                .DispatchAsync(command)
+                .ConfigureAwait(false);
+        }
+
+        foreach (var connectorToRemove in connectorsToRemove)
+        {
+            _connectors.Remove(connectorToRemove);
+        }
+
+        foreach (var nodeToRemove in nodesToRemove)
+        {
+            _nodes.Remove(nodeToRemove);
+        }
     }
 }

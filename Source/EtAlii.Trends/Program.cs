@@ -21,6 +21,7 @@ builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
 builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();
 builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
 builder.Services.AddSingleton<IUpdateDiagramCommandHandler, UpdateDiagramCommandHandler>();
+builder.Services.AddSingleton<IRemoveTrendCommandHandler, RemoveTrendCommandHandler>();
 
 builder.Services.AddSingleton<IGetAllLayersQueryHandler, GetAllLayersQueryHandler>();
 builder.Services.AddSingleton<IUpdateLayerCommandHandler, UpdateLayerCommandHandler>();
