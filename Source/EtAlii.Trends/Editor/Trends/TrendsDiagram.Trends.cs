@@ -26,22 +26,7 @@ public partial class TrendsDiagram
             .DispatchAsync<Trend>(command)
             .ConfigureAwait(false);
 
-        var node = new Node
-        {
-            Data = trend,
-            Height = 100,
-            Width = 100,
-            ID = trend.Id.ToString(),
-            OffsetX = trend.X,
-            OffsetY = trend.Y,
-            Annotations = new DiagramObjectCollection<ShapeAnnotation>
-            {
-                new()
-                {
-                    Content = trend.Name,
-                }
-            }
-        };
+        var node = _nodeFactory.Create(trend);
         _nodes.Add(node);
 
         SelectedTrend = trend;
