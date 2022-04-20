@@ -10,6 +10,7 @@ public class PortManager : IPortManager
     {
         return new PointPort
         {
+            AdditionalInfo = { ["Component"] = component },
             ID = component.Id.ToString(),
             Shape = PortShapes.Circle,
             Width = 16,
