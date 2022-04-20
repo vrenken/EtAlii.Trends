@@ -123,16 +123,17 @@ public partial class TrendPropertyGrid
 
     private async Task AddComponent(Component component)
     {
+        var componentToAdd = component;
         var command = new AddComponentCommand
         (
             Component: trend =>
             {
-                component.Trend = trend;
-                return component;
+                componentToAdd.Trend = trend;
+                return componentToAdd;
             },
             TrendId: SelectedTrend!.Id
         );
-        component = await _commandDispatcher
+        await _commandDispatcher
             .DispatchAsync<Component>(command)
             .ConfigureAwait(false);
 
