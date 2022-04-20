@@ -18,6 +18,8 @@ builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
 
+builder.Services.AddSingleton<IViewManager, ViewManager>();
+
 builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();
 builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
 builder.Services.AddSingleton<IUpdateDiagramCommandHandler, UpdateDiagramCommandHandler>();
@@ -43,7 +45,7 @@ builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionC
 builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
 builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
-builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
+builder.Services.AddScoped<IConnectionConnectorLoader, ConnectionConnectorLoader>();
 
 builder.Services.AddSingleton<DataContext>();
 builder.Services.AddSingleton<DatabaseManager>();

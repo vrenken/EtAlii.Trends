@@ -82,9 +82,6 @@
     <Compile Update="Editor\Trends\TrendsDiagram.Toolbar.cs">
       <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
-    <Compile Update="Editor\Trends\TrendsDiagram.Trends.cs">
-      <DependentUpon>TrendsDiagram.razor</DependentUpon>
-    </Compile>
     <Compile Update="Editor\Trends\TrendsDiagram.cs">
       <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
@@ -107,6 +104,9 @@
       <DependentUpon>ActivityIndicator.razor</DependentUpon>
     </Compile>
     <Compile Update="Editor\Trends\TrendsDiagram.Connections.cs">
+      <DependentUpon>TrendsDiagram.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\TrendsDiagram.Lifetime.cs">
       <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
   </ItemGroup>

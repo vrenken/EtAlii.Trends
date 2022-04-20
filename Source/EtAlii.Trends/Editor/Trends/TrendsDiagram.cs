@@ -52,9 +52,9 @@ public partial class TrendsDiagram
     {
         await InitializePositionAndZoom().ConfigureAwait(false);
 
-        await _trendNodesLoader.Load(_nodes, DiagramId).ConfigureAwait(false);
+        await _nodeLoader.Load(_nodes, DiagramId).ConfigureAwait(false);
 
-        await _componentConnectionLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
+        await _connectorLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
 
         _connectors.CollectionChanged += OnConnectorsChanged;
     }

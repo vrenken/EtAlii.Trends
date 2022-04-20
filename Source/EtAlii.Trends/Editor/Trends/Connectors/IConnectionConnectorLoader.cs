@@ -4,7 +4,7 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using Syncfusion.Blazor.Diagram;
 
-public interface IComponentConnectionLoader
+public interface IConnectionConnectorLoader
 {
     Task Load(DiagramObjectCollection<Connector> connectors, DiagramObjectCollection<Node> nodes, Guid diagramId);
 }
