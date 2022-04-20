@@ -8,7 +8,6 @@ public class ConnectorFactory : IConnectorFactory
 {
     public Connector Create(Connection connection)
     {
-
         var v1Distance = connection.SourceBezierDistance == 0 ? 50L : connection.SourceBezierDistance;
         var v2Distance = connection.TargetBezierDistance == 0 ? 50L : connection.TargetBezierDistance;
 
@@ -42,13 +41,21 @@ public class ConnectorFactory : IConnectorFactory
             Type = ConnectorSegmentType.Bezier,
             TargetDecorator =
             {
-                Shape = DecoratorShape.None
+                Shape = DecoratorShape.Arrow
             },
             Style = new ShapeStyle
             {
                 StrokeColor = "#6d6d6d"
             },
-            Constraints = ConnectorConstraints.Default,
+            Constraints = ConnectorConstraints.ConnectToNearByPort |
+                          ConnectorConstraints.PointerEvents |
+                          ConnectorConstraints.InheritBridging |
+                          ConnectorConstraints.DragTargetEnd |
+                          ConnectorConstraints.DragSourceEnd |
+                          //ConnectorConstraints.Drag |
+                          ConnectorConstraints.Delete |
+                          //ConnectorConstraints.DragSegmentThumb |
+                          ConnectorConstraints.Select,
             Segments = new DiagramObjectCollection<ConnectorSegment>
             {
                 new BezierSegment

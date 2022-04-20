@@ -14,8 +14,6 @@ using Orientation = Syncfusion.Blazor.Diagram.Orientation;
 public partial class TrendsDiagram
 {
     [Parameter] public Guid DiagramId { get; set; }
-
-
     [CascadingParameter(Name = "SelectedTrend")] public Trend? SelectedTrend { get; set; }
 
     [Parameter] public EventCallback<Trend?> SelectedTrendChanged { get; set; }
@@ -26,6 +24,7 @@ public partial class TrendsDiagram
     private readonly DiagramObjectCollection<Connector> _connectors = new();
     private IDiagramObject? DrawingObject => _drawingObjectFactory?.Invoke();
     private Func<IDiagramObject>? _drawingObjectFactory;
+    private readonly List<IDiagramObject> _selectedDiagramObjects = new();
 
 #pragma warning disable CS8618
     public TrendsDiagram()
@@ -42,7 +41,6 @@ public partial class TrendsDiagram
                 diagram.DiagramZoom = _currentZoom;
                 diagram.HorizontalOffset = _horizontalOffset;
                 diagram.VerticalOffset = _verticalOffset;
-
 
                 await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
                     .ConfigureAwait(false);
@@ -142,17 +140,33 @@ public partial class TrendsDiagram
 
     private async Task OnTrendSelected(SelectionChangedEventArgs e)
     {
-        if (e.NewValue.Count == 1)
-        {
-            var node = (Node)e.NewValue[0];
-            var trend = (Trend)node.Data;
+        SelectedTrend = null;
+        _selectedDiagramObjects.Clear();
 
-            SelectedTrend = trend;
-        }
-        else
+        var selectedItems = e.NewValue.Count;
+        switch (selectedItems)
         {
-            SelectedTrend = null;
+            case 0: break; // Nothing to do.
+            case 1:
+                switch (e.NewValue[0])
+                {
+                    case Node node:
+                        var trend = (Trend)node.Data;
+                        SelectedTrend = trend;
+                        _selectedDiagramObjects.Add(node);
+                        break;
+                    case Connector connector:
+                        _selectedDiagramObjects.Add(connector);
+                        break;
+                }
+                break;
+            default: // More than 1 item.
+                _selectedDiagramObjects.AddRange(e.NewValue);
+                break;
         }
-        await SelectedTrendChanged.InvokeAsync(SelectedTrend).ConfigureAwait(false);
+
+        await SelectedTrendChanged
+            .InvokeAsync(SelectedTrend)
+            .ConfigureAwait(false);
     }
 }
