@@ -109,6 +109,24 @@
     <Compile Update="Editor\Trends\TrendsDiagram.Lifetime.cs">
       <DependentUpon>TrendsDiagram.razor</DependentUpon>
     </Compile>
+    <Compile Update="Editor\Trends\Nodes\INodeManager.cs">
+      <DependentUpon>NodeManager.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\Nodes\IPortManager.cs">
+      <DependentUpon>PortManager.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\Nodes\ITrendNodesLoader.cs">
+      <DependentUpon>TrendNodesLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\Connectors\IConnectionConnectorLoader.cs">
+      <DependentUpon>ConnectionConnectorLoader.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\Connectors\IConnectorFactory.cs">
+      <DependentUpon>ConnectorFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Editor\Trends\View\IViewManager.cs">
+      <DependentUpon>ViewManager.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
