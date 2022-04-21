@@ -2,14 +2,18 @@
 @using Syncfusion.Blazor.Navigations;
 @using Syncfusion.Blazor.Spinner
 
+@inject NavigationManager _uriHelper;
 @inject IJSRuntime _jsRuntime
 @inject IQueryDispatcher _queryDispatcher;
 @inject ICommandDispatcher _commandDispatcher;
 
-@inject ITrendNodesLoader _trendNodesLoader;
-@inject IComponentConnectionLoader _componentConnectionLoader;
+@inject ITrendNodesLoader _nodeLoader;
+@inject IConnectionConnectorLoader _connectorLoader;
 @inject IConnectorFactory _connectorFactory;
-@inject INodeFactory _nodeFactory;
+@inject INodeManager _nodeManager;
+@inject IPortManager _portManager;
+
+@inject IViewManager _viewManager;
 
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>

@@ -4,12 +4,12 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using Syncfusion.Blazor.Diagram;
 
-public class ComponentConnectionLoader : IComponentConnectionLoader
+public class ConnectionConnectorLoader : IConnectionConnectorLoader
 {
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly IConnectorFactory _connectorFactory;
 
-    public ComponentConnectionLoader(IQueryDispatcher queryDispatcher, IConnectorFactory connectorFactory)
+    public ConnectionConnectorLoader(IQueryDispatcher queryDispatcher, IConnectorFactory connectorFactory)
     {
         _queryDispatcher = queryDispatcher;
         _connectorFactory = connectorFactory;

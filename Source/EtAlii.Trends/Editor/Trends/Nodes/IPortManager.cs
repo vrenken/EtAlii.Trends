@@ -4,7 +4,7 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using Syncfusion.Blazor.Diagram;
 
-public interface INodeFactory
+public interface IPortManager
 {
-    Node Create(Trend trend);
+    PointPort CreatePort(Component component);
 }

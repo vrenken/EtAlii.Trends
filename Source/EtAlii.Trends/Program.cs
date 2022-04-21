@@ -18,6 +18,8 @@ builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddSingleton<IGetUserQueryHandler, GetUserQueryHandler>();
 
+builder.Services.AddSingleton<IViewManager, ViewManager>();
+
 builder.Services.AddSingleton<IGetDiagramQueryHandler, GetDiagramQueryHandler>();
 builder.Services.AddSingleton<IGetAllDiagramsForUserQueryHandler, GetAllDiagramsForUserQueryHandler>();
 builder.Services.AddSingleton<IUpdateDiagramCommandHandler, UpdateDiagramCommandHandler>();
@@ -42,14 +44,15 @@ builder.Services.AddSingleton<IAddConnectionCommandHandler, AddConnectionCommand
 builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionCommandHandler>();
 builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
+builder.Services.AddSingleton<INodeManager, NodeManager>();
+builder.Services.AddSingleton<IPortManager, PortManager>();
 builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
-builder.Services.AddScoped<IComponentConnectionLoader, ComponentConnectionLoader>();
+builder.Services.AddScoped<IConnectionConnectorLoader, ConnectionConnectorLoader>();
 
 builder.Services.AddSingleton<DataContext>();
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ApplicationContext>();
 
-builder.Services.AddSingleton<INodeFactory, NodeFactory>();
 builder.Services.AddSingleton<IConnectorFactory, ConnectorFactory>();
 
 Logging.ConfigureGlobalLogging(builder.Configuration);

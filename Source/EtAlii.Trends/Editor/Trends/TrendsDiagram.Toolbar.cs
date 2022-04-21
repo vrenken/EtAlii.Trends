@@ -73,66 +73,12 @@ public partial class TrendsDiagram
         _trendsDiagram.FitToPage();
         UpdateButtons();
     }
-    private void OnBringIntoViewClick()
-    {
-        double? left = null, top = null, right = null, bottom = null;
 
-        foreach (var node in _selectedDiagramObjects.OfType<Node>())
-        {
-            left = !left.HasValue
-                ? node.OffsetX
-                : Math.Min(left.Value, node.OffsetX);
-            top = !top.HasValue
-                ? node.OffsetY
-                : Math.Min(top.Value, node.OffsetY);
+    private void OnBringIntoCenterClick() => _viewManager.OnBringIntoCenter(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
 
-            var nodeRight = node.OffsetX + node.Width;
-            var nodeBottom = node.OffsetY + node.Height;
+    private void OnBringIntoViewClick() => _viewManager.OnBringIntoView(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
 
-            right = !right.HasValue
-                ? nodeRight
-                : Math.Max(right.Value, nodeRight!.Value);
-
-            bottom = !bottom.HasValue
-                ? nodeBottom
-                : Math.Max(bottom.Value, nodeBottom!.Value);
-
-        }
-        var bound = new DiagramRect(left, top, right - left, bottom - top);
-        _trendsDiagram.BringIntoView(bound);
-
-        UpdateButtons();
-    }
-    private void OnBringIntoCenterClick()
-    {
-        double? left = null, top = null, right = null, bottom = null;
-
-        foreach (var node in _selectedDiagramObjects.OfType<Node>())
-        {
-            left = !left.HasValue
-                ? node.OffsetX
-                : Math.Min(left.Value, node.OffsetX);
-            top = !top.HasValue
-                ? node.OffsetY
-                : Math.Min(top.Value, node.OffsetY);
-
-            var nodeRight = node.OffsetX + node.Width;
-            var nodeBottom = node.OffsetY + node.Height;
-
-            right = !right.HasValue
-                ? nodeRight
-                : Math.Max(right.Value, nodeRight!.Value);
-
-            bottom = !bottom.HasValue
-                ? nodeBottom
-                : Math.Max(bottom.Value, nodeBottom!.Value);
-
-        }
-        var bound = new DiagramRect(left, top, right - left, bottom - top);
-        _trendsDiagram.BringIntoCenter(bound);
-
-        UpdateButtons();
-    }
+    private Task OnDeleteItemsClicked() => OnDeleteItems();
 
     private void OnPanClick()
     {
@@ -166,60 +112,5 @@ public partial class TrendsDiagram
 
         _resetItemCssClass = "tb-item-start";
         _fitCssClass = "tb-item-start";
-    }
-
-    private async Task OnDeleteItemsClicked()
-    {
-        var nodesToRemove = _selectedDiagramObjects
-            .OfType<Node>()
-            .ToArray();
-
-        var trendsToDelete = nodesToRemove
-            .Select(n => n.Data)
-            .Where(t => t != null)
-            .Cast<Trend>()
-            .ToArray();
-
-        var connectorsToRemove = _selectedDiagramObjects
-            .OfType<Connector>()
-            .ToArray();
-
-        var connectionsToDelete = connectorsToRemove
-            .Select(n =>
-            {
-                if(n.AdditionalInfo.TryGetValue("Connection", out var connection))
-                {
-                    return connection;
-                }
-                return null;
-            })
-            .Where(c => c != null)
-            .Cast<Connection>();
-
-        foreach (var trend in trendsToDelete)
-        {
-            var command = new RemoveTrendCommand(trend.Id);
-            await _commandDispatcher
-                .DispatchAsync(command)
-                .ConfigureAwait(false);
-        }
-
-        foreach (var connection in connectionsToDelete)
-        {
-            var command = new RemoveConnectionCommand(connection.Id);
-            await _commandDispatcher
-                .DispatchAsync(command)
-                .ConfigureAwait(false);
-        }
-
-        foreach (var connectorToRemove in connectorsToRemove)
-        {
-            _connectors.Remove(connectorToRemove);
-        }
-
-        foreach (var nodeToRemove in nodesToRemove)
-        {
-            _nodes.Remove(nodeToRemove);
-        }
     }
 }
