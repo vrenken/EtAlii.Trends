@@ -52,14 +52,8 @@ public class NodeManager : INodeManager
                 NodeConstraints.Select
         };
 
-        node.Annotations.Add(new ShapeAnnotation
-        {
-            Content = trend.Name,
-            Style = new TextStyle
-            {
-                Color = "black"
-            }
-        });
+        var annotation = CreateAnnotation(trend.Name);
+        node.Annotations.Add(annotation);
 
         AddOrUpdatePorts(trend, node, out var changed);
         if (changed)
@@ -79,9 +73,12 @@ public class NodeManager : INodeManager
             position += 0.3f;
             var port = node.Ports.Single(p => p.ID == component.Id.ToString());
             port.Offset.X = position;
-            var annotation = node.Annotations.Single(a => a.ID == component.Id.ToString());
+            var annotation = node.Annotations.Single(a => a.ID == $"{component.Id}_Annotation");
             annotation.Offset.X = position - 0.15f;
         }
+
+        node.Ports = new DiagramObjectCollection<PointPort>(node.Ports);
+        node.Annotations = new DiagramObjectCollection<ShapeAnnotation>(node.Annotations);
     }
     public void Update(Trend trend, Node node)
     {
@@ -94,32 +91,65 @@ public class NodeManager : INodeManager
 
     private void AddOrUpdatePorts(Trend trend, Node node, out bool changed)
     {
-        var componentsToAdd = trend.Components
+        changed = false;
+        var portsToAdd = trend.Components
             .Where(c => node.Ports.All(p => p.ID != c.Id.ToString()))
             .ToArray();
 
         var portsToRemove = node.Ports
             .Where(p => trend.Components.All(c => c.Id.ToString() != p.ID))
             .ToArray();
+        var unchangedPorts = node.Ports.Except(portsToRemove).ToArray();
 
-        foreach (var componentToAdd in componentsToAdd)
+        if (portsToAdd.Any() || portsToRemove.Any())
         {
-            var port = _portManager.CreatePort(componentToAdd);
-            node.Ports.Add(port);
+            foreach (var portToRemove in portsToRemove)
+            {
+                node.Ports.Remove(portToRemove);
+            }
+            var visiblePorts = new DiagramObjectCollection<PointPort>(unchangedPorts);
+            foreach (var portToAdd in portsToAdd)
+            {
+                var port = _portManager.CreatePort(portToAdd);
+                visiblePorts.Add(port);
+            }
+            node.Ports = visiblePorts;
 
-            var annotation = CreateAnnotation(componentToAdd);
-            node.Annotations.Add(annotation);
+            changed = true;
         }
 
-        foreach (var portToRemove in portsToRemove)
+        var annotationsToAdd = trend.Components
+            .Where(c => node.Annotations.All(a => a.ID != $"{c.Id}_Annotation"))
+            .ToArray();
+
+        var annotationsToRemove = node.Annotations
+            .Skip(1)
+            .Where(a => trend.Components.All(c => $"{c.Id}_Annotation" != a.ID))
+            .ToArray();
+        var unchangedAnnotations = node.Annotations.Except(annotationsToRemove).ToArray();
+
+        if (annotationsToAdd.Any() || annotationsToRemove.Any())
         {
-            node.Ports.Remove(portToRemove);
+            foreach (var annotationToRemove in annotationsToRemove)
+            {
+                node.Annotations.Remove(annotationToRemove);
+            }
+            var visibleAnnotations = new DiagramObjectCollection<ShapeAnnotation>(unchangedAnnotations);
+            foreach (var annotationToAdd in annotationsToAdd)
+            {
+                var annotation = CreateAnnotation(annotationToAdd);
+                //node.Annotations.Add(annotation);
+                visibleAnnotations.Add(annotation);
+            }
+            node.Annotations = visibleAnnotations;
 
-            var annotation = node.Annotations.Single(a => a.ID == portToRemove.ID);
-            node.Annotations.Remove(annotation);
+            changed = true;
         }
+    }
 
-        changed = componentsToAdd.Any() || portsToRemove.Any();
+    private ShapeAnnotation CreateAnnotation(string name)
+    {
+        return new ShapeAnnotation { Content = name, Style = new TextStyle { Color = "black" } };
     }
 
     private ShapeAnnotation CreateAnnotation(Component component)
@@ -132,14 +162,10 @@ public class NodeManager : INodeManager
 
         return new ShapeAnnotation
         {
-            ID = component.Id.ToString(),
+            AdditionalInfo = { ["Component"] = component },
+            ID = $"{component.Id}_Annotation",
             Constraints = AnnotationConstraints.ReadOnly,
             Visibility = true,
-            // Hyperlink = new HyperlinkSettings
-            // {
-            //     Content = component.Name,
-            //     TextDecoration = TextDecoration.None,
-            // },
             Style = new TextStyle
             {
                 FontSize = 13,

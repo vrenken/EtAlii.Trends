@@ -59,15 +59,14 @@ public partial class TrendsDiagram
         _connectors.CollectionChanged += OnConnectorsChanged;
     }
 
-    protected override Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
         if (SelectedTrend != null)
         {
             var node = _nodes.Single(n => n.Data == SelectedTrend);
             _nodeManager.Update(SelectedTrend, node);
+            // StateHasChanged();
         }
-
-        return Task.CompletedTask;
     }
 
     // Create the layout info.
