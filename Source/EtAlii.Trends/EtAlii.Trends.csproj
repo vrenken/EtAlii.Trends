@@ -114,6 +114,5 @@
   <ItemGroup>
     <Folder Include="Migrations" />
     <Folder Include="Users\Commands" />
-    <Folder Include="Viewer" />
   </ItemGroup>
 </Project>

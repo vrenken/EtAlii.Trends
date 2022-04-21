@@ -1,0 +1,91 @@
+@page "/Test"
+<h3>Test</h3>
+<SfDiagramComponent
+	@ref="_diagram" Height="600px" Nodes="@_nodes" Connectors="@_connectors"
+	SourcePointChanged="OnSourceConnectionPointChanged"
+	TargetPointChanged="OnTargetConnectionPointChanged"
+/>
+
+@code
+{
+#pragma warning disable CS8618
+    private SfDiagramComponent _diagram;
+    private DiagramObjectCollection<Node> _nodes;
+	private DiagramObjectCollection<Connector> _connectors;
+#pragma warning restore CS8618
+
+	protected override void OnInitialized()
+	{
+		var node1 = new Node
+		{
+			ID = "node1",
+			OffsetX = 100, OffsetY = 100,
+			Width = 100, Height = 100,
+			Style = new ShapeStyle { Fill = "#6BA5D7", StrokeColor = "white" },
+			Ports = new DiagramObjectCollection<PointPort>
+			{
+				new()
+				{
+					ID = "port1",
+					Offset = new DiagramPoint { X = 0.5f, Y = 1f },
+					Visibility = PortVisibility.Visible
+				}
+			}
+		};
+		var node2 = new Node
+		{
+			ID = "node2",
+			OffsetX = 400, OffsetY = 400,
+			Width = 100, Height = 100,
+			Style = new ShapeStyle { Fill = "#6BA5D7", StrokeColor = "white" },
+			Ports = new DiagramObjectCollection<PointPort>
+			{
+				new()
+				{
+					ID = "port2",
+					Offset = new DiagramPoint { X = 0.5f, Y = 0f },
+					Visibility = PortVisibility.Visible
+				}
+			}
+		};
+		_nodes = new DiagramObjectCollection<Node>(new[] { node1, node2 });
+
+		var connector = new Connector
+		{
+			SourceID = "node1",
+			SourcePortID = "port1",
+			TargetID = "node2",
+			TargetPortID = "port2",
+			Type = ConnectorSegmentType.Bezier,
+			Segments = new DiagramObjectCollection<ConnectorSegment>
+			{
+				new BezierSegment
+				{
+					AllowDrag = true,
+					Vector1 = new Vector { Distance = 100L, Angle = +90L },
+					Vector2 = new Vector { Distance = 100L, Angle = -90L }
+				}
+			}
+		};
+		_connectors = new DiagramObjectCollection<Connector>(new [] { connector });
+
+	}
+
+	private void OnSourceConnectionPointChanged(EndPointChangedEventArgs e)
+	{
+        // ReSharper disable once UnusedVariable
+	    var segment = (BezierSegment)e.Connector.Segments[0];
+		// I'd expect the angle and distance of either vector to have changed.
+		// segment.Vector1.Angle != +90;
+		// segment.Vector1.Distance != 100;
+	}
+
+	private void OnTargetConnectionPointChanged(EndPointChangedEventArgs e)
+	{
+        // ReSharper disable once UnusedVariable
+		var segment = (BezierSegment)e.Connector.Segments[0];
+		// I'd expect the angle and distance of either vector to have changed.
+		// segment.Vector2.Angle != +90;
+		// segment.Vector2.Distance != 100;
+	}
+}

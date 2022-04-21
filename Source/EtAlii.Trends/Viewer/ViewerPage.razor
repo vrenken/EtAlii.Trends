@@ -1,0 +1,69 @@
+@page "/Viewer"
+<h3>ViewerPage</h3>
+
+
+<input type="button" value="Update Port" @onclick="@UpdatePort" />
+<SfDiagramComponent @ref="_diagram" Height="600px" Nodes="@_nodes" />
+
+@code
+{
+#pragma warning disable CS8618
+    SfDiagramComponent _diagram;
+    DiagramObjectCollection<Node> _nodes;
+#pragma warning restore CS8618
+
+protected override void OnInitialized()
+{
+    var port1 = CreatePort("port1");
+    port1.Offset = new DiagramPoint { X = 0, Y = 0.5 };
+    var port2 = CreatePort("port2");
+    port2.Offset = new DiagramPoint { X = 1, Y = 0.5 };
+
+    // Initialize port collection.
+    DiagramObjectCollection<PointPort> ports = new() { port1, port2 };
+    // A node is created and stored in nodes array.
+    _nodes = new DiagramObjectCollection<Node>();
+    Node node = new Node
+    {
+        // Position of the node.
+        OffsetX = 250,
+        OffsetY = 250,
+        // Size of the node.
+        Width = 100,
+        Height = 100,
+        Style = new ShapeStyle { Fill = "#6BA5D7", StrokeColor = "white" },
+        Ports = ports
+    };
+    _nodes.Add(node);
+}
+
+    private async void UpdatePort()
+    {
+        //Update ports at run time.
+        _diagram.BeginUpdate();
+        foreach (var node in _nodes)
+        {
+            foreach (var port in node.Ports)
+            {
+                port.Offset.X += 10;
+            }
+        }
+        await _diagram.EndUpdate();
+    }
+
+    private PointPort CreatePort(string id)
+    {
+        return new PointPort
+        {
+            ID = id,
+            Shape = PortShapes.Circle,
+            Width = 16,
+            Height = 16,
+            Visibility = PortVisibility.Visible,
+            Offset = new DiagramPoint { X = 0f, Y = 0.5f },
+            Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
+            Constraints = PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
+        };
+    }
+
+}
