@@ -66,23 +66,29 @@ public class NodeManager : INodeManager
 
     private void RepositionPorts(Trend trend, Node node)
     {
-        var position = 1f;
+        var position = node.Width!.Value;
 
+        var margin = 13D;
+        var characterWidth = 10D;
         foreach (var component in trend.Components.OrderBy(c => c.Moment))
         {
-            position += 0.3f;
-            var port = node.Ports.Single(p => p.ID == component.Id.ToString());
-            port.Offset.X = position;
             var annotation = node.Annotations.Single(a => a.ID == $"{component.Id}_Annotation");
-            annotation.Offset.X = position - 0.15f;
+            var port = node.Ports.Single(p => p.ID == component.Id.ToString());
+            var nextPortOffset = characterWidth * annotation.Content.Length + 2 * margin;
+            var nextAnnotationOffset = nextPortOffset / 2D;
+
+            annotation.Margin = new Margin { Left = position + nextAnnotationOffset };
+            port.Margin = new Margin { Left = position + nextPortOffset};
+
+            position += nextPortOffset;
         }
 
         node.Ports = new DiagramObjectCollection<PointPort>(node.Ports);
         node.Annotations = new DiagramObjectCollection<ShapeAnnotation>(node.Annotations);
     }
-    public void Update(Trend trend, Node node)
+    public void Update(Trend trend, Node node, out bool changed)
     {
-        AddOrUpdatePorts(trend, node, out var changed);
+        AddOrUpdatePorts(trend, node, out changed);
         if (changed)
         {
             RepositionPorts(trend, node);

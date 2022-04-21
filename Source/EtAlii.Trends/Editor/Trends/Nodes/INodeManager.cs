@@ -8,5 +8,5 @@ public interface INodeManager
 {
     Node Create(Trend trend);
 
-    void Update(Trend trend, Node node);
+    void Update(Trend trend, Node node, out bool changed);
 }

@@ -64,8 +64,12 @@ public partial class TrendsDiagram
         if (SelectedTrend != null)
         {
             var node = _nodes.Single(n => n.Data == SelectedTrend);
-            _nodeManager.Update(SelectedTrend, node);
-            // StateHasChanged();
+            _nodeManager.Update(SelectedTrend, node, out var changed);
+            if (changed)
+            {
+                // TODO: Ugly workaround to update port+annotation positions.
+                _uriHelper.NavigateTo(_uriHelper.Uri, true);
+            }
         }
     }
 
@@ -131,6 +135,12 @@ public partial class TrendsDiagram
             await _commandDispatcher
                 .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
                 .ConfigureAwait(false);
+        }
+
+        if (settings.Nodes.Any())
+        {
+            // TODO: Ugly workaround to update port+annotation positions.
+            _uriHelper.NavigateTo(_uriHelper.Uri, true);
         }
     }
 
