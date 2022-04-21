@@ -35,19 +35,6 @@ public partial class TrendsDiagram
 
     private async Task OnDeleteItems()
     {
-        // //Update ports at run time.
-        // _trendsDiagram.BeginUpdate();
-        // foreach (var node in _trendsDiagram.Nodes)
-        // {
-        //     //node.OffsetX += 10;
-        //     foreach (var port in node.Ports)
-        //     {
-        //         port.Offset.X += 0.1;
-        //     }
-        // }
-        // await _trendsDiagram.EndUpdate().ConfigureAwait(false);
-        //
-        // return;
         var nodesToRemove = _selectedDiagramObjects
             .OfType<Node>()
             .ToArray();
