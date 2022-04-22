@@ -26,7 +26,7 @@
                             </SplitterPane>
                             <SplitterPane Size="40%" Min="10%" Max="90%">
                                 <ContentTemplate>
-                                    <TrendPropertyGrid @ref="_trendPropertyGrid" SelectedTrendChanged="OnSelectedTrendChanged"/>
+                                    <TrendPropertyGrid @ref="_trendPropertyGrid" SelectedTrendChanged="OnSelectedTrendChangedInPropertyGrid"/>
                                 </ContentTemplate>
                             </SplitterPane>
                         </SplitterPanes>
@@ -35,7 +35,7 @@
             </SplitterPane>
             <SplitterPane Size="85%" Min="40%" Max="90%">
                 <ContentTemplate>
-                    <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId" SelectedTrendChanged="OnSelectedTrendChanged"/>
+                    <TrendsDiagram @ref="_trendsDiagram" DiagramId="@_diagramId" SelectedTrendChanged="OnSelectedTrendChangedInDiagram"/>
                 </ContentTemplate>
             </SplitterPane>
         </SplitterPanes>

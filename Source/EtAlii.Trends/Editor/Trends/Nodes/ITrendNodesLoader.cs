@@ -6,5 +6,5 @@ using Syncfusion.Blazor.Diagram;
 
 public interface ITrendNodesLoader
 {
-    Task Load(DiagramObjectCollection<Node> nodes, Guid diagramId);
+    Task Load(DiagramObjectCollection<Node> nodes, DiagramObjectCollection<Connector> connectors, Guid diagramId);
 }

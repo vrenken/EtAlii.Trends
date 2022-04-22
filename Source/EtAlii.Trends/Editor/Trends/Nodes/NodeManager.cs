@@ -13,7 +13,7 @@ public class NodeManager : INodeManager
         _portManager = portManager;
     }
 
-    public Node Create(Trend trend)
+    public Node Create(Trend trend, DiagramObjectCollection<Connector> connectors)
     {
         // Defines the node's default values.
         var node = new Node
@@ -53,27 +53,31 @@ public class NodeManager : INodeManager
         };
 
         var annotation = CreateAnnotation(trend.Name);
-        node.Annotations.Add(annotation);
+        node.Annotations = new DiagramObjectCollection<ShapeAnnotation>(new [] { annotation });
 
-        AddOrUpdatePorts(trend, node, out var changed);
-        if (changed)
-        {
-            RepositionPorts(trend, node);
-        }
+        Update(trend, node, connectors);
 
         return node;
     }
 
-    private void RepositionPorts(Trend trend, Node node)
+    public void Update(Trend trend, Node node, DiagramObjectCollection<Connector> connectors)
     {
         var position = node.Width!.Value;
 
         var margin = 13D;
         var characterWidth = 10D;
+
+        var visibleAnnotations = new List<ShapeAnnotation>(new [] { node.Annotations.First() });
+        var visiblePorts = new List<PointPort>();
+
         foreach (var component in trend.Components.OrderBy(c => c.Moment))
         {
-            var annotation = node.Annotations.Single(a => a.ID == $"{component.Id}_Annotation");
-            var port = node.Ports.Single(p => p.ID == component.Id.ToString());
+            var annotation = GetOrAddAnnotation(component, node);
+            visibleAnnotations.Add(annotation);
+
+            var port = GetOrAddPort(component, node);
+            visiblePorts.Add(port);
+
             var nextPortOffset = characterWidth * annotation.Content.Length + 2 * margin;
             var nextAnnotationOffset = nextPortOffset / 2D;
 
@@ -83,74 +87,65 @@ public class NodeManager : INodeManager
             position += nextPortOffset;
         }
 
+        var portsToRemove = node.Ports.Except(visiblePorts).ToArray();
+        foreach (var portToRemove in portsToRemove)
+        {
+            node.Ports.Remove(portToRemove);
+        }
+
+        var annotationsToRemove = node.Annotations.Except(visibleAnnotations).ToArray();
+        foreach (var annotationToRemove in annotationsToRemove)
+        {
+            node.Annotations.Remove(annotationToRemove);
+        }
+
         node.Ports = new DiagramObjectCollection<PointPort>(node.Ports);
         node.Annotations = new DiagramObjectCollection<ShapeAnnotation>(node.Annotations);
+
+        TrendsDiagram.PropagateConnectorUpdates = false;
+        foreach (var port in node.Ports)
+        {
+            var outEdges = connectors
+                .Where(c => c.SourceID == node.ID && c.SourcePortID == port.ID)
+                .ToArray();
+            foreach (var connector in outEdges)
+            {
+                connectors.Remove(connector);
+                connectors.Add(connector);
+            }
+
+            var inEdges = connectors
+                .Where(c => c.TargetID == node.ID && c.TargetPortID == port.ID)
+                .ToArray();
+            foreach (var connector in inEdges)
+            {
+                connectors.Remove(connector);
+                connectors.Add(connector);
+            }
+        }
+        TrendsDiagram.PropagateConnectorUpdates = true;
     }
-    public void Update(Trend trend, Node node, out bool changed)
+
+    private ShapeAnnotation GetOrAddAnnotation(Component component, Node node)
     {
-        AddOrUpdatePorts(trend, node, out changed);
-        if (changed)
+        var annotation = node.Annotations.SingleOrDefault(a => a.ID == $"{component.Id}_Annotation");
+        if (annotation == null)
         {
-            RepositionPorts(trend, node);
+            annotation = CreateAnnotation(component);
+            node.Annotations.Add(annotation);
         }
+        return annotation;
     }
 
-    private void AddOrUpdatePorts(Trend trend, Node node, out bool changed)
+    private PointPort GetOrAddPort(Component component, Node node)
     {
-        changed = false;
-        var portsToAdd = trend.Components
-            .Where(c => node.Ports.All(p => p.ID != c.Id.ToString()))
-            .ToArray();
-
-        var portsToRemove = node.Ports
-            .Where(p => trend.Components.All(c => c.Id.ToString() != p.ID))
-            .ToArray();
-        var unchangedPorts = node.Ports.Except(portsToRemove).ToArray();
-
-        if (portsToAdd.Any() || portsToRemove.Any())
+        var port = node.Ports.SingleOrDefault(a => a.ID == $"{component.Id}");
+        if (port == null)
         {
-            foreach (var portToRemove in portsToRemove)
-            {
-                node.Ports.Remove(portToRemove);
-            }
-            var visiblePorts = new DiagramObjectCollection<PointPort>(unchangedPorts);
-            foreach (var portToAdd in portsToAdd)
-            {
-                var port = _portManager.CreatePort(portToAdd);
-                visiblePorts.Add(port);
-            }
-            node.Ports = visiblePorts;
-
-            changed = true;
+            port = _portManager.CreatePort(component);
+            node.Ports.Add(port);
         }
-
-        var annotationsToAdd = trend.Components
-            .Where(c => node.Annotations.All(a => a.ID != $"{c.Id}_Annotation"))
-            .ToArray();
-
-        var annotationsToRemove = node.Annotations
-            .Skip(1)
-            .Where(a => trend.Components.All(c => $"{c.Id}_Annotation" != a.ID))
-            .ToArray();
-        var unchangedAnnotations = node.Annotations.Except(annotationsToRemove).ToArray();
-
-        if (annotationsToAdd.Any() || annotationsToRemove.Any())
-        {
-            foreach (var annotationToRemove in annotationsToRemove)
-            {
-                node.Annotations.Remove(annotationToRemove);
-            }
-            var visibleAnnotations = new DiagramObjectCollection<ShapeAnnotation>(unchangedAnnotations);
-            foreach (var annotationToAdd in annotationsToAdd)
-            {
-                var annotation = CreateAnnotation(annotationToAdd);
-                //node.Annotations.Add(annotation);
-                visibleAnnotations.Add(annotation);
-            }
-            node.Annotations = visibleAnnotations;
-
-            changed = true;
-        }
+        return port;
     }
 
     private ShapeAnnotation CreateAnnotation(string name)

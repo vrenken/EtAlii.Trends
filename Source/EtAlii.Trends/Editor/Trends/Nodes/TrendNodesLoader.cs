@@ -13,7 +13,7 @@ public class TrendNodesLoader : ITrendNodesLoader
         _nodeManager = nodeManager;
     }
 
-    public async Task Load(DiagramObjectCollection<Node> nodes, Guid diagramId)
+    public async Task Load(DiagramObjectCollection<Node> nodes, DiagramObjectCollection<Connector> connectors, Guid diagramId)
     {
         var trends = _queryDispatcher
             .DispatchAsync<Trend>(new GetAllTrendsQuery(diagramId))
@@ -21,7 +21,7 @@ public class TrendNodesLoader : ITrendNodesLoader
 
         await foreach (var trend in trends)
         {
-            var node = _nodeManager.Create(trend);
+            var node = _nodeManager.Create(trend, connectors);
             nodes.Add(node);
         }
     }

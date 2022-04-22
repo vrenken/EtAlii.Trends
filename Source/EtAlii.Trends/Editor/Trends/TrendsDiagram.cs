@@ -52,24 +52,21 @@ public partial class TrendsDiagram
     {
         await InitializePositionAndZoom().ConfigureAwait(false);
 
-        await _nodeLoader.Load(_nodes, DiagramId).ConfigureAwait(false);
+        await _nodeLoader.Load(_nodes, _connectors, DiagramId).ConfigureAwait(false);
 
         await _connectorLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
 
         _connectors.CollectionChanged += OnConnectorsChanged;
     }
 
-    protected override void OnParametersSet()
+    public async Task UpdatedTrend(Trend? trend)
     {
-        if (SelectedTrend != null)
+        if (trend != null)
         {
-            var node = _nodes.Single(n => n.Data == SelectedTrend);
-            _nodeManager.Update(SelectedTrend, node, out var changed);
-            if (changed)
-            {
-                // TODO: Ugly workaround to update port+annotation positions.
-                _uriHelper.NavigateTo(_uriHelper.Uri, true);
-            }
+            var node = _nodes.Single(n => n.Data == trend);
+            _trendsDiagram.BeginUpdate();
+            _nodeManager.Update(trend, node, _connectors);
+            await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
 
@@ -132,15 +129,13 @@ public partial class TrendsDiagram
             trend.W = node.Width!.Value;
             trend.H = node.Height!.Value;
 
-            await _commandDispatcher
+            trend = await _commandDispatcher
                 .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
                 .ConfigureAwait(false);
-        }
 
-        if (settings.Nodes.Any())
-        {
-            // TODO: Ugly workaround to update port+annotation positions.
-            _uriHelper.NavigateTo(_uriHelper.Uri, true);
+            _trendsDiagram.BeginUpdate();
+            _nodeManager.Update(trend, node, _connectors);
+            await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
 

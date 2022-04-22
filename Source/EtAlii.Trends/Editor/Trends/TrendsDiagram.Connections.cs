@@ -10,11 +10,16 @@ using Syncfusion.Blazor.Layouts;
 
 public partial class TrendsDiagram
 {
+    public static bool PropagateConnectorUpdates = true;
     private void OnConnectorsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
+                if (!PropagateConnectorUpdates)
+                {
+                    break;
+                }
                 foreach (Connector connector in e.NewItems!)
                 {
                     var command = new AddConnectionCommand

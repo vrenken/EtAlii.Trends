@@ -6,7 +6,7 @@ using Syncfusion.Blazor.Diagram;
 
 public interface INodeManager
 {
-    Node Create(Trend trend);
+    Node Create(Trend trend, DiagramObjectCollection<Connector> connectors);
 
-    void Update(Trend trend, Node node, out bool changed);
+    void Update(Trend trend, Node node, DiagramObjectCollection<Connector> connectors);
 }
