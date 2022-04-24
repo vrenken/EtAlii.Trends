@@ -3,6 +3,7 @@
 namespace EtAlii.Trends;
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 public static class ObservableSubscribeAsyncExtension
@@ -15,8 +16,22 @@ public static class ObservableSubscribeAsyncExtension
     {
         void OnNext(T o)
         {
-            var task = Task.Run(() => onNext(o));
-            task.GetAwaiter().GetResult();
+            try
+            {
+                var task = Task.Run(() => onNext(o));
+                task.GetAwaiter().GetResult();
+            }
+            catch
+            {
+                if(Debugger.IsAttached)
+                {
+                    throw;
+                }
+                else
+                {
+                    //Let's do nothing and just experience the exceptions when a debugger is attached.
+                }
+            }
         }
 
         if (onError != null && onCompleted != null)
