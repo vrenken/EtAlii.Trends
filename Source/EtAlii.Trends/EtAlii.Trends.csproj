@@ -14,10 +14,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="6.0.4" />
-    <PackageReference Include="Syncfusion.Blazor.Diagram" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Blazor.Layouts" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Blazor.Diagram" Version="20.1.0.50" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.1.0.50" />
+    <PackageReference Include="Syncfusion.Blazor.Layouts" Version="20.1.0.50" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.1.0.50" />
 
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
