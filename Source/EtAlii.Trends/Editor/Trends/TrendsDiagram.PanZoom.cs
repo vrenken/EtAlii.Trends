@@ -24,6 +24,8 @@ public partial class TrendsDiagram
 
     private async Task InitializePositionAndZoom()
     {
+        _log.Verbose("Method called {MethodName}", nameof(InitializePositionAndZoom));
+
         var diagram = await _queryDispatcher
             .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
             .ConfigureAwait(false);
@@ -37,18 +39,24 @@ public partial class TrendsDiagram
 
     private void OnCurrentZoomChanged(double currentZoom)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnCurrentZoomChanged));
+
         _currentZoom = currentZoom;
         _persistPanAndZoom.Raise();
     }
 
     private void OnHorizontalOffsetChanged(double horizontalOffset)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnHorizontalOffsetChanged));
+
         _horizontalOffset = horizontalOffset;
         _persistPanAndZoom.Raise();
     }
 
     private void OnVerticalOffsetChanged(double verticalOffset)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnVerticalOffsetChanged));
+
         _verticalOffset = verticalOffset;
         _persistPanAndZoom.Raise();
     }

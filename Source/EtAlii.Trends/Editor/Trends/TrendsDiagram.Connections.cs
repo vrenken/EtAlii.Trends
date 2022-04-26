@@ -13,6 +13,8 @@ public partial class TrendsDiagram
     public static bool PropagateConnectorUpdates = true;
     private void OnConnectorsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnConnectorsChanged));
+
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
@@ -54,6 +56,8 @@ public partial class TrendsDiagram
 
     private Task OnConnectionChanging(ConnectionChangingEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnConnectionChanging));
+
         switch (e.ConnectorAction)
         {
             case Actions.ConnectorSourceEnd:
@@ -87,6 +91,8 @@ public partial class TrendsDiagram
 
     private Task OnConnectionChanged(ConnectionChangedEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnConnectionChanged));
+
         switch (e.ConnectorAction)
         {
             case Actions.ConnectorSourceEnd:
@@ -101,12 +107,24 @@ public partial class TrendsDiagram
         return Task.CompletedTask;
     }
 
-    private Task OnTargetConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.Connector.SourcePortID, e.TargetPortID);
+    private Task OnTargetConnectionPointChanged(EndPointChangedEventArgs e)
+    {
+        _log.Verbose("Method called {MethodName}", nameof(OnTargetConnectionPointChanged));
 
-    private Task OnSourceConnectionPointChanged(EndPointChangedEventArgs e) => OnConnectionPointChanged(e.Connector, e.TargetPortID, e.Connector.TargetPortID);
+        return OnConnectionPointChanged(e.Connector, e.Connector.SourcePortID, e.TargetPortID);
+    }
+
+    private Task OnSourceConnectionPointChanged(EndPointChangedEventArgs e)
+    {
+        _log.Verbose("Method called {MethodName}", nameof(OnSourceConnectionPointChanged));
+
+        return OnConnectionPointChanged(e.Connector, e.TargetPortID, e.Connector.TargetPortID);
+    }
 
     private async Task OnConnectionPointChanged(Connector connector, string sourceComponentId, string targetComponentId)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnConnectionPointChanged));
+
         if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
         {
             var connection = (Connection)connectionObject;
@@ -128,6 +146,8 @@ public partial class TrendsDiagram
 
     private void UpdateConnectorFromConnection(Connection connection, Connector connector)
     {
+        _log.Verbose("Method called {MethodName}", nameof(UpdateConnectorFromConnection));
+
         var segment = (BezierSegment)connector.Segments[0];
         segment.Vector1.Angle = connection.SourceBezierAngle;
         segment.Vector1.Distance = connection.SourceBezierDistance;
@@ -140,6 +160,8 @@ public partial class TrendsDiagram
 
     private void UpdateConnectionFromConnector(Connector connector, Connection connection)
     {
+        _log.Verbose("Method called {MethodName}", nameof(UpdateConnectionFromConnector));
+
         var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
         var delta = sourceHigherThanTarget
             ? connector.TargetPoint.Y - connector.SourcePoint.Y

@@ -9,6 +9,8 @@ public partial class TrendsDiagram
 {
     private async Task AddNewTrend(DiagramPoint position)
     {
+        _log.Verbose("Method called {MethodName}", nameof(AddNewTrend));
+
         var command = new AddTrendCommand
         (
             Trend: diagram => new Trend
@@ -35,6 +37,8 @@ public partial class TrendsDiagram
 
     private async Task OnDeleteItems()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnDeleteItems));
+
         var nodesToRemove = _selectedDiagramObjects
             .OfType<Node>()
             .ToArray();

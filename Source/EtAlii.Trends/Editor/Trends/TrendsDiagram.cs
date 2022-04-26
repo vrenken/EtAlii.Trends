@@ -14,7 +14,7 @@ using Orientation = Syncfusion.Blazor.Diagram.Orientation;
 public partial class TrendsDiagram
 {
     [Parameter] public Guid DiagramId { get; set; }
-    [CascadingParameter(Name = "SelectedTrend")] public Trend? SelectedTrend { get; set; }
+    [CascadingParameter(Name = nameof(SelectedTrend))] public Trend? SelectedTrend { get; set; }
 
     [Parameter] public EventCallback<Trend?> SelectedTrendChanged { get; set; }
 
@@ -25,6 +25,8 @@ public partial class TrendsDiagram
     private IDiagramObject? DrawingObject => _drawingObjectFactory?.Invoke();
     private Func<IDiagramObject>? _drawingObjectFactory;
     private readonly List<IDiagramObject> _selectedDiagramObjects = new();
+
+    private readonly ILogger _log = Log.ForContext<TrendsDiagram>();
 
 #pragma warning disable CS8618
     public TrendsDiagram()
@@ -50,6 +52,8 @@ public partial class TrendsDiagram
 
     protected override async Task OnInitializedAsync()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnInitializedAsync));
+
         await InitializePositionAndZoom().ConfigureAwait(false);
 
         await _nodeLoader.Load(_nodes, _connectors, DiagramId).ConfigureAwait(false);
@@ -61,6 +65,8 @@ public partial class TrendsDiagram
 
     public async Task UpdatedTrend(Trend? trend)
     {
+        _log.Verbose("Method called {MethodName}", nameof(UpdatedTrend));
+
         if (trend != null)
         {
             var node = _nodes.Single(n => n.Data == trend);
@@ -73,6 +79,8 @@ public partial class TrendsDiagram
     // Create the layout info.
     private TreeInfo GetLayoutInfo(IDiagramObject obj, TreeInfo options)
     {
+        _log.Verbose("Method called {MethodName}", nameof(GetLayoutInfo));
+
         // Enable the sub-tree.
         options.EnableSubTree = true;
         // Specify the subtree orientation.
@@ -83,6 +91,8 @@ public partial class TrendsDiagram
 
     private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnTrendNodeTextChanged));
+
         if (e.Element is Node { Data: Trend trend })
         {
             if (!string.IsNullOrWhiteSpace(e.NewValue))
@@ -105,6 +115,8 @@ public partial class TrendsDiagram
 
     private async Task OnTrendNodePositionChanged(PositionChangedEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnTrendNodePositionChanged));
+
         var settings = (DiagramSelectionSettings)e.Element;
         foreach (var node in settings.Nodes)
         {
@@ -121,6 +133,8 @@ public partial class TrendsDiagram
 
     private async Task OnTrendNodeSizeChanged(SizeChangedEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnTrendNodeSizeChanged));
+
         var settings = e.Element;
         foreach (var node in settings.Nodes)
         {
@@ -141,6 +155,8 @@ public partial class TrendsDiagram
 
     private async Task OnClicked(ClickEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnClicked));
+
         switch (e.Count)
         {
             case 2 when e.ActualObject == null:
@@ -155,6 +171,8 @@ public partial class TrendsDiagram
 
     private async Task OnTrendSelected(SelectionChangedEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnTrendSelected));
+
         SelectedTrend = null;
         _selectedDiagramObjects.Clear();
 

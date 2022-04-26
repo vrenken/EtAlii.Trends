@@ -38,6 +38,8 @@ public partial class TrendsDiagram
 
     private async Task OnResetItemClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnResetItemClick));
+
         var diagram = await _queryDispatcher
             .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
             .ConfigureAwait(false);
@@ -58,30 +60,53 @@ public partial class TrendsDiagram
 
     private void OnZoomInItemClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnZoomInItemClick));
+
         _trendsDiagram.Zoom(1.1f, null); // null causes zoom to happen from the center of the diagram
         UpdateButtons();
     }
 
     private void OnZoomOutItemClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnZoomOutItemClick));
+
         _trendsDiagram.Zoom(1 / 1.1f, null); // null causes zoom to happen from the center of the diagram
         UpdateButtons();
     }
 
     private void OnFitToPageClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnFitToPageClick));
+
         _trendsDiagram.FitToPage();
         UpdateButtons();
     }
 
-    private void OnBringIntoCenterClick() => _viewManager.OnBringIntoCenter(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
+    private void OnBringIntoCenterClick()
+    {
+        _log.Verbose("Method called {MethodName}", nameof(OnBringIntoCenterClick));
 
-    private void OnBringIntoViewClick() => _viewManager.OnBringIntoView(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
+        _viewManager.OnBringIntoCenter(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
+    }
 
-    private Task OnDeleteItemsClicked() => OnDeleteItems();
+    private void OnBringIntoViewClick()
+    {
+        _log.Verbose("Method called {MethodName}", nameof(OnBringIntoViewClick));
+
+        _viewManager.OnBringIntoView(_trendsDiagram, _selectedDiagramObjects.AsReadOnly());
+    }
+
+    private Task OnDeleteItemsClicked()
+    {
+        _log.Verbose("Method called {MethodName}", nameof(OnDeleteItemsClicked));
+
+        return OnDeleteItems();
+    }
 
     private void OnPanClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnPanClick));
+
         _diagramTool = _panZoomController;
         _drawingObjectFactory = null;
         UpdateButtons();
@@ -89,6 +114,8 @@ public partial class TrendsDiagram
 
     private void OnEditTrendClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnEditTrendClick));
+
         _diagramTool = _editTrendController;
         _drawingObjectFactory = null;
         UpdateButtons();
@@ -96,6 +123,8 @@ public partial class TrendsDiagram
 
     private void OnEditConnectionClick()
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnEditConnectionClick));
+
         _diagramTool = _editConnectionController;
         _drawingObjectFactory = () => _connectorFactory.CreateBlank();
         UpdateButtons();
@@ -103,6 +132,8 @@ public partial class TrendsDiagram
 
     private void UpdateButtons()
     {
+        _log.Verbose("Method called {MethodName}", nameof(UpdateButtons));
+
         _zoomInCssClass = "tb-item-start";
         _zoomOutCssClass = "tb-item-start";
 

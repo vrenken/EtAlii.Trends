@@ -20,6 +20,8 @@ public partial class TrendsDiagram
 
     public void OnSplitterResized(ResizingEventArgs e)
     {
+        _log.Verbose("Method called {MethodName}", nameof(OnSplitterResized));
+
         _diagramWidth = $"{e.PaneSize[1]}px";
         StateHasChanged();
     }
@@ -28,6 +30,8 @@ public partial class TrendsDiagram
     {
         if (!_isLoaded)
         {
+            _log.Verbose("Method called {MethodName}", nameof(OnAfterRenderAsync));
+
             _isLoaded = true;
             var windowDimensions = await _jsRuntime
                 .InvokeAsync<WindowDimension>("getWindowDimensions", CancellationToken.None, null)
