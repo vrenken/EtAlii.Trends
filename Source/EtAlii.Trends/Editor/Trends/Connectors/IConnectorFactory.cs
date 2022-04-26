@@ -8,4 +8,6 @@ public interface IConnectorFactory
 {
     Connector Create(Connection connection);
     Connector CreateBlank();
+
+    void ApplyStyle(Connector connector);
 }

@@ -34,21 +34,9 @@ public class NodeManager : INodeManager
             Constraints =
                 NodeConstraints.ResizeWest |
                 NodeConstraints.ResizeEast |
-                NodeConstraints.OutConnect |
-                NodeConstraints.InConnect |
                 NodeConstraints.Delete |
                 NodeConstraints.PointerEvents |
-                //NodeConstraints.Rotate |
                 NodeConstraints.Drag |
-                // NodeConstraints.InConnect |
-                // NodeConstraints.OutConnect |
-                // NodeConstraints.Rotate |
-                // NodeConstraints.ResizeNorth |
-                // NodeConstraints.ResizeNorthWest |
-                // NodeConstraints.ResizeNorthEast |
-                // NodeConstraints.ResizeSouth |
-                // NodeConstraints.ResizeSouthEast |
-                // NodeConstraints.ResizeSouthWest
                 NodeConstraints.Select
         };
 

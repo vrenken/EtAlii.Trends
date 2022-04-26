@@ -15,15 +15,13 @@ public class ConnectorFactory : IConnectorFactory
         var connector = CreateBlank();
         connector.ID = connection.Id.ToString();
         connector.AdditionalInfo = new Dictionary<string, object> { ["Connection"] = connection };
-        connector.Segments = new DiagramObjectCollection<ConnectorSegment>
-            {
-                new BezierSegment
-                {
-                    //Defines the Vector1 and Vector2 for the bezier connector.
-                    Vector1 = new Vector { Distance = v1Distance, Angle = connection.SourceBezierAngle },
-                    Vector2 = new Vector { Distance = v2Distance, Angle = connection.TargetBezierAngle }
-                }
-            };
+        connector.Segments.Clear();
+        connector.Segments.Add(new BezierSegment
+        {
+            //Defines the Vector1 and Vector2 for the bezier connector.
+            Vector1 = new Vector { Distance = v1Distance, Angle = connection.SourceBezierAngle },
+            Vector2 = new Vector { Distance = v2Distance, Angle = connection.TargetBezierAngle }
+        });
         connector.SourceID = connection.Source.Trend.Id.ToString();
         connector.SourcePortID = connection.Source.Id.ToString();
         connector.TargetID = connection.Target.Trend.Id.ToString();
@@ -32,41 +30,49 @@ public class ConnectorFactory : IConnectorFactory
         return connector;
     }
 
+    public void ApplyStyle(Connector connector)
+    {
+        connector.Type = ConnectorSegmentType.Bezier;
+        connector.CanAutoLayout = false;
+        connector.TargetDecorator = new DecoratorSettings
+        {
+            Shape = DecoratorShape.Arrow
+        };
+        connector.Style = new ShapeStyle
+        {
+            StrokeColor = "#6d6d6d"
+        };
+        connector.Constraints =
+            ConnectorConstraints.ConnectToNearByPort |
+            ConnectorConstraints.PointerEvents |
+            ConnectorConstraints.InheritBridging |
+            ConnectorConstraints.DragTargetEnd |
+            ConnectorConstraints.DragSourceEnd |
+            //ConnectorConstraints.Drag |
+            ConnectorConstraints.Delete |
+            //ConnectorConstraints.DragSegmentThumb |
+            ConnectorConstraints.Select;
+
+        if (connector.Segments.Count == 0 || connector.Segments[0] is not BezierSegment)
+        {
+            connector.Segments.Clear();
+            connector.Segments.Add(new BezierSegment
+            {
+                //Defines the Vector1 and Vector2 for the bezier connector.
+                Vector1 = new Vector { Distance = 50L, Angle = -90L },
+                Vector2 = new Vector { Distance = 50L, Angle = +90L }
+            });
+        }
+    }
     public Connector CreateBlank()
     {
         // Defines the connector's default values.
         var connector = new Connector
         {
             ID = $"New connector {Guid.NewGuid()}",
-            Type = ConnectorSegmentType.Bezier,
-            TargetDecorator =
-            {
-                Shape = DecoratorShape.Arrow
-            },
-            Style = new ShapeStyle
-            {
-                StrokeColor = "#6d6d6d"
-            },
-            Constraints = ConnectorConstraints.ConnectToNearByPort |
-                          ConnectorConstraints.PointerEvents |
-                          ConnectorConstraints.InheritBridging |
-                          ConnectorConstraints.DragTargetEnd |
-                          ConnectorConstraints.DragSourceEnd |
-                          //ConnectorConstraints.Drag |
-                          ConnectorConstraints.Delete |
-                          //ConnectorConstraints.DragSegmentThumb |
-                          ConnectorConstraints.Select,
-            Segments = new DiagramObjectCollection<ConnectorSegment>
-            {
-                new BezierSegment
-                {
-                    //Defines the Vector1 and Vector2 for the bezier connector.
-                    Vector1 = new Vector { Distance = 50L, Angle = -90L },
-                    Vector2 = new Vector { Distance = 50L, Angle = +90L }
-                }
-            },
-            CanAutoLayout = false,
         };
+
+        ApplyStyle(connector);
 
         return connector;
     }
