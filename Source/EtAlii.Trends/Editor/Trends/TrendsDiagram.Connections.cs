@@ -46,6 +46,7 @@ public partial class TrendsDiagram
                         .ConfigureAwait(false);
 
                     var connection = task.GetAwaiter().GetResult();
+                    _connectorFactory.ApplyStyle(connector);
                     UpdateConnectorFromConnection(connection, connector);
                 }
                 break;

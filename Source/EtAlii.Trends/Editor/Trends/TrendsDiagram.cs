@@ -22,8 +22,6 @@ public partial class TrendsDiagram
 
     private readonly DiagramObjectCollection<Node> _nodes = new();
     private readonly DiagramObjectCollection<Connector> _connectors = new();
-    private IDiagramObject? DrawingObject => _drawingObjectFactory?.Invoke();
-    private Func<IDiagramObject>? _drawingObjectFactory;
     private readonly List<IDiagramObject> _selectedDiagramObjects = new();
 
     private readonly ILogger _log = Log.ForContext<TrendsDiagram>();

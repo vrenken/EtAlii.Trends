@@ -18,20 +18,19 @@
 <SfToolbar @ref="@_toolbar" Height="@_toolbarHeight" Width="100%">
     <ToolbarItems>
 
-        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" CssClass="@_panZoomCssClass" TooltipText="Pan Tool" OnClick="OnPanClick" />
-        <ToolbarItem @ref="@_editTrendItem" PrefixIcon="e-icons e-resize" CssClass="@_editTrendCssClass" TooltipText="Edit trend" OnClick="OnEditTrendClick" />
-        <ToolbarItem @ref="@_editConnectionItem" PrefixIcon="e-icons e-length" CssClass="@_editConnectionCssClass" TooltipText="Edit connection" OnClick="OnEditConnectionClick" />
+        <ToolbarItem @ref="@_panItem" PrefixIcon="e-icons e-pan" TooltipText="Pan Tool" OnClick="OnPanClick" />
+        <ToolbarItem @ref="@_editTrendItem" PrefixIcon="e-icons e-resize" TooltipText="Edit trend" OnClick="OnEditTrendClick" />
 
         <ToolbarItem Type="ItemType.Separator" />
-        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" CssClass="@_zoomInCssClass" PrefixIcon="e-icons e-zoom-in" OnClick="OnZoomInItemClick" />
-        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" CssClass="@_zoomOutCssClass" PrefixIcon="e-icons e-zoom-out" OnClick="OnZoomOutItemClick" />
-        <ToolbarItem @ref="@_resetItem" TooltipText="Reset" CssClass="@_resetItemCssClass" PrefixIcon="e-icons e-refresh" OnClick="OnResetItemClick" />
+        <ToolbarItem @ref="@_zoomInItem" TooltipText="ZoomIn" PrefixIcon="e-icons e-zoom-in" OnClick="OnZoomInItemClick" />
+        <ToolbarItem @ref="@_zoomOutItem" TooltipText="ZoomOut" PrefixIcon="e-icons e-zoom-out" OnClick="OnZoomOutItemClick" />
+        <ToolbarItem @ref="@_resetItem" TooltipText="Reset" PrefixIcon="e-icons e-refresh" OnClick="OnResetItemClick" />
         <ToolbarItem PrefixIcon="e-icons e-bring-to-view" Disabled="@(!_selectedDiagramObjects.OfType<Node>().Any())"  TooltipText="Bring into view" OnClick="OnBringIntoViewClick" />
         <ToolbarItem PrefixIcon="e-icons e-bring-to-center" Disabled="@(!_selectedDiagramObjects.OfType<Node>().Any())" TooltipText="Bring into center" OnClick="OnBringIntoCenterClick" />
-        <ToolbarItem @ref="@_fitToPageItem" CssClass="@_fitCssClass" OnClick="OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page" />
+        <ToolbarItem @ref="@_fitToPageItem" OnClick="OnFitToPageClick" PrefixIcon="e-icons e-zoom-to-fit" TooltipText="Fit To Page" />
 
         <ToolbarItem Type="ItemType.Separator" />
-        <ToolbarItem OnClick="OnDeleteItemsClicked" PrefixIcon="e-icons e-trash" Disabled="@(_selectedDiagramObjects.Count != 1)" TooltipText="Delete" />
+        <ToolbarItem OnClick="OnDeleteItemsClicked" PrefixIcon="e-icons e-trash" Disabled="@(_selectedDiagramObjects.Count == 0)" TooltipText="Delete" />
 
         <ToolbarItem PrefixIcon="e-icons e-search" TooltipText="Search" Align="@ItemAlign.Right" />
         <ToolbarItem PrefixIcon="e-icons e-settings" TooltipText="Settings" Align="@ItemAlign.Right" />
@@ -44,7 +43,6 @@
         Width="@_diagramWidth"
         Height="@_diagramHeight"
         InteractionController="@_diagramTool"
-        DrawingObject="@DrawingObject"
         TextChanged="OnTrendNodeTextChanged"
         PositionChanged="OnTrendNodePositionChanged"
         SizeChanged="OnTrendNodeSizeChanged"
