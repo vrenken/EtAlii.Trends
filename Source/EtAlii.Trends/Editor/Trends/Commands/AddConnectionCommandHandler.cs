@@ -4,7 +4,7 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using EtAlii.Trends.Diagrams;
 
-public record AddConnectionCommand(Func<Diagram, Component, Component, Connection> Connection, Guid DiagramId, Guid SourceComponentId, Guid TargetComponentId) : AsyncCommandWithResult<IAddConnectionCommandHandler>;
+public record AddConnectionCommand(Func<Diagram, Trend, Trend, Connection> Connection, Guid DiagramId, Guid SourceTrendId, Guid TargetTrendId) : AsyncCommandWithResult<IAddConnectionCommandHandler>;
 
 public interface IAddConnectionCommandHandler : IAsyncCommandHandlerWithResult<AddConnectionCommand, Connection> {}
 
@@ -20,13 +20,13 @@ public class AddConnectionCommandHandler : IAddConnectionCommandHandler
             .SingleAsync()
             .ConfigureAwait(false);
 
-        var source = await data.Components
-            .Where(d => d.Id == command.SourceComponentId)
+        var source = await data.Trends
+            .Where(d => d.Id == command.SourceTrendId)
             .SingleAsync()
             .ConfigureAwait(false);
 
-        var target = await data.Components
-            .Where(d => d.Id == command.TargetComponentId)
+        var target = await data.Trends
+            .Where(d => d.Id == command.TargetTrendId)
             .SingleAsync()
             .ConfigureAwait(false);
 
