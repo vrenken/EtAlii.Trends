@@ -126,6 +126,10 @@ public partial class TrendsDiagram
             await _commandDispatcher
                 .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
                 .ConfigureAwait(false);
+
+            _trendsDiagram.BeginUpdate();
+            _nodeManager.Update(trend, node, _connectors);
+            await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
 

@@ -10,4 +10,6 @@ public interface IConnectorFactory
     Connector CreateBlank();
 
     void ApplyStyle(Connector connector);
+
+    void Recalculate(Connector connector);
 }

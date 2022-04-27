@@ -22,32 +22,42 @@ public partial class TrendsDiagram
                 {
                     break;
                 }
+
+                var reloadPage = false;
                 foreach (Connector connector in e.NewItems!)
                 {
-                    var command = new AddConnectionCommand
-                    (
-                        Connection: (diagram, source, target) =>
-                        {
-                            var connection = new Connection
+                    if (Guid.TryParse(connector.SourcePortID, out var sourceId) &&
+                        Guid.TryParse(connector.TargetPortID, out var targetId))
+                    {
+                        var command = new AddConnectionCommand
+                        (
+                            Connection: (diagram, source, target) =>
                             {
-                                Diagram = diagram,
-                                Source = source,
-                                Target = target
-                            };
-                            UpdateConnectionFromConnector(connector, connection);
-                            return connection;
-                        },
-                        DiagramId: DiagramId,
-                        SourceComponentId: Guid.Parse(connector.SourcePortID),
-                        TargetComponentId: Guid.Parse(connector.TargetPortID)
-                    );
-                    var task = _commandDispatcher
-                        .DispatchAsync<Connection>(command)
-                        .ConfigureAwait(false);
+                                var connection = new Connection { Diagram = diagram, Source = source, Target = target };
+                                UpdateConnectionFromConnector(connector, connection);
+                                return connection;
+                            },
+                            DiagramId: DiagramId,
+                            SourceComponentId: sourceId,
+                            TargetComponentId: targetId
+                        );
+                        var task = _commandDispatcher
+                            .DispatchAsync<Connection>(command)
+                            .ConfigureAwait(false);
 
-                    var connection = task.GetAwaiter().GetResult();
-                    _connectorFactory.ApplyStyle(connector);
-                    UpdateConnectorFromConnection(connection, connector);
+                        var connection = task.GetAwaiter().GetResult();
+                        _connectorFactory.ApplyStyle(connector);
+                        UpdateConnectorFromConnection(connection, connector);
+                    }
+                    else
+                    {
+                        reloadPage = true;
+                    }
+                }
+
+                if (reloadPage)
+                {
+                    _uriHelper.NavigateTo(_uriHelper.Uri);
                 }
                 break;
             case NotifyCollectionChangedAction.Replace:

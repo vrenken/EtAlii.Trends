@@ -7,10 +7,12 @@ using Syncfusion.Blazor.Diagram;
 public class NodeManager : INodeManager
 {
     private readonly IPortManager _portManager;
+    private readonly IConnectorFactory _connectorFactory;
 
-    public NodeManager(IPortManager portManager)
+    public NodeManager(IPortManager portManager, IConnectorFactory connectorFactory)
     {
         _portManager = portManager;
+        _connectorFactory = connectorFactory;
     }
 
     public Node Create(Trend trend, DiagramObjectCollection<Connector> connectors)
@@ -100,6 +102,7 @@ public class NodeManager : INodeManager
             {
                 connectors.Remove(connector);
                 connectors.Add(connector);
+                _connectorFactory.Recalculate(connector);
             }
 
             var inEdges = connectors
@@ -109,6 +112,7 @@ public class NodeManager : INodeManager
             {
                 connectors.Remove(connector);
                 connectors.Add(connector);
+                _connectorFactory.Recalculate(connector);
             }
         }
         TrendsDiagram.PropagateConnectorUpdates = true;

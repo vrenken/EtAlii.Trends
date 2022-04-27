@@ -55,29 +55,33 @@ public class ConnectorFactory : IConnectorFactory
 
         if (connector.Segments.Count == 0 || connector.Segments[0] is not BezierSegment)
         {
-            connector.Segments.Clear();
-
-            var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
-            var delta = sourceHigherThanTarget
-                ? connector.TargetPoint.Y - connector.SourcePoint.Y
-                : connector.SourcePoint.Y - connector.TargetPoint.Y;
-            var sourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
-            var sourceBezierDistance = delta / 3f * 2f;
-            var targetBezierAngle = sourceHigherThanTarget ? -90 : +90;
-            var targetBezierDistance = delta / 3f * 2f;
-
-            connector.Segments.Add(new BezierSegment
-            {
-                //Defines the Vector1 and Vector2 for the bezier connector.
-                Vector1 = new Vector { Distance = sourceBezierDistance, Angle = sourceBezierAngle },
-                Vector2 = new Vector { Distance = targetBezierDistance, Angle = targetBezierAngle }
-            });
-
+            Recalculate(connector);
             // Vector1 = new Vector { Distance = 50L, Angle = -90L },
             // Vector2 = new Vector { Distance = 50L, Angle = +90L }
-
         }
     }
+
+    public void Recalculate(Connector connector)
+    {
+        connector.Segments.Clear();
+
+        var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
+        var delta = sourceHigherThanTarget
+            ? connector.TargetPoint.Y - connector.SourcePoint.Y
+            : connector.SourcePoint.Y - connector.TargetPoint.Y;
+        var sourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
+        var sourceBezierDistance = delta / 3f * 2f;
+        var targetBezierAngle = sourceHigherThanTarget ? -90 : +90;
+        var targetBezierDistance = delta / 3f * 2f;
+
+        connector.Segments.Add(new BezierSegment
+        {
+            //Defines the Vector1 and Vector2 for the bezier connector.
+            Vector1 = new Vector { Distance = sourceBezierDistance, Angle = sourceBezierAngle },
+            Vector2 = new Vector { Distance = targetBezierDistance, Angle = targetBezierAngle }
+        });
+    }
+
     public Connector CreateBlank()
     {
         // Defines the connector's default values.
