@@ -9,11 +9,7 @@ public class Connection : Entity
 #pragma warning disable CS8618
     public Trend Source { get; set; }
 
-    public double SourceBezierAngle { get; set; }
-    public double SourceBezierDistance { get; set; }
     public Trend Target { get; set; }
-    public double TargetBezierAngle { get; set; }
-    public double TargetBezierDistance { get; set; }
     public Diagram Diagram { get; set; }
 #pragma warning restore CS8618
 }

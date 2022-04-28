@@ -45,7 +45,6 @@ builder.Services.AddSingleton<IUpdateConnectionCommandHandler, UpdateConnectionC
 builder.Services.AddSingleton<IRemoveConnectionCommandHandler, RemoveConnectionCommandHandler>();
 
 builder.Services.AddSingleton<INodeManager, NodeManager>();
-builder.Services.AddSingleton<IPortManager, PortManager>();
 builder.Services.AddScoped<ITrendNodesLoader, TrendNodesLoader>();
 builder.Services.AddScoped<IConnectionConnectorLoader, ConnectionConnectorLoader>();
 

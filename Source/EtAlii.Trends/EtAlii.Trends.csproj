@@ -113,7 +113,7 @@
       <DependentUpon>NodeManager.cs</DependentUpon>
     </Compile>
     <Compile Update="Editor\Trends\Nodes\IPortManager.cs">
-      <DependentUpon>PortManager.cs</DependentUpon>
+      <DependentUpon>__PortManager.cs</DependentUpon>
     </Compile>
     <Compile Update="Editor\Trends\Nodes\ITrendNodesLoader.cs">
       <DependentUpon>TrendNodesLoader.cs</DependentUpon>
