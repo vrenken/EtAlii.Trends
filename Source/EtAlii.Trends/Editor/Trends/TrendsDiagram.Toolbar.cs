@@ -12,16 +12,14 @@ public partial class TrendsDiagram
 
     private ToolbarItem _zoomInItem;
     private ToolbarItem _zoomOutItem;
-
     private ToolbarItem _resetItem;
-
     private ToolbarItem _panItem;
-    private InteractionController _panZoomController = InteractionController.ZoomPan;
-
     private ToolbarItem _editTrendItem;
+    private ToolbarItem _fitToPageItem;
+
+    private InteractionController _panZoomController = InteractionController.ZoomPan;
     private InteractionController _editTrendController = InteractionController.MultipleSelect | InteractionController.SingleSelect;
 
-    private ToolbarItem _fitToPageItem;
 
     private InteractionController _diagramTool = InteractionController.ZoomPan;
     private SfToolbar _toolbar;
@@ -41,9 +39,11 @@ public partial class TrendsDiagram
         await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
             .ConfigureAwait(false);
 
-        _currentZoom = diagram.DiagramZoom;
-        _horizontalOffset = diagram.HorizontalOffset;
-        _verticalOffset = diagram.VerticalOffset;
+#pragma warning disable BL0005
+        _trendsDiagram.ScrollSettings.CurrentZoom = diagram.DiagramZoom;
+        _trendsDiagram.ScrollSettings.HorizontalOffset = diagram.HorizontalOffset;
+        _trendsDiagram.ScrollSettings.VerticalOffset = diagram.VerticalOffset;
+#pragma warning restore BL0005
     }
 
     private void OnZoomInItemClick()
@@ -84,6 +84,8 @@ public partial class TrendsDiagram
     private Task OnDeleteItemsClicked()
     {
         _log.Verbose("Method called {MethodName}", nameof(OnDeleteItemsClicked));
+
+        //await _trendsDiagram.DoLayout().ConfigureAwait(false);
 
         return OnDeleteItems();
     }

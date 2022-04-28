@@ -40,6 +40,9 @@ public partial class TrendsDiagram
             //var toolbarHeight = _toolbar.Height;
             _diagramHeight = $"{windowDimensions.Height - 60}px";
             _toolbarHeight = $"{60}px";
+
+            await InitializePositionAndZoom().ConfigureAwait(false);
+
             await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         }
     }

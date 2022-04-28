@@ -12,10 +12,6 @@ using System.Reactive.Subjects;
 
 public partial class TrendsDiagram
 {
-    private double _currentZoom;
-    private double _horizontalOffset;
-    private double _verticalOffset;
-
     //Sets the line intervals for the gridlines.
     private readonly double[] _lineInterval = { 1, 9, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75, 0.25, 9.75 };
     private readonly SnapConstraints _snapConstraints = SnapConstraints.ShowLines | SnapConstraints.SnapToObject;
@@ -30,32 +26,32 @@ public partial class TrendsDiagram
             .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
             .ConfigureAwait(false);
 
-        _currentZoom = diagram.DiagramZoom;
-        _horizontalOffset = diagram.HorizontalOffset;
-        _verticalOffset = diagram.VerticalOffset;
+#pragma warning disable BL0005
+        _trendsDiagram.ScrollSettings.CurrentZoom = diagram.DiagramZoom;
+        _trendsDiagram.ScrollSettings.HorizontalOffset = diagram.HorizontalOffset;
+        _trendsDiagram.ScrollSettings.VerticalOffset = diagram.VerticalOffset;
+#pragma warning restore BL0005
     }
 
-    private void OnCurrentZoomChanged(double currentZoom)
+    private async Task PersistPanAndZoom()
     {
-        _log.Verbose("Method called {MethodName}", nameof(OnCurrentZoomChanged));
+        _log.Verbose("Method called {MethodName}", nameof(PersistPanAndZoom));
 
-        _currentZoom = currentZoom;
-        _persistPanAndZoom.Raise();
+        var diagram = await _queryDispatcher
+            .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
+            .ConfigureAwait(false);
+
+        diagram.DiagramZoom = _trendsDiagram.ScrollSettings.CurrentZoom;
+        diagram.HorizontalOffset = _trendsDiagram.ScrollSettings.HorizontalOffset;
+        diagram.VerticalOffset = _trendsDiagram.ScrollSettings.VerticalOffset;
+
+        await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
+            .ConfigureAwait(false);
     }
 
-    private void OnHorizontalOffsetChanged(double horizontalOffset)
-    {
-        _log.Verbose("Method called {MethodName}", nameof(OnHorizontalOffsetChanged));
+    private void OnCurrentZoomChanged(double currentZoom) => _persistPanAndZoom.Raise();
 
-        _horizontalOffset = horizontalOffset;
-        _persistPanAndZoom.Raise();
-    }
+    private void OnHorizontalOffsetChanged(double horizontalOffset) => _persistPanAndZoom.Raise();
 
-    private void OnVerticalOffsetChanged(double verticalOffset)
-    {
-        _log.Verbose("Method called {MethodName}", nameof(OnVerticalOffsetChanged));
-
-        _verticalOffset = verticalOffset;
-        _persistPanAndZoom.Raise();
-    }
+    private void OnVerticalOffsetChanged(double verticalOffset) => _persistPanAndZoom.Raise();
 }

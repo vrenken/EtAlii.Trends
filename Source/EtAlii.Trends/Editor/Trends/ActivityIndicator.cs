@@ -31,8 +31,11 @@ public partial class ActivityIndicator
 
     private void OnActivityStarted()
     {
-        _showIndicator = true;
-        StateHasChanged();
+        InvokeAsync(() =>
+        {
+            _showIndicator = true;
+            StateHasChanged();
+        });
     }
     private void OnActivityStopped()
     {
