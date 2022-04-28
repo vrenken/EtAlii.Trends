@@ -28,7 +28,7 @@ public partial class TrendsDiagram
             .DispatchAsync<Trend>(command)
             .ConfigureAwait(false);
 
-        var node = _nodeManager.Create(trend, _connectors);
+        var node = _nodeManager.Create(trend);
         _nodes.Add(node);
 
         SelectedTrend = trend;

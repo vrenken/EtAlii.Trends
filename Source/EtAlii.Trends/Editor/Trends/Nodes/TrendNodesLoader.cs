@@ -21,7 +21,7 @@ public class TrendNodesLoader : ITrendNodesLoader
 
         await foreach (var trend in trends)
         {
-            var node = _nodeManager.Create(trend, connectors);
+            var node = _nodeManager.Create(trend);
             nodes.Add(node);
         }
     }

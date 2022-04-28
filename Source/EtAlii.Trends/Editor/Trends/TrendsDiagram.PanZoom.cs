@@ -33,8 +33,6 @@ public partial class TrendsDiagram
         _currentZoom = diagram.DiagramZoom;
         _horizontalOffset = diagram.HorizontalOffset;
         _verticalOffset = diagram.VerticalOffset;
-
-        StateHasChanged();
     }
 
     private void OnCurrentZoomChanged(double currentZoom)
