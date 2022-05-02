@@ -62,6 +62,16 @@ public class ConnectorManager : IConnectorManager
                 // connectors.Add(connector);
                 Recalculate(connector);
             }
+
+            var inEdges = connectors
+                .Where(c => c.TargetID == node.ID && c.TargetPortID == port.ID)
+                .ToArray();
+            foreach (var connector in inEdges)
+            {
+                // connectors.Remove(connector);
+                // connectors.Add(connector);
+                Recalculate(connector);
+            }
         }
     }
 
