@@ -43,6 +43,8 @@ public partial class TrendsDiagram
         await _nodeLoader.Load(_nodes, _connectors, DiagramId).ConfigureAwait(false);
 
         await _connectorLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
+
+        UpdatePorts();
     }
 
     public void UpdatedTrend(Trend? trend)
@@ -99,7 +101,7 @@ public partial class TrendsDiagram
                 .ConfigureAwait(false);
 
             _trendsDiagram.BeginUpdate();
-            _connectorManager.Recalculate(node, _connectors);
+            await _connectorManager.Recalculate(node, _connectors).ConfigureAwait(false);
             await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
@@ -121,7 +123,7 @@ public partial class TrendsDiagram
                 .ConfigureAwait(false);
 
             _trendsDiagram.BeginUpdate();
-            _connectorManager.Recalculate(node, _connectors);
+            await _connectorManager.Recalculate(node, _connectors).ConfigureAwait(false);
             await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }

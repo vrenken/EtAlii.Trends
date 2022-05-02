@@ -25,7 +25,7 @@ public static class ObservableSubscribeAsyncExtension
             {
                 if(Debugger.IsAttached)
                 {
-                    throw;
+                    //throw;
                 }
                 else
                 {

@@ -124,25 +124,6 @@ public partial class TrendsDiagram
 
     private async Task OnConnectionPointChanged(Connector connector, string sourceId, string targetId)
     {
-        _log.Verbose("Method called {MethodName}", nameof(OnConnectionPointChanged));
-
-        if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
-        {
-            var connection = (Connection)connectionObject;
-            var command = new UpdateConnectionCommand(
-                Connection: (source, target) =>
-                {
-                    _connectorManager.UpdateConnectionFromConnector(connector, connection);
-                    connection.Source = source;
-                    connection.Target = target;
-                    return connection;
-                },
-                SourceTrendId: Guid.Parse(sourceId),
-                TargetTrendId: Guid.Parse(targetId));
-            await _commandDispatcher
-                .DispatchAsync<Connection>(command)
-                .ConfigureAwait(false);
-            _connectorManager.Recalculate(connector);
-        }
+        await _connectorManager.Recalculate(connector).ConfigureAwait(false);
     }
 }

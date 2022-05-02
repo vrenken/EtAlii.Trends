@@ -8,6 +8,13 @@ public class ConnectorManager : IConnectorManager
 {
     private readonly ILogger _log = Log.ForContext<ConnectorManager>();
 
+    private readonly ICommandDispatcher _commandDispatcher;
+
+    public ConnectorManager(ICommandDispatcher commandDispatcher)
+    {
+        _commandDispatcher = commandDispatcher;
+    }
+
     public Connector Create(Connection connection)
     {
         // Defines the connector's default values.
@@ -49,7 +56,7 @@ public class ConnectorManager : IConnectorManager
             ConnectorConstraints.Select;
     }
 
-    public void Recalculate(Node node, DiagramObjectCollection<Connector> connectors)
+    public async Task Recalculate(Node node, DiagramObjectCollection<Connector> connectors)
     {
         foreach (var port in node.Ports)
         {
@@ -60,7 +67,7 @@ public class ConnectorManager : IConnectorManager
             {
                 // connectors.Remove(connector);
                 // connectors.Add(connector);
-                Recalculate(connector);
+                await Recalculate(connector).ConfigureAwait(false);
             }
 
             var inEdges = connectors
@@ -70,13 +77,15 @@ public class ConnectorManager : IConnectorManager
             {
                 // connectors.Remove(connector);
                 // connectors.Add(connector);
-                Recalculate(connector);
+                await Recalculate(connector).ConfigureAwait(false);
             }
         }
     }
 
-    public void Recalculate(Connector connector)
+    public async Task Recalculate(Connector connector)
     {
+        _log.Verbose("Method called {MethodName}", nameof(Recalculate));
+
         var sourceLowerThanTarget = connector.SourcePoint.X < connector.TargetPoint.X;
         var delta = Math.Abs(connector.TargetPoint.X - connector.SourcePoint.X);
         var sourceBezierAngle = sourceLowerThanTarget ? 0 : -180;
@@ -87,6 +96,24 @@ public class ConnectorManager : IConnectorManager
         var segment = (BezierSegment)connector.Segments[0];
         segment.Vector1 = new Vector { Distance = sourceBezierDistance, Angle = sourceBezierAngle };
         segment.Vector2 = new Vector { Distance = targetBezierDistance, Angle = targetBezierAngle };
+
+        if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
+        {
+            var connection = (Connection)connectionObject;
+            var command = new UpdateConnectionCommand(
+                Connection: (source, target) =>
+                {
+                    UpdateConnectionFromConnector(connector, connection);
+                    connection.Source = source;
+                    connection.Target = target;
+                    return connection;
+                },
+                SourceTrendId: Guid.Parse(connector.SourceID),
+                TargetTrendId: Guid.Parse(connector.TargetID));
+            await _commandDispatcher
+                .DispatchAsync<Connection>(command)
+                .ConfigureAwait(false);
+        }
     }
 
     public void UpdateConnectionFromConnector(Connector connector, Connection connection)

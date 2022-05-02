@@ -21,7 +21,7 @@ public partial class TrendsDiagram
     private InteractionController _editTrendController = InteractionController.MultipleSelect | InteractionController.SingleSelect;
 
 
-    private InteractionController _diagramTool = InteractionController.ZoomPan;
+    private InteractionController _diagramTool = InteractionController.ZoomPan | InteractionController.MultipleSelect | InteractionController.SingleSelect;
     private SfToolbar _toolbar;
 
     private async Task OnResetItemClick()
@@ -95,6 +95,7 @@ public partial class TrendsDiagram
         _log.Verbose("Method called {MethodName}", nameof(OnPanClick));
 
         _diagramTool = _panZoomController;
+        UpdatePorts();
     }
 
     private void OnEditTrendClick()
@@ -102,5 +103,21 @@ public partial class TrendsDiagram
         _log.Verbose("Method called {MethodName}", nameof(OnEditTrendClick));
 
         _diagramTool = _editTrendController;
+        UpdatePorts();
+    }
+
+    private void UpdatePorts()
+    {
+        var ports = _nodes
+            .SelectMany(n => n.Ports)
+            .ToArray();
+
+        var constraints = _diagramTool == InteractionController.ZoomPan
+            ? PortConstraints.Default
+            : PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect;
+        foreach(var port in ports)
+        {
+            port.Constraints = constraints;
+        }
     }
 }

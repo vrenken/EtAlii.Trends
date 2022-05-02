@@ -46,7 +46,7 @@ public class NodeManager : INodeManager
                     Visibility = PortVisibility.Visible,
                     Offset = new DiagramPoint { X = 0f, Y = 0.5f },
                     Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
-                    Constraints = PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
+                    Constraints = PortConstraints.Default
                 },
                 new()
                 {
@@ -57,7 +57,7 @@ public class NodeManager : INodeManager
                     Visibility = PortVisibility.Visible,
                     Offset = new DiagramPoint { X = 1f, Y = 0.5f },
                     Style = new ShapeStyle { Fill = "white", StrokeColor = "black" },
-                    Constraints = PortConstraints.Draw | PortConstraints.InConnect | PortConstraints.OutConnect
+                    Constraints = PortConstraints.Default
                 }
             }
         };

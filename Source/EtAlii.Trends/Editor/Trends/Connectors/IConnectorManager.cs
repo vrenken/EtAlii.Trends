@@ -10,9 +10,9 @@ public interface IConnectorManager
 
     void ApplyStyle(Connector connector);
 
-    void Recalculate(Connector connector);
+    Task Recalculate(Connector connector);
 
-    void Recalculate(Node node, DiagramObjectCollection<Connector> connectors);
+    Task Recalculate(Node node, DiagramObjectCollection<Connector> connectors);
 
     void UpdateConnectionFromConnector(Connector connector, Connection connection);
 
