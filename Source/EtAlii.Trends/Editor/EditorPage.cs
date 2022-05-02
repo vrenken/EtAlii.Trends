@@ -29,10 +29,10 @@ public partial class EditorPage
 
     private void OnSplitterResized(ResizingEventArgs arg) => _trendsDiagram.OnSplitterResized(arg);
 
-    private async Task OnSelectedTrendChangedInPropertyGrid(Trend? trend)
+    private void OnSelectedTrendChangedInPropertyGrid(Trend? trend)
     {
         _selectedTrend = trend;
-        await _trendsDiagram.UpdatedTrend(trend).ConfigureAwait(false);
+        _trendsDiagram.UpdatedTrend(trend);
     }
 
     private void OnSelectedTrendChangedInDiagram(Trend? trend)

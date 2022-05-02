@@ -10,59 +10,49 @@ using Syncfusion.Blazor.Layouts;
 
 public partial class TrendsDiagram
 {
-    public static bool PropagateConnectorUpdates = true;
-    private void OnConnectorsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private async Task OnConnectorCreated(IDiagramObject diagramObject)
     {
-        _log.Verbose("Method called {MethodName}", nameof(OnConnectorsChanged));
+        var connector = (Connector)diagramObject;
 
-        switch (e.Action)
+        if (connector.Segments.Count == 0)
         {
-            case NotifyCollectionChangedAction.Add:
-                if (!PropagateConnectorUpdates)
-                {
-                    break;
-                }
-
-                var reloadPage = false;
-                foreach (Connector connector in e.NewItems!)
-                {
-                    if (Guid.TryParse(connector.SourcePortID, out var sourceId) &&
-                        Guid.TryParse(connector.TargetPortID, out var targetId))
-                    {
-                        var command = new AddConnectionCommand
-                        (
-                            Connection: (diagram, source, target) =>
-                            {
-                                var connection = new Connection { Diagram = diagram, Source = source, Target = target };
-                                UpdateConnectionFromConnector(connector, connection);
-                                return connection;
-                            },
-                            DiagramId: DiagramId,
-                            SourceComponentId: sourceId,
-                            TargetComponentId: targetId
-                        );
-                        var task = _commandDispatcher
-                            .DispatchAsync<Connection>(command)
-                            .ConfigureAwait(false);
-
-                        var connection = task.GetAwaiter().GetResult();
-                        _connectorFactory.ApplyStyle(connector);
-                        UpdateConnectorFromConnection(connection, connector);
-                    }
-                    else
-                    {
-                        reloadPage = true;
-                    }
-                }
-
-                if (reloadPage)
-                {
-                    _uriHelper.NavigateTo(_uriHelper.Uri);
-                }
-                break;
-            case NotifyCollectionChangedAction.Replace:
-                break;
+            connector.Segments.Add(new BezierSegment());
         }
+        else if (connector.Segments[0] is not BezierSegment)
+        {
+            connector.Segments.Clear();
+            connector.Segments.Add(new BezierSegment());
+        }
+
+        _connectorManager.ApplyStyle(connector);
+
+        Connection connection;
+        if (connector.AdditionalInfo.TryGetValue("Connection", out var connectionObject))
+        {
+            connection = (Connection)connectionObject;
+        }
+        else
+        {
+            var sourceToTarget = connector.SourcePortID == "Out";
+
+            var sourceId = Guid.Parse(sourceToTarget ? connector.SourceID : connector.TargetID);
+            var targetId = Guid.Parse(sourceToTarget ? connector.TargetID : connector.SourceID);
+
+            var command = new AddConnectionCommand
+            (
+                Connection: (diagram, source, target) => new Connection { Diagram = diagram, Source = source, Target = target },
+                DiagramId: DiagramId,
+                SourceTrendId: sourceId,
+                TargetTrendId: targetId
+            );
+            connection = await _commandDispatcher
+                .DispatchAsync<Connection>(command)
+                .ConfigureAwait(false);
+
+            connector.ID = connection.Id.ToString();
+            connector.AdditionalInfo["Connection"] = connection;
+        }
+        _connectorManager.UpdateConnectorFromConnection(connection, connector);
     }
 
     private Task OnConnectionChanging(ConnectionChangingEventArgs e)
@@ -122,17 +112,17 @@ public partial class TrendsDiagram
     {
         _log.Verbose("Method called {MethodName}", nameof(OnTargetConnectionPointChanged));
 
-        return OnConnectionPointChanged(e.Connector, e.Connector.SourcePortID, e.TargetPortID);
+        return OnConnectionPointChanged(e.Connector, e.Connector.SourceID, e.Connector.TargetID);
     }
 
     private Task OnSourceConnectionPointChanged(EndPointChangedEventArgs e)
     {
         _log.Verbose("Method called {MethodName}", nameof(OnSourceConnectionPointChanged));
 
-        return OnConnectionPointChanged(e.Connector, e.TargetPortID, e.Connector.TargetPortID);
+        return OnConnectionPointChanged(e.Connector, e.Connector.SourceID, e.Connector.TargetID);
     }
 
-    private async Task OnConnectionPointChanged(Connector connector, string sourceComponentId, string targetComponentId)
+    private async Task OnConnectionPointChanged(Connector connector, string sourceId, string targetId)
     {
         _log.Verbose("Method called {MethodName}", nameof(OnConnectionPointChanged));
 
@@ -142,52 +132,17 @@ public partial class TrendsDiagram
             var command = new UpdateConnectionCommand(
                 Connection: (source, target) =>
                 {
-                    UpdateConnectionFromConnector(connector, connection);
+                    _connectorManager.UpdateConnectionFromConnector(connector, connection);
                     connection.Source = source;
                     connection.Target = target;
                     return connection;
                 },
-                SourceComponentId: Guid.Parse(sourceComponentId),
-                TargetComponentId: Guid.Parse(targetComponentId));
+                SourceTrendId: Guid.Parse(sourceId),
+                TargetTrendId: Guid.Parse(targetId));
             await _commandDispatcher
                 .DispatchAsync<Connection>(command)
                 .ConfigureAwait(false);
+            _connectorManager.Recalculate(connector);
         }
-    }
-
-    private void UpdateConnectorFromConnection(Connection connection, Connector connector)
-    {
-        _log.Verbose("Method called {MethodName}", nameof(UpdateConnectorFromConnection));
-
-        var segment = (BezierSegment)connector.Segments[0];
-        segment.Vector1.Angle = connection.SourceBezierAngle;
-        segment.Vector1.Distance = connection.SourceBezierDistance;
-        segment.Vector2.Angle = connection.TargetBezierAngle;
-        segment.Vector2.Distance = connection.TargetBezierDistance;
-
-        connector.ID = connection.Id.ToString();
-        connector.AdditionalInfo["Connection"] = connection;
-    }
-
-    private void UpdateConnectionFromConnector(Connector connector, Connection connection)
-    {
-        _log.Verbose("Method called {MethodName}", nameof(UpdateConnectionFromConnector));
-
-        var sourceHigherThanTarget = connector.SourcePoint.Y < connector.TargetPoint.Y;
-        var delta = sourceHigherThanTarget
-            ? connector.TargetPoint.Y - connector.SourcePoint.Y
-            : connector.SourcePoint.Y - connector.TargetPoint.Y;
-        connection.SourceBezierAngle = sourceHigherThanTarget ? +90 : -90;
-        connection.SourceBezierDistance = delta / 3f * 2f;
-        connection.TargetBezierAngle = sourceHigherThanTarget ? -90 : +90;
-        connection.TargetBezierDistance = delta / 3f * 2f;
-
-        // The below angle and distances do not change. Feels weird.
-        // var segment = (BezierSegment)connector.Segments[0];
-        // connection.SourceBezierAngle = segment.Vector1.Angle;
-        // connection.SourceBezierDistance = segment.Vector1.Distance;
-        // connection.TargetBezierAngle = segment.Vector2.Angle;
-        // connection.TargetBezierDistance = segment.Vector2.Distance;
-
     }
 }

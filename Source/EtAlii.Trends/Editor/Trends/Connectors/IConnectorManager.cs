@@ -4,12 +4,17 @@ namespace EtAlii.Trends.Editor.Trends;
 
 using Syncfusion.Blazor.Diagram;
 
-public interface IConnectorFactory
+public interface IConnectorManager
 {
     Connector Create(Connection connection);
-    Connector CreateBlank();
 
     void ApplyStyle(Connector connector);
 
     void Recalculate(Connector connector);
+
+    void Recalculate(Node node, DiagramObjectCollection<Connector> connectors);
+
+    void UpdateConnectionFromConnector(Connector connector, Connection connection);
+
+    void UpdateConnectorFromConnection(Connection connection, Connector connector);
 }

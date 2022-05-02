@@ -1,6 +1,6 @@
-@using Syncfusion.Blazor.Layouts
+@* @using Syncfusion.Blazor.Layouts *@
 @using Syncfusion.Blazor.Navigations;
-@using Syncfusion.Blazor.Spinner
+@* @using Syncfusion.Blazor.Spinner *@
 
 @inject NavigationManager _uriHelper;
 @inject IJSRuntime _jsRuntime
@@ -9,7 +9,7 @@
 
 @inject ITrendNodesLoader _nodeLoader;
 @inject IConnectionConnectorLoader _connectorLoader;
-@inject IConnectorFactory _connectorFactory;
+@inject IConnectorManager _connectorManager;
 @inject INodeManager _nodeManager;
 @inject IViewManager _viewManager;
 
@@ -44,13 +44,14 @@
         TextChanged="OnTrendNodeTextChanged"
         PositionChanged="OnTrendNodePositionChanged"
         SizeChanged="OnTrendNodeSizeChanged"
+        ConnectorCreating="OnConnectorCreated"
         ConnectionChanging="OnConnectionChanging"
         ConnectionChanged="OnConnectionChanged"
         SourcePointChanged="OnSourceConnectionPointChanged"
         TargetPointChanged="OnTargetConnectionPointChanged"
         SelectionChanged="OnTrendSelected"
-        Nodes="@_nodes"
-        Connectors="@_connectors"
+        Nodes="_nodes"
+        Connectors="_connectors"
         Click="OnClicked">
         <ScrollSettings
             CurrentZoomChanged="OnCurrentZoomChanged"
@@ -61,16 +62,6 @@
             <HorizontalGridLines LineColor="#e0e0e0" SnapIntervals="@_lineInterval"/>
             <VerticalGridLines LineColor="#e0e0e0" SnapIntervals="@_lineInterval"/>
         </SnapSettings>
-        <Layout
-            type="@LayoutType.None"
-            HorizontalSpacing="_horizontalSpacing"
-            Orientation="_orientation"
-            VerticalSpacing="_verticalSpacing"
-            HorizontalAlignment="_horizontalAlignment"
-            VerticalAlignment="_verticalAlignment"
-            GetLayoutInfo="GetLayoutInfo">
-            <LayoutMargin Top="50" Bottom="50" Right="50" Left="50"/>
-        </Layout>
     </SfDiagramComponent>
     <ActivityIndicator />
 </div>

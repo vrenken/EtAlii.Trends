@@ -32,19 +32,7 @@ public partial class TrendsDiagram
     {
         _persistPanAndZoom = new ThrottledInvocation(TimeSpan.FromSeconds(2), async () =>
         {
-            await InvokeAsync(async () =>
-            {
-                var diagram = await _queryDispatcher
-                    .DispatchAsync<Diagram>(new GetDiagramQuery(DiagramId))
-                    .ConfigureAwait(false);
-
-                diagram.DiagramZoom = _currentZoom;
-                diagram.HorizontalOffset = _horizontalOffset;
-                diagram.VerticalOffset = _verticalOffset;
-
-                await _commandDispatcher.DispatchAsync<Diagram>(new UpdateDiagramCommand(diagram))
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            await InvokeAsync(PersistPanAndZoom).ConfigureAwait(false);
         });
     }
 
@@ -52,40 +40,23 @@ public partial class TrendsDiagram
     {
         _log.Verbose("Method called {MethodName}", nameof(OnInitializedAsync));
 
-        await InitializePositionAndZoom().ConfigureAwait(false);
-
         await _nodeLoader.Load(_nodes, _connectors, DiagramId).ConfigureAwait(false);
 
         await _connectorLoader.Load(_connectors, _nodes, DiagramId).ConfigureAwait(false);
-
-        _connectors.CollectionChanged += OnConnectorsChanged;
     }
 
-    public async Task UpdatedTrend(Trend? trend)
+    public void UpdatedTrend(Trend? trend)
     {
         _log.Verbose("Method called {MethodName}", nameof(UpdatedTrend));
 
         if (trend != null)
         {
-            var node = _nodes.Single(n => n.Data == trend);
-            _trendsDiagram.BeginUpdate();
-            _nodeManager.Update(trend, node, _connectors);
-            await _trendsDiagram.EndUpdate().ConfigureAwait(false);
+            // var node = _nodes.Single(n => n.Data == trend);
+            // _trendsDiagram.BeginUpdate();
+            // _nodeManager.Update(trend, node, _connectors);
+            // await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
-
-    // Create the layout info.
-    private TreeInfo GetLayoutInfo(IDiagramObject obj, TreeInfo options)
-    {
-        _log.Verbose("Method called {MethodName}", nameof(GetLayoutInfo));
-
-        // Enable the sub-tree.
-        options.EnableSubTree = true;
-        // Specify the subtree orientation.
-        options.Orientation = Orientation.Horizontal;
-        return options;
-    }
-
 
     private async Task OnTrendNodeTextChanged(TextChangeEventArgs e)
     {
@@ -128,7 +99,7 @@ public partial class TrendsDiagram
                 .ConfigureAwait(false);
 
             _trendsDiagram.BeginUpdate();
-            _nodeManager.Update(trend, node, _connectors);
+            _connectorManager.Recalculate(node, _connectors);
             await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }
@@ -145,12 +116,12 @@ public partial class TrendsDiagram
             trend.W = node.Width!.Value;
             trend.H = node.Height!.Value;
 
-            trend = await _commandDispatcher
+            await _commandDispatcher
                 .DispatchAsync<Trend>(new UpdateTrendCommand(trend))
                 .ConfigureAwait(false);
 
             _trendsDiagram.BeginUpdate();
-            _nodeManager.Update(trend, node, _connectors);
+            _connectorManager.Recalculate(node, _connectors);
             await _trendsDiagram.EndUpdate().ConfigureAwait(false);
         }
     }

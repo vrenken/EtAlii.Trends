@@ -7,12 +7,12 @@ using Syncfusion.Blazor.Diagram;
 public class ConnectionConnectorLoader : IConnectionConnectorLoader
 {
     private readonly IQueryDispatcher _queryDispatcher;
-    private readonly IConnectorFactory _connectorFactory;
+    private readonly IConnectorManager _connectorManager;
 
-    public ConnectionConnectorLoader(IQueryDispatcher queryDispatcher, IConnectorFactory connectorFactory)
+    public ConnectionConnectorLoader(IQueryDispatcher queryDispatcher, IConnectorManager connectorManager)
     {
         _queryDispatcher = queryDispatcher;
-        _connectorFactory = connectorFactory;
+        _connectorManager = connectorManager;
     }
 
     public async Task Load(DiagramObjectCollection<Connector> connectors, DiagramObjectCollection<Node> nodes, Guid diagramId)
@@ -23,7 +23,7 @@ public class ConnectionConnectorLoader : IConnectionConnectorLoader
 
         await foreach (var connection in connections)
         {
-            var connector = _connectorFactory.Create(connection);
+            var connector = _connectorManager.Create(connection);
             connectors.Add(connector);
         }
     }
