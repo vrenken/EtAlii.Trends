@@ -7,13 +7,6 @@ using Syncfusion.Blazor.Layouts;
 
 public partial class TrendsDiagram
 {
-    // Specify the orientation of the layout.
-    private LayoutOrientation _orientation = LayoutOrientation.LeftToRight;
-    private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Auto;
-    private VerticalAlignment _verticalAlignment = VerticalAlignment.Auto;
-    private int _horizontalSpacing = 30;
-    private int _verticalSpacing = 30;
-
     private bool _isLoaded;
     private string _diagramHeight = "900px";
     private string _diagramWidth = "100%";

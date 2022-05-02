@@ -52,7 +52,7 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddSingleton<DatabaseManager>();
 builder.Services.AddSingleton<ApplicationContext>();
 
-builder.Services.AddSingleton<IConnectorFactory, ConnectorFactory>();
+builder.Services.AddSingleton<IConnectorManager, ConnectorManager>();
 
 Logging.ConfigureGlobalLogging(builder.Configuration);
 

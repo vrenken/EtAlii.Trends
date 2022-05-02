@@ -121,8 +121,8 @@
     <Compile Update="Editor\Trends\Connectors\IConnectionConnectorLoader.cs">
       <DependentUpon>ConnectionConnectorLoader.cs</DependentUpon>
     </Compile>
-    <Compile Update="Editor\Trends\Connectors\IConnectorFactory.cs">
-      <DependentUpon>ConnectorFactory.cs</DependentUpon>
+    <Compile Update="Editor\Trends\Connectors\IConnectorManager.cs">
+      <DependentUpon>ConnectorManager.cs</DependentUpon>
     </Compile>
     <Compile Update="Editor\Trends\View\IViewManager.cs">
       <DependentUpon>ViewManager.cs</DependentUpon>
