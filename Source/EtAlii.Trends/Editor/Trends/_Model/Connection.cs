@@ -6,6 +6,11 @@ using EtAlii.Trends.Diagrams;
 
 public class Connection : Entity
 {
+    public double SourceBezierAngle { get; set; }
+    public double SourceBezierDistance { get; set; }
+    public double TargetBezierAngle { get; set; }
+    public double TargetBezierDistance { get; set; }
+
 #pragma warning disable CS8618
     public Trend Source { get; set; }
 
